@@ -1,9 +1,11 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.basic;
 
 import static com.bytezone.appleformat.Utility.ASCII_COLON;
 import static com.bytezone.appleformat.Utility.isDigit;
 import static com.bytezone.appleformat.Utility.isHighBitSet;
 import static com.bytezone.appleformat.Utility.isLetter;
+
+import com.bytezone.appleformat.HexFormatter;
 
 // -----------------------------------------------------------------------------------//
 public class DebugBasicFormatter extends BasicFormatter

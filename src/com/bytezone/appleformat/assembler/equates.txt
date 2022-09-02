@@ -1,0 +1,236 @@
+* Zero page
+
+0018  First data track
+0019  First data sector
+001A  Shape pointer LO
+001B  Shape pointer HI
+001C  Last color used
+0020  WNDLFT
+0021  WNDWDTH
+0022  WNDTOP
+0023  WNDBTM
+0024  CH
+0025  CV
+0026  GBAS-LO
+0027  GBAS-HI
+0028  BAS-LO
+0029  BAS-HI
+002A  BAS2-LO
+002B  BAS2-HI
+0032  INVFLG
+0033  Prompt character
+0035  YSAV1
+0036  CSWL
+0037  CSHW
+0044  A5L - volume number?
+004E  RND-LO
+004F  RND-HI
+0050  LINNUM
+0067  Basic program address LO
+0068  Basic program address HI
+0069  Basic variables address LO
+006A  Basic variables address HI
+006B  Basic arrays address LO
+006C  Basic arrays address HI
+0073  HIMEM
+009D  FAC
+009E  FAC mantissa hi order
+009F  FAC mantissa mid order hi
+00B1  CHRGET
+00B7  CHRGOT
+00B8  TXTPTR
+
+00E0  X of last HPLOT
+00E4  HCOLOR
+00E6  HiRes plotting page ($20 or $40)
+00E7  Scale
+00E8  Shape table address LO
+00E9  Shape table address HI
+00EA  Collision counter
+00F9  ROT
+
+0200  Input buffer
+
+03D0  Applesoft warm start
+03EA  VECT
+A56E  catalog routine
+
+* C000  80STOREOFF      Allow page2 to switch video page1 page2
+C001  80STOREON       Allow page2 to switch main & aux video memory
+C002  RAMRDOFF        Read enable main memory from $0200-$BFFF
+C003  RAMDRON         Read enable aux memory from $0200-$BFFF
+C004  RAMWRTOFF       Write enable main memory from $0200-$BFFF
+C005  RAMWRTON        Write enable aux memory from $0200-$BFFF
+C006  INTCXROMOFF     Enable slot ROM from $C100-$CFFF
+C007  INTCXROMON      Enable main ROM from $C100-$CFFF
+C008  ALTZPOFF        Enable main memory from $0000-$01FF & avl BSR
+C009  ALTZPON         Enable aux memory from $0000-$01FF & avl BSR
+C00A  SLOTC3ROMOFF    Enable main ROM from $C300-$C3FF
+C00B  SLOTC3ROMON     Enable slot ROM from $C300-$C3FF
+
+C000  KYBD - last key pressed
+C010  STROBE - Clear KYBD
+C050  TXTCLR - Display Graphics
+C051  TXTSET - Display Text
+C052  MIXCLR - Display Full Screen
+C053  MIXSET - Display Split Screen
+C054  TXTPAGE1 - Display Page 1
+C055  TXTPAGE2 - If 80STORE Off: Display Page 2, If 80STORE On: Read/Write Aux Display Mem
+C056  LORES - Display LoRes Graphics
+C057  HIRES - Display HiRes Graphics
+
+C080  Read RAM bank 2; no write
+C081  ROMIN - Read ROM; write RAM bank 2
+C082  Read ROM; no write
+C083  LCBANK2 - Read/write RAM bank 2
+C084  Read RAM bank 2; no write
+C085  ROMIN - Read ROM; write RAM bank 2
+C086  Read ROM; no write
+C087  LCBANK2 - Read/write RAM bank 2
+C088  Read RAM bank 1; no write
+C089  Read ROM; write RAM bank 1
+C08A  Read ROM; no write
+C08B  Read/write RAM bank 1
+C08C  Read RAM bank 1; no write
+C08D  Read ROM; write RAM bank 1
+C08E  Read ROM; no write
+C08F  Read/write RAM bank 1
+
+D52C  INLIN numeric input
+DB3A  STROUT - output a string
+DB5C  output a character
+DD67  FRMNUM
+DD7B  FRMEVAL
+DEBE  CHKCOM
+DEC0  SYNCHR
+DEC9  syntax error
+DFE3  PTRGET
+
+E053  find a variable
+E10C  convert FP to INT
+E2F2  GIVAYF - convert (A,Y) to FP
+E301  SNGFLT
+E3E7  FPSTR2
+E6F8  GETBYTE
+E74C  COMBYTE
+E752  GETADR - get from FAC to LINNUM
+E7A0  FADDH
+E7A7  FSUB
+E7BE  FADD
+E8D5  OVERFLOW
+E913  ONE
+E941  FLOG
+E97F  FMULT
+E9E3  CONUPK
+EA39  MUL10
+EA55  DIV10
+EA66  FDIV
+EAE1  DIVERR
+EAF9  MOVEFM (Y,A) -> FAC
+EB1E  MOV2F  FAC -> TEMP2
+EB21  MOV1F  FAC -> TEMP1
+EB23  MOVML  FAC -> (O,X)
+EB2B  MOVMF  FAC -> (Y,A)
+EB53  MOVFA  ARG -> FAC
+EB63  MOVAF  (Y,A) -> ARG
+EB82  SIGN
+EB90  SGN
+EB93  FLOAT
+EBA0  FLOAT1 - integer to FAC ($9D-$A2)
+EBAF  FABS
+EBB2  FCOMP
+EBF2  QINT
+EC23  FINT
+EC4A  FIN
+ED24  LINPRNT - print a decimal number
+ED2E  PRNTFAC
+ED34  FOUT - FAC to FBUFFR ($100-$110)
+EE8D  FSQR
+EE97  FPWRT
+EED0  NEGOP
+EF09  FEXP
+EFAE  FRND
+EFEA  FCOS
+EFF1  FSIN
+
+F03A  FTAN
+F066  PIHALF
+F09E  FATN
+F411  map x,y location on hi-res 1 ??
+F467  LEFT EQU
+F48A  RIGHT EQU
+F4D5  UP EQU
+F504  DOWN EQU
+F6B9  HFNS
+
+F800  PLOT - plot a block on lo-res screen
+F819  HLINE - draw horizontal line of blocks
+F828  VLINE - draw vertical line of blocks
+F832  CLRSCR - clear lo-res screen
+F836  CLRTOP - clear top of lo-res screen
+F85F  NEXTCOL - increment color by 3
+F864  SETCOL - set lo-res graphics color
+F871  SCRN - read lo-res screen
+
+F940  PRINTYX - print YX registers in hex
+F941  PRINTAX - print AX registers in hex
+F948  PRBLNK - print 3 spaces
+F94A  PRBL2 - print X blank spaces
+
+FAA6  reboot DOS
+FAFF  0 = Autostart ROM, 1 = Old Monitor
+
+FB1E  PREAD - read game paddle
+FB2F  initialise text screen
+FB39  text mode - SETTXT
+FB40  SETGR
+FB5B  TABV - monitor tab routine
+FB6F  set powerup checksum
+FBC1  BASCALC - calculate video address
+FBDD  BELL1 - beep speaker
+FBF4  CURSRIT - move cursor right
+
+FC10  CURSLFT - move cursor left
+FC1A  CURSUP - move cursor up
+FC22  VTAB
+FC42  CLREOP - clear to end of page
+FC58  HOME - clear screen
+FC62  CR
+FC66  CURSDWN - move cursor down
+FC9C  CLREOL - clear to end of line
+FCA8  WAIT - delay
+FCFA  RD2BIT
+
+FD0C  RDKEY - get input character
+FD1B  KEYIN - read keyboard
+FD35  RDCHAR - get input char or escape code
+FD6A  GETLN - get input line (with prompt)
+FD67  GETLNZ - get input line after CR
+FD6F  GETLN1 - get input line (no prompt)
+FD75  NXTCHAR
+FD8B  CROUT1 - print a CR with clear
+FD8E  CROUT - print a CR
+FDDA  PRBYTE - print A register in hex
+FDE3  PRHEX - print a hex digit
+FDED  COUT - print a character (in Acc)
+FDF0  COUT1 - print character to screen
+
+FE2C  move a block of memory
+FE80  SETINV - set inverse mode
+FE84  SETNORM - set normal mode
+FE89  disconnect DOS from I/O links
+FE8B  INPORT
+FE93  disconnect DOS from I/O links
+FE95  OUTPORT
+FECD  WRITE
+FEFD  READ
+
+FF02  READ2
+FF2D  PRERR - print 'ERR'
+FF3A  BELL
+FF3F  IOREST - restore all registers
+FF4A  IOSAVE - save all registers
+FF58  RTS - jump to <address on stack> + 1
+FF59  Monitor cold entry point
+FFA7  GETNUM - move num to A2L.A2H
+FFC7  ZMODE - monitor get ASCII return

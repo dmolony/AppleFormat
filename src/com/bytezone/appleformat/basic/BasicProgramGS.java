@@ -1,9 +1,11 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.basic;
 
 import static com.bytezone.appleformat.Utility.isHighBitSet;
 
 import java.util.ArrayList;
-import java.util.List;;
+import java.util.List;
+
+import com.bytezone.appleformat.Utility;;
 
 // -----------------------------------------------------------------------------------//
 public class BasicProgramGS extends BasicProgram

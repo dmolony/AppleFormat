@@ -1,4 +1,4 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.basic;
 
 // -----------------------------------------------------------------------------------//
 public interface ApplesoftConstants

@@ -1,4 +1,4 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.basic;
 
 import static com.bytezone.appleformat.Utility.ASCII_DOLLAR;
 import static com.bytezone.appleformat.Utility.ASCII_PERCENT;

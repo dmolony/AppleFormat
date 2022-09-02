@@ -1,7 +1,9 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.basic;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.bytezone.appleformat.Utility;
 
 // -----------------------------------------------------------------------------------//
 public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftConstants

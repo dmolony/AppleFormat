@@ -1,4 +1,4 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.text;
 
 // -----------------------------------------------------------------------------------//
 public class Text

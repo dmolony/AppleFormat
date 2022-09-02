@@ -1,4 +1,4 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.basic;
 
 import static com.bytezone.appleformat.Utility.ASCII_BACKSPACE;
 import static com.bytezone.appleformat.Utility.ASCII_COLON;
@@ -21,6 +21,8 @@ import static com.bytezone.appleformat.Utility.isPossibleVariable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.bytezone.appleformat.HexFormatter;
 
 // -----------------------------------------------------------------------------------//
 public class SubLine implements ApplesoftConstants
@@ -696,7 +698,7 @@ public class SubLine implements ApplesoftConstants
     if (buffer[max] == 0)
       --max;
 
-    if (isImpliedGoto () && !ApplesoftBasicProgram.basicPreferences.showThen)
+    if (isImpliedGoto () && !BasicProgram.basicPreferences.showThen)
       line.append ("GOTO ");
 
     for (int p = startPtr; p <= max; p++)
@@ -707,7 +709,7 @@ public class SubLine implements ApplesoftConstants
         if (line.length () > 0 && line.charAt (line.length () - 1) != ' ')
           line.append (' ');
         int val = b & 0x7F;
-        if (b != TOKEN_THEN || ApplesoftBasicProgram.basicPreferences.showThen)
+        if (b != TOKEN_THEN || BasicProgram.basicPreferences.showThen)
           line.append (ApplesoftConstants.tokens[val] + " ");
       }
       //      else if (Utility.isControlCharacter (b))
