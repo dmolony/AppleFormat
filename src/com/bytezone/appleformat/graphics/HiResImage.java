@@ -37,6 +37,13 @@ public abstract class HiResImage
   private ColorTable defaultColorTable320 = new ColorTable (0, 0x00);
   private ColorTable defaultColorTable640 = new ColorTable (0, 0x80);
 
+  // ---------------------------------------------------------------------------------//
+  public static void setGraphicsPreferences (GraphicsPreferences graphicsPreferences)
+  // ---------------------------------------------------------------------------------//
+  {
+    HiResImage.graphicsPreferences = graphicsPreferences;
+  }
+
   // ---- ---- ------ -------------------------------------- ------------------------
   // File Type Aux Name Description
   // ---- ---- ------ -------------------------------------- ------------------------
