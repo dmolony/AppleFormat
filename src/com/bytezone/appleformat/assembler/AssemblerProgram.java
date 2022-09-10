@@ -22,6 +22,8 @@ public class AssemblerProgram
 
   String name;
   byte[] buffer;
+  int offset;
+  int length;
 
   private final int loadAddress;
   private int executeOffset;
@@ -39,12 +41,19 @@ public class AssemblerProgram
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (String name, byte[] buffer, int address)
+  public AssemblerProgram (String name, byte[] buffer, int offset, int length, int address)
   // ---------------------------------------------------------------------------------//
   {
     this.name = name;
     this.buffer = buffer;
+    this.offset = offset;
+    this.length = length;
     this.loadAddress = address;
+
+    if (false)
+      System.out.printf (
+          "name: %s, buffer length: %04X, offset: %04X, length: %04X, address: %04X%n", name,
+          buffer.length, offset, length, address);
 
     if (equates == null)
       getEquates ();
@@ -53,10 +62,11 @@ public class AssemblerProgram
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (String name, byte[] buffer, int address, int executeOffset)
+  public AssemblerProgram (String name, byte[] buffer, int offset, int length, int address,
+      int executeOffset)
   // ---------------------------------------------------------------------------------//
   {
-    this (name, buffer, address);
+    this (name, buffer, offset, length, address);
     this.executeOffset = executeOffset;
   }
 
@@ -114,7 +124,7 @@ public class AssemblerProgram
   // ---------------------------------------------------------------------------------//
   {
     pgm.append (String.format ("Name    : %s%n", name));
-    pgm.append (String.format ("Length  : $%04X (%,d)%n", buffer.length, buffer.length));
+    pgm.append (String.format ("Length  : $%04X (%<,d)%n", length));
     pgm.append (String.format ("Load at : $%04X (%,d)%n", loadAddress, loadAddress));
 
     if (executeOffset > 0)
@@ -152,7 +162,7 @@ public class AssemblerProgram
 
     // if the assembly doesn't start at the beginning, just dump the bytes that
     // are skipped
-    for (int i = 0; i < executeOffset; i++)
+    for (int i = offset; i < executeOffset; i++)
       pgm.append (String.format ("    %04X: %02X%n", (loadAddress + i), buffer[i]));
 
     for (AssemblerStatement cmd : lines)
@@ -178,7 +188,7 @@ public class AssemblerProgram
         line.append (String.format ("$%04X", branch < 0 ? branch += 0xFFFF : branch));
       }
       else if (cmd.target > 0
-          && (cmd.target < loadAddress - 1 || cmd.target > (loadAddress + buffer.length)))
+          && (cmd.target < loadAddress - 1 || cmd.target > (loadAddress + length)))
       {
         while (line.length () < 40)
           line.append (" ");
@@ -226,25 +236,27 @@ public class AssemblerProgram
     Map<Integer, AssemblerStatement> linesMap = new HashMap<> ();
     List<Integer> targets = new ArrayList<> ();
 
-    int ptr = executeOffset;
+    int ptr = offset + executeOffset;
     int address = loadAddress + executeOffset;
 
-    while (ptr < buffer.length)
+    //    while (ptr < buffer.length)
+    int max = offset + length;
+    while (ptr < max)
     {
       AssemblerStatement cmd = new AssemblerStatement (buffer[ptr]);
       lines.add (cmd);
       linesMap.put (address, cmd);
       cmd.address = address;
 
-      if (cmd.size == 2 && ptr < buffer.length - 1)
+      if (cmd.size == 2 && ptr < max - 1)
         cmd.addData (buffer[ptr + 1]);
-      else if (cmd.size == 3 && ptr < buffer.length - 2)
+      else if (cmd.size == 3 && ptr < max - 2)
         cmd.addData (buffer[ptr + 1], buffer[ptr + 2]);
       else
         cmd.size = 1;
 
       // JMP, JMP, JSR
-      if (cmd.target >= loadAddress && cmd.target < (loadAddress + buffer.length)
+      if (cmd.target >= loadAddress && cmd.target < (loadAddress + max)
           && (cmd.value == 0x4C || cmd.value == 0x6C || cmd.value == 0x20))
         targets.add (cmd.target);
 
@@ -296,7 +308,8 @@ public class AssemblerProgram
     stringLocations = new ArrayList<> ();
 
     int start = 0;
-    for (int ptr = 0; ptr < buffer.length; ptr++)
+    int max = offset + length;
+    for (int ptr = offset; ptr < max; ptr++)
     {
       if ((buffer[ptr] & 0x80) != 0)                    // hi bit set
         continue;
@@ -313,7 +326,7 @@ public class AssemblerProgram
     if (buffer.length - start > 3)
       stringLocations.add (new StringLocation (start, buffer.length - 1));
 
-    int max = buffer.length - 2;
+    max = offset + length - 2;
     for (StringLocation stringLocation : stringLocations)
       for (int ptr = 0; ptr < max; ptr++)
         if (stringLocation.matches (buffer, ptr))

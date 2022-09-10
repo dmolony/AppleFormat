@@ -73,7 +73,8 @@ public class IntegerBasicProgram extends BasicProgram
       int remainingBytes = buffer.length - ptr - 5;
       byte[] newBuffer = new byte[remainingBytes];
       System.arraycopy (buffer, ptr + 4, newBuffer, 0, remainingBytes);
-      AssemblerProgram ap = new AssemblerProgram ("embedded", newBuffer, address);
+      AssemblerProgram ap =
+          new AssemblerProgram ("embedded", newBuffer, 0, newBuffer.length, address);
       pgm.append ("\n" + ap.getText () + "\n");
     }
 
