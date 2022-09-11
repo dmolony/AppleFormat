@@ -1,6 +1,8 @@
 package com.bytezone.appleformat.text;
 
+// -----------------------------------------------------------------------------------//
 public class TextFormatter
+// -----------------------------------------------------------------------------------//
 {
   Text text;
   TextPreferences textPreferences;

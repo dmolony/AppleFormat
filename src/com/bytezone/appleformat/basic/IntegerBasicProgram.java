@@ -32,14 +32,17 @@ public class IntegerBasicProgram extends BasicProgram
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder pgm = new StringBuilder ();
+
     pgm.append ("Name    : " + name + "\n");
-    pgm.append (String.format ("Length  : $%04X (%<,d)%n%n", buffer.length));
-    int ptr = 0;
+    pgm.append (String.format ("Length  : $%04X (%<,d)%n%n", length));
+
+    int ptr = offset;
+    int max = offset + length;
 
     boolean looksLikeAssembler = checkForAssembler ();      // this can probably go
     boolean looksLikeSCAssembler = checkForSCAssembler ();
 
-    while (ptr < buffer.length)
+    while (ptr < max)
     {
       int lineLength = buffer[ptr] & 0xFF;
       /*
@@ -47,7 +50,7 @@ public class IntegerBasicProgram extends BasicProgram
        * lines ending in 01 are Integer Basic programs.
        */
       int p2 = ptr + lineLength - 1;
-      if (p2 < 0 || p2 >= buffer.length || (buffer[p2] != 1 && buffer[p2] != 0))
+      if (p2 < 0 || p2 >= max || (buffer[p2] != 1 && buffer[p2] != 0))
       {
         pgm.append ("\nPossible assembler code follows\n");
         break;
@@ -67,10 +70,10 @@ public class IntegerBasicProgram extends BasicProgram
       ptr += lineLength;
     }
 
-    if ((ptr + 4) < buffer.length)
+    if ((ptr + 4) < max)
     {
       int address = Utility.intValue (buffer[ptr + 2], buffer[ptr + 3]);
-      int remainingBytes = buffer.length - ptr - 5;
+      int remainingBytes = max - ptr - 5;
       byte[] newBuffer = new byte[remainingBytes];
       System.arraycopy (buffer, ptr + 4, newBuffer, 0, remainingBytes);
       AssemblerProgram ap =
@@ -104,16 +107,17 @@ public class IntegerBasicProgram extends BasicProgram
   private boolean checkForAssembler ()
   // ---------------------------------------------------------------------------------//
   {
-    int ptr = 0;
+    int ptr = offset;
+    int max = offset + length;
 
-    while (ptr < buffer.length)
+    while (ptr < max)
     {
       int lineLength = buffer[ptr] & 0xFF;
       if (lineLength == 255)
         System.out.printf ("Line length %d%n", lineLength);
       int p2 = ptr + lineLength - 1;
 
-      if (p2 < 0 || p2 >= buffer.length || (buffer[p2] != 1 && buffer[p2] != 0))
+      if (p2 < 0 || p2 >= max || (buffer[p2] != 1 && buffer[p2] != 0))
         break;
       if (lineLength <= 0)                   // in case of looping bug
         break;
@@ -135,10 +139,12 @@ public class IntegerBasicProgram extends BasicProgram
       System.out.println ("Empty buffer array");
       return false;
     }
-    int lineLength = buffer[0] & 0xFF;
+
+    int lineLength = buffer[offset] & 0xFF;
     if (lineLength <= 0)
       return false;
-    return buffer[lineLength - 1] == 0;
+
+    return buffer[offset + lineLength - 1] == 0;
   }
 
   // ---------------------------------------------------------------------------------//
