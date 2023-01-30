@@ -2,7 +2,9 @@ package com.bytezone.appleformat;
 
 import javafx.scene.canvas.GraphicsContext;
 
+// -----------------------------------------------------------------------------------//
 public interface FormattedAppleFile
+// -----------------------------------------------------------------------------------//
 {
   public String getText ();
 

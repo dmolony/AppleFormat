@@ -8,38 +8,27 @@ public abstract class BasicProgram extends AbstractFormattedAppleFile
 {
   static BasicPreferences basicPreferences;     // set by MenuHandler
 
-  // ---------------------------------------------------------------------------------//
-  public static void setBasicPreferences (BasicPreferences basicPreferences)
-  // ---------------------------------------------------------------------------------//
-  {
-    BasicProgram.basicPreferences = basicPreferences;
-  }
+  //  protected final String name;
+  //  protected final byte[] buffer;
+  //  protected final int offset;
+  //  protected final int length;
 
   // ---------------------------------------------------------------------------------//
   public BasicProgram (String name, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
     super (name, buffer, offset, length);
+
+    //    this.name = name;
+    //    this.buffer = buffer;
+    //    this.offset = offset;
+    //    this.length = length;
   }
 
   // ---------------------------------------------------------------------------------//
-  public byte[] getBuffer ()
+  public static void setBasicPreferences (BasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
-    return buffer;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public int getOffset ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return offset;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public int getLength ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return length;
+    BasicProgram.basicPreferences = basicPreferences;
   }
 }

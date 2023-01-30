@@ -1,24 +1,20 @@
 package com.bytezone.appleformat;
 
+import com.bytezone.filesystem.AppleFile;
+
 import javafx.scene.canvas.GraphicsContext;
 
 // -----------------------------------------------------------------------------------//
-public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
+public class Catalog implements FormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  protected final String name;
-  protected final byte[] buffer;
-  protected final int offset;
-  protected final int length;
+  AppleFile appleFile;
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (String name, byte[] buffer, int offset, int length)
+  public Catalog (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this.name = name;
-    this.buffer = buffer;
-    this.offset = offset;
-    this.length = length;
+    this.appleFile = appleFile;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -26,7 +22,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    return "bollocks";
+    return appleFile.catalog ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -34,7 +30,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public void writeGraphics (GraphicsContext graphicsContext)
   // ---------------------------------------------------------------------------------//
   {
-
   }
 
   // ---------------------------------------------------------------------------------//
@@ -42,7 +37,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public String getHex ()
   // ---------------------------------------------------------------------------------//
   {
-    return "bollocks";
+    return "catalog hex";
   }
 
   // ---------------------------------------------------------------------------------//
@@ -50,27 +45,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public String getMeta ()
   // ---------------------------------------------------------------------------------//
   {
-    return "bollocks";
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public String getName ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return name;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public byte[] getBuffer ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return buffer;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public int getOffset ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return offset;
+    return "catalog meta";
   }
 }

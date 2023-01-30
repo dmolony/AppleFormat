@@ -17,12 +17,16 @@ import com.bytezone.filesystem.FsProdos;
 
 // -----------------------------------------------------------------------------------//
 public class FormattedAppleFileFactory
+// -----------------------------------------------------------------------------------//
 {
 
   // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
+    if (appleFile.isFileSystem () || appleFile.isFolder ())
+      return new Catalog (appleFile);
+
     AppleFileSystem fileSystem = appleFile.getFileSystem ();
 
     if (fileSystem instanceof FsDos)
@@ -54,18 +58,12 @@ public class FormattedAppleFileFactory
       case 1:
         int length = Utility.getShort (buffer, 0);
 
-        IntegerBasicProgram integerBasicProgram =
-            new IntegerBasicProgram (fileName, buffer, 2, length);
-
-        return integerBasicProgram;
+        return new IntegerBasicProgram (fileName, buffer, 2, length);
 
       case 2:
         length = Utility.getShort (buffer, 0);
 
-        ApplesoftBasicProgram applesoftBasicProgram =
-            new ApplesoftBasicProgram (fileName, buffer, 2, length);
-
-        return applesoftBasicProgram;
+        return new ApplesoftBasicProgram (fileName, buffer, 2, length);
 
       case 4:
       case 16:
@@ -73,9 +71,7 @@ public class FormattedAppleFileFactory
         int address = Utility.getShort (buffer, 0);
         length = Utility.getShort (buffer, 2);
 
-        AssemblerProgram assembler = new AssemblerProgram (fileName, buffer, 4, length, address);
-
-        return assembler;
+        return new AssemblerProgram (fileName, buffer, 4, length, address);
     }
 
     return null;
@@ -91,15 +87,11 @@ public class FormattedAppleFileFactory
     switch (file.getFileType ())
     {
       case 0x04:
-        Text text = new Text (fileName, buffer, 0, buffer.length);
-
-        return text;
+        return new Text (fileName, buffer, 0, buffer.length);
 
       case 0xFC:
         int length = file.getLength ();
-        ApplesoftBasicProgram basic = new ApplesoftBasicProgram (fileName, buffer, 0, length);
-
-        return basic;
+        return new ApplesoftBasicProgram (fileName, buffer, 0, length);
     }
 
     return null;
