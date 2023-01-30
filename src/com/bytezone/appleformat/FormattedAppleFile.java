@@ -1,12 +1,20 @@
 package com.bytezone.appleformat;
 
-public interface FormattedFile
+import javafx.scene.canvas.GraphicsContext;
+
+public interface FormattedAppleFile
 {
-  public String getFormattedText ();
+  public String getText ();
 
-  public String getAlternateText ();
+  //  public String getAlternateText ();
+  //
+  //  public String[] getFormattedLines ();
+  //
+  //  public String[] getAlternateLines ();
 
-  public String[] getFormattedLines ();
+  public void writeGraphics (GraphicsContext graphicsContext);
 
-  public String[] getAlternateLines ();
+  public String getHex ();
+
+  public String getMeta ();
 }

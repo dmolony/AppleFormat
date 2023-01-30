@@ -44,6 +44,7 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
   }
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {

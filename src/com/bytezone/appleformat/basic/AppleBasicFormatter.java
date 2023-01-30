@@ -42,7 +42,7 @@ public class AppleBasicFormatter extends BasicFormatter
       ptr = formatter.formatLine (currentLine, ptr);
 
       if (ptr != (linkField - loadAddress))
-        System.out.printf ("%s: ptr: %04X, nextLine: %04X%n", program.name, ptr + loadAddress,
+        System.out.printf ("%s: ptr: %04X, nextLine: %04X%n", program.getName (), ptr + loadAddress,
             linkField);
 
       currentLine.append (NEWLINE);

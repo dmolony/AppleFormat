@@ -9,21 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.basic.ApplesoftConstants;
 
 // -----------------------------------------------------------------------------------//
-public class AssemblerProgram
+public class AssemblerProgram extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   static AssemblerPreferences assemblerPreferences;     // set by MenuHandler
 
   private static Map<Integer, String> equates;
 
-  String name;
-  byte[] buffer;
-  int offset;
-  int length;
+  //  String name;
+  //  byte[] buffer;
+  //  int offset;
+  //  int length;
 
   private final int loadAddress;
   private int executeOffset;
@@ -44,10 +45,12 @@ public class AssemblerProgram
   public AssemblerProgram (String name, byte[] buffer, int offset, int length, int address)
   // ---------------------------------------------------------------------------------//
   {
-    this.name = name;
-    this.buffer = buffer;
-    this.offset = offset;
-    this.length = length;
+    super (name, buffer, offset, length);
+
+    //    this.name = name;
+    //    this.buffer = buffer;
+    //    this.offset = offset;
+    //    this.length = length;
     this.loadAddress = address;
 
     if (false)

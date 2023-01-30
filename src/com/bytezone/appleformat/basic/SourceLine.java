@@ -68,7 +68,7 @@ public class SourceLine implements ApplesoftConstants
             inRemark = true;
           else                                    //  mid-line - should be illegal
           {
-            System.out.printf ("%s : %5d mid-line REM token%n", program.name, lineNumber);
+            System.out.printf ("%s : %5d mid-line REM token%n", program.getName (), lineNumber);
             startPtr = addSubLine (startPtr, --ptr);    // point back to the REM
           }
           break;

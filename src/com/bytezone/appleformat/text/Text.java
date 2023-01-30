@@ -1,13 +1,15 @@
 package com.bytezone.appleformat.text;
 
+import com.bytezone.appleformat.AbstractFormattedAppleFile;
+
 // -----------------------------------------------------------------------------------//
-public class Text
+public class Text extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   static TextPreferences textPreferences;     // set by MenuHandler
 
-  String name;
-  byte[] buffer;
+  //  String name;
+  //  byte[] buffer;
   String output;
 
   private final TextFormatter textFormatter;
@@ -20,11 +22,12 @@ public class Text
   }
 
   // ---------------------------------------------------------------------------------//
-  public Text (String name, byte[] buffer)
+  public Text (String name, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    this.name = name;
-    this.buffer = buffer;
+    super (name, buffer, offset, length);
+    //    this.name = name;
+    //    this.buffer = buffer;
 
     textFormatter = new TextFormatter (this, textPreferences);
   }

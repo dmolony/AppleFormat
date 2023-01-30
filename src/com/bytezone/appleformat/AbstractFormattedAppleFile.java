@@ -1,45 +1,62 @@
-package com.bytezone.appleformat.basic;
+package com.bytezone.appleformat;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import javafx.scene.canvas.GraphicsContext;
 
 // -----------------------------------------------------------------------------------//
-public abstract class BasicProgram extends AbstractFormattedAppleFile
+public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  static BasicPreferences basicPreferences;     // set by MenuHandler
+  protected final String name;
+  protected final byte[] buffer;
+  protected final int offset;
+  protected final int length;
 
   // ---------------------------------------------------------------------------------//
-  public static void setBasicPreferences (BasicPreferences basicPreferences)
+  public AbstractFormattedAppleFile (String name, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    BasicProgram.basicPreferences = basicPreferences;
+    this.name = name;
+    this.buffer = buffer;
+    this.offset = offset;
+    this.length = length;
   }
 
   // ---------------------------------------------------------------------------------//
-  public BasicProgram (String name, byte[] buffer, int offset, int length)
+  public String getName ()
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    return name;
   }
 
   // ---------------------------------------------------------------------------------//
-  public byte[] getBuffer ()
+  @Override
+  public String getMeta ()
   // ---------------------------------------------------------------------------------//
   {
-    return buffer;
+    return "meta";
   }
 
   // ---------------------------------------------------------------------------------//
-  public int getOffset ()
+  @Override
+  public String getHex ()
   // ---------------------------------------------------------------------------------//
   {
-    return offset;
+    return "hex";
   }
 
   // ---------------------------------------------------------------------------------//
-  public int getLength ()
+  @Override
+  public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    return length;
+    return "text";
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public void writeGraphics (GraphicsContext graphicsContext)
+  // ---------------------------------------------------------------------------------//
+  {
+
   }
 }
