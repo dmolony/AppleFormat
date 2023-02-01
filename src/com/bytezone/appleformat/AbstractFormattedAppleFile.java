@@ -12,6 +12,13 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final int length;
 
   // ---------------------------------------------------------------------------------//
+  public AbstractFormattedAppleFile (String name, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    this (name, buffer, 0, buffer.length);
+  }
+
+  // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (String name, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
@@ -38,22 +45,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  public String getHex ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return "bollocks";
-  }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  public String getMeta ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return "bollocks";
-  }
-
-  // ---------------------------------------------------------------------------------//
   public String getName ()
   // ---------------------------------------------------------------------------------//
   {
@@ -61,6 +52,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public byte[] getBuffer ()
   // ---------------------------------------------------------------------------------//
   {
@@ -68,9 +60,18 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public int getOffset ()
   // ---------------------------------------------------------------------------------//
   {
     return offset;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public int getLength ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return length;
   }
 }

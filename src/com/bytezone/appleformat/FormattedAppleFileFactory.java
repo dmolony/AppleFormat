@@ -56,22 +56,15 @@ public class FormattedAppleFileFactory
         return text;
 
       case 1:
-        int length = Utility.getShort (buffer, 0);
-
-        return new IntegerBasicProgram (fileName, buffer, 2, length);
+        return new IntegerBasicProgram (fileName, buffer, 2, Utility.getShort (buffer, 0));
 
       case 2:
-        length = Utility.getShort (buffer, 0);
-
-        return new ApplesoftBasicProgram (fileName, buffer, 2, length);
+        return new ApplesoftBasicProgram (fileName, buffer, 2, Utility.getShort (buffer, 0));
 
       case 4:
       case 16:
-
-        int address = Utility.getShort (buffer, 0);
-        length = Utility.getShort (buffer, 2);
-
-        return new AssemblerProgram (fileName, buffer, 4, length, address);
+        return new AssemblerProgram (fileName, buffer, 4, Utility.getShort (buffer, 2),
+            Utility.getShort (buffer, 0));
     }
 
     return null;
@@ -90,8 +83,7 @@ public class FormattedAppleFileFactory
         return new Text (fileName, buffer, 0, buffer.length);
 
       case 0xFC:
-        int length = file.getLength ();
-        return new ApplesoftBasicProgram (fileName, buffer, 0, length);
+        return new ApplesoftBasicProgram (fileName, buffer, 0, file.getLength ());
     }
 
     return null;

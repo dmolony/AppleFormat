@@ -30,21 +30,31 @@ public class Catalog implements FormattedAppleFile
   public void writeGraphics (GraphicsContext graphicsContext)
   // ---------------------------------------------------------------------------------//
   {
+    System.out.println ("No can do in Catalog");
   }
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getHex ()
+  public byte[] getBuffer ()
   // ---------------------------------------------------------------------------------//
   {
-    return "catalog hex";
+    // return catalog blocks?
+    return null;
   }
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getMeta ()
+  public int getOffset ()
   // ---------------------------------------------------------------------------------//
   {
-    return "catalog meta";
+    return 0;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public int getLength ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return 0;
   }
 }

@@ -33,17 +33,25 @@ public class FileContainer implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getHex ()
+  public byte[] getBuffer ()
   // ---------------------------------------------------------------------------------//
   {
-    return "formatted apple file hex";
+    return formattedAppleFile.getBuffer ();
   }
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getMeta ()
+  public int getOffset ()
   // ---------------------------------------------------------------------------------//
   {
-    return "formatted apple file meta";
+    return formattedAppleFile.getOffset ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public int getLength ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return formattedAppleFile.getLength ();
   }
 }
