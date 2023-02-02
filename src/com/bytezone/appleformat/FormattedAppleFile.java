@@ -10,17 +10,7 @@ public interface FormattedAppleFile
 
   public String getExtras ();
 
-  //  public String getAlternateText ();
-  //
-  //  public String[] getFormattedLines ();
-  //
-  //  public String[] getAlternateLines ();
-
   public void writeGraphics (GraphicsContext graphicsContext);
-
-  //  public String getHex ();
-
-  //  public String getMeta ();
 
   public byte[] getBuffer ();
 

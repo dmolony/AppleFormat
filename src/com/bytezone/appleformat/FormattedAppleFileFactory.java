@@ -38,7 +38,7 @@ public class FormattedAppleFileFactory
     else if (fileSystem instanceof FsCpm)
       return getFormattedCpmFile ((FileCpm) appleFile);
 
-    return null;
+    return new DataFile (appleFile.getFileName (), appleFile.read ());
   }
 
   // ---------------------------------------------------------------------------------//
@@ -67,7 +67,7 @@ public class FormattedAppleFileFactory
             Utility.getShort (buffer, 0));
     }
 
-    return null;
+    return new DataFile (fileName, buffer);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -86,20 +86,26 @@ public class FormattedAppleFileFactory
         return new ApplesoftBasicProgram (fileName, buffer, 0, file.getLength ());
     }
 
-    return null;
+    return new DataFile (fileName, buffer);
   }
 
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile getFormattedPascalFile (FilePascal file)
   // ---------------------------------------------------------------------------------//
   {
-    return null;
+    byte[] buffer = file.read ();
+    String fileName = file.getFileName ();
+
+    return new DataFile (fileName, buffer);
   }
 
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile getFormattedCpmFile (FileCpm file)
   // ---------------------------------------------------------------------------------//
   {
-    return null;
+    byte[] buffer = file.read ();
+    String fileName = file.getFileName ();
+
+    return new DataFile (fileName, buffer);
   }
 }

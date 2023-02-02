@@ -33,7 +33,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    return "bollocks";
+    return "Unknown file type";
   }
 
   // ---------------------------------------------------------------------------------//
@@ -41,7 +41,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public String getExtras ()
   // ---------------------------------------------------------------------------------//
   {
-    return "bollocks 2";
+    return "no additional information";
   }
 
   // ---------------------------------------------------------------------------------//

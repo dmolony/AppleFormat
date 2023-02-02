@@ -21,14 +21,16 @@ public class TextFormatter
   public void append (StringBuilder text)
   // ---------------------------------------------------------------------------------//
   {
-
     int ptr = 0;
-    while (ptr < buffer.length && buffer[ptr] != 0x00)
+    while (ptr < buffer.length)
     {
+      int c = buffer[ptr++] & 0x7F;
+      if (c == 0x00)
+        break;
       String line = getLine (ptr);
       text.append (line + "\n");
       ptr += line.length () + 1;
-      if (ptr < buffer.length && buffer[ptr] == 0x0A)
+      if (ptr < buffer.length && (buffer[ptr] & 0x7F) == 0x0A)
         ptr++;
     }
   }
@@ -39,9 +41,13 @@ public class TextFormatter
   {
     StringBuilder line = new StringBuilder ();
 
-    // added check for 0x00 eol 17/01/17
-    while (ptr < buffer.length && buffer[ptr] != 0x0D && buffer[ptr] != 0x00)
-      line.append ((char) (buffer[ptr++] & 0x7F));
+    while (ptr < buffer.length)
+    {
+      int c = buffer[ptr++] & 0x7F;
+      if (c == 0x0D || c == 0x00)
+        break;
+      line.append ((char) c);
+    }
 
     return line.toString ();
   }
