@@ -25,6 +25,14 @@ public class FileContainer implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
+  public String getExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return formattedAppleFile.getExtras ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
   public void writeGraphics (GraphicsContext graphicsContext)
   // ---------------------------------------------------------------------------------//
   {

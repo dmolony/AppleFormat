@@ -38,6 +38,14 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
+  public String getExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return "bollocks 2";
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
   public void writeGraphics (GraphicsContext graphicsContext)
   // ---------------------------------------------------------------------------------//
   {

@@ -8,6 +8,8 @@ public interface FormattedAppleFile
 {
   public String getText ();
 
+  public String getExtras ();
+
   //  public String getAlternateText ();
   //
   //  public String[] getFormattedLines ();

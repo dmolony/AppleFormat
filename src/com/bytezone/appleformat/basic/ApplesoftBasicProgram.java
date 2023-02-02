@@ -53,12 +53,6 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
     if (basicPreferences.showHeader)
       headerFormatter.append (text);
 
-    if (showDebugText)
-    {
-      debugBasicFormatter.append (text);
-      return Utility.rtrim (text);
-    }
-
     if (sourceLines.size () == 0)
     {
       text.append ("\n\nThis page intentionally left blank");
@@ -69,6 +63,28 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
       userBasicFormatter.append (text);
     else
       appleBasicFormatter.append (text);
+
+    return Utility.rtrim (text);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String getExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    if (sourceLines.size () == 0)
+    {
+      text.append ("\n\nThis page intentionally left blank");
+      return text.toString ();
+    }
+
+    if (showDebugText)
+    {
+      debugBasicFormatter.append (text);
+      return Utility.rtrim (text);
+    }
 
     if (basicPreferences.showAllXref)
       xrefFormatter.append (text);

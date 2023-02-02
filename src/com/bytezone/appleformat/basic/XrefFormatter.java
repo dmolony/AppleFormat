@@ -180,7 +180,7 @@ public class XrefFormatter extends BasicFormatter
   private void heading (StringBuilder fullText, String format, String... heading)
   // ---------------------------------------------------------------------------------//
   {
-    if (fullText.charAt (fullText.length () - 2) != '\n')
+    if (fullText.length () >= 2 && fullText.charAt (fullText.length () - 2) != '\n')
       fullText.append (NEWLINE);
 
     fullText.append (String.format (format, underline));
