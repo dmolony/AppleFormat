@@ -5,15 +5,6 @@ import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.AppleFileSystem;
-import com.bytezone.filesystem.FileCpm;
-import com.bytezone.filesystem.FileDos;
-import com.bytezone.filesystem.FilePascal;
-import com.bytezone.filesystem.FileProdos;
-import com.bytezone.filesystem.FsCpm;
-import com.bytezone.filesystem.FsDos;
-import com.bytezone.filesystem.FsPascal;
-import com.bytezone.filesystem.FsProdos;
 
 // -----------------------------------------------------------------------------------//
 public class FormattedAppleFileFactory
@@ -27,85 +18,65 @@ public class FormattedAppleFileFactory
     if (appleFile.isFileSystem () || appleFile.isFolder ())
       return new Catalog (appleFile);
 
-    AppleFileSystem fileSystem = appleFile.getFileSystem ();
+    byte[] buffer = appleFile.read ();
+    String fileName = appleFile.getFileName ();
+    int type = appleFile.getFileType ();
 
-    if (fileSystem instanceof FsDos)
-      return getFormattedDosFile ((FileDos) appleFile);
-    else if (fileSystem instanceof FsProdos)
-      return getFormattedProdosFile ((FileProdos) appleFile);
-    else if (fileSystem instanceof FsPascal)
-      return getFormattedPascalFile ((FilePascal) appleFile);
-    else if (fileSystem instanceof FsCpm)
-      return getFormattedCpmFile ((FileCpm) appleFile);
-
-    return new DataFile (appleFile.getFileName (), appleFile.read ());
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedDosFile (FileDos file)
-  // ---------------------------------------------------------------------------------//
-  {
-    byte[] buffer = file.read ();
-    String fileName = file.getFileName ();
-
-    switch (file.getFileType ())
+    return switch (appleFile.getFileSystem ().getFileSystemType ())
     {
-      case 0:
-        Text text = new Text (fileName, buffer, 0, buffer.length);
-
-        return text;
-
-      case 1:
-        return new IntegerBasicProgram (fileName, buffer, 2, Utility.getShort (buffer, 0));
-
-      case 2:
-        return new ApplesoftBasicProgram (fileName, buffer, 2, Utility.getShort (buffer, 0));
-
-      case 4:
-      case 16:
-        return new AssemblerProgram (fileName, buffer, 4, Utility.getShort (buffer, 2),
-            Utility.getShort (buffer, 0));
-    }
-
-    return new DataFile (fileName, buffer);
+      case DOS -> getFormattedDosFile (fileName, type, buffer);
+      case PRODOS -> getFormattedProdosFile (fileName, type, buffer, appleFile.getLength ());
+      case PASCAL -> getFormattedPascalFile (fileName, type, buffer);
+      case CPM -> getFormattedCpmFile (fileName, type, buffer);
+      default -> new DataFile (fileName, buffer);
+    };
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedProdosFile (FileProdos file)
+  private FormattedAppleFile getFormattedDosFile (String fileName, int fileType, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = file.read ();
-    String fileName = file.getFileName ();
-
-    switch (file.getFileType ())
+    return switch (fileType)
     {
-      case 0x04:
-        return new Text (fileName, buffer, 0, buffer.length);
-
-      case 0xFC:
-        return new ApplesoftBasicProgram (fileName, buffer, 0, file.getLength ());
-    }
-
-    return new DataFile (fileName, buffer);
+      case 0 -> new Text (fileName, buffer, 0, buffer.length);
+      case 1 -> new IntegerBasicProgram (fileName, buffer, 2, Utility.getShort (buffer, 0));
+      case 2 -> new ApplesoftBasicProgram (fileName, buffer, 2, Utility.getShort (buffer, 0));
+      case 4, 16 -> new AssemblerProgram (fileName, buffer, 4, Utility.getShort (buffer, 2),
+          Utility.getShort (buffer, 0));
+      default -> new DataFile (fileName, buffer);
+    };
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedPascalFile (FilePascal file)
+  private FormattedAppleFile getFormattedProdosFile (String fileName, int fileType, byte[] buffer,
+      int length)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = file.read ();
-    String fileName = file.getFileName ();
-
-    return new DataFile (fileName, buffer);
+    return switch (fileType)
+    {
+      case 0x04 -> new Text (fileName, buffer, 0, buffer.length);
+      case 0xFC -> new ApplesoftBasicProgram (fileName, buffer, 0, length);
+      default -> new DataFile (fileName, buffer);
+    };
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedCpmFile (FileCpm file)
+  private FormattedAppleFile getFormattedPascalFile (String fileName, int fileType, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = file.read ();
-    String fileName = file.getFileName ();
+    return switch (fileType)
+    {
+      default -> new DataFile (fileName, buffer);
+    };
+  }
 
-    return new DataFile (fileName, buffer);
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile getFormattedCpmFile (String fileName, int fileType, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (fileType)
+    {
+      default -> new DataFile (fileName, buffer);
+    };
   }
 }
