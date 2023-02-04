@@ -3,6 +3,7 @@ package com.bytezone.appleformat;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
+import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleFile;
 
@@ -41,10 +42,25 @@ public class FormattedAppleFileFactory
       case 0 -> new Text (fileName, buffer, 0, buffer.length);
       case 1 -> new IntegerBasicProgram (fileName, buffer, 2, Utility.getShort (buffer, 0));
       case 2 -> new ApplesoftBasicProgram (fileName, buffer, 2, Utility.getShort (buffer, 0));
-      case 4, 16 -> new AssemblerProgram (fileName, buffer, 4, Utility.getShort (buffer, 2),
-          Utility.getShort (buffer, 0));
+      case 4, 16 -> checkBinary (fileName, fileType, buffer);
       default -> new DataFile (fileName, buffer);
     };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkBinary (String fileName, int fileType, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    if (buffer.length > 4)
+    {
+      int address = Utility.getShort (buffer, 0);
+      int length = Utility.getShort (buffer, 2);
+      if (ShapeTable.isShapeTable (buffer, 4, length))
+        return new ShapeTable (fileName, buffer, 4, length);
+
+      return new AssemblerProgram (fileName, buffer, 4, length, address);
+    }
+    return new DataFile (fileName, buffer);
   }
 
   // ---------------------------------------------------------------------------------//
