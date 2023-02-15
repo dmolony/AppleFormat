@@ -6,81 +6,107 @@ import java.util.List;
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 /*-
  *  Offset     Meaning
- *    0        # of shapes
- *    1        unused
- *    2-3      offset to shape #1 (S1)
- *    3-4      offset to shape #2 (S2)
- *    S1-S1+1  shape definition #1
- *    S1+n     last byte = 0
- *    S2-S2+1  shape definition #1
- *    S2+n     last byte = 0
+ *    0     # of shapes
+ *    2     offset to shape #1 (S1)
+ *    4     offset to shape #2 (S2)
+ *    S1    shape definition #1
+ *    S1+n  last byte = 0
+ *    S2    shape definition #1
+ *    S2+n  last byte = 0
  */
 
 // -----------------------------------------------------------------------------------//
 public class ShapeTable extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  private final List<Shape> shapes = new ArrayList<> ();
-  int maxWidth = 0;
-  int maxHeight = 0;
+  private final List<Integer> index;
+  private final List<Shape> shapes;
+
+  private final int maxShapeWidth;
+  private final int maxShapeHeight;
 
   // ---------------------------------------------------------------------------------//
   public ShapeTable (String name, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer);
+    super (name, buffer, offset, length);
 
-    int minRow = 200;
-    int minCol = 200;
-    int maxRow = 200;
-    int maxCol = 200;
+    int minY = Shape.ORIGIN;
+    int minX = Shape.ORIGIN;
+    int maxY = Shape.ORIGIN;
+    int maxX = Shape.ORIGIN;
 
     int totalShapes = Utility.getShort (buffer, offset);
+    index = new ArrayList<> (totalShapes);
+    shapes = new ArrayList<> (totalShapes);
+
     for (int i = 0; i < totalShapes; i++)
     {
-      Shape shape = new Shape (buffer, offset, length, i);
+      int indexOffset = offset + i * 2 + 2;
+      int shapeOffset = offset + Utility.getShort (buffer, indexOffset);
+
+      Shape shape = new Shape (buffer, shapeOffset, offset + length, i);
+
       if (!shape.valid)
         continue;                   // shape table should be abandoned
 
+      index.add (shapeOffset);
       shapes.add (shape);
 
-      minRow = Math.min (minRow, shape.minRow);
-      minCol = Math.min (minCol, shape.minCol);
-      maxRow = Math.max (maxRow, shape.maxRow);
-      maxCol = Math.max (maxCol, shape.maxCol);
+      minY = Math.min (minY, shape.minY);
+      minX = Math.min (minX, shape.minX);
+      maxY = Math.max (maxY, shape.maxY);
+      maxX = Math.max (maxX, shape.maxX);
     }
 
-    maxHeight = maxRow - minRow + 1;
-    maxWidth = maxCol - minCol + 1;
+    maxShapeHeight = maxY - minY + 1;
+    maxShapeWidth = maxX - minX + 1;
 
     for (Shape shape : shapes)
-      shape.convertGrid (minRow, minCol, maxHeight, maxWidth);
+      shape.convertGrid (minY, minX,              // offset coordinates
+          maxShapeHeight, maxShapeWidth);         // dimensions of new grid
+  }
 
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public void writeGraphics (GraphicsContext gc)
+  // ---------------------------------------------------------------------------------//
+  {
     int cols = (int) Math.sqrt (shapes.size ());
     int rows = (shapes.size () - 1) / cols + 1;
+    int pixelSize = 6;
 
-    //    image = new BufferedImage ((cols + 1) * (maxWidth + 5), (rows + 1) * (maxHeight + 5),
-    //        BufferedImage.TYPE_BYTE_GRAY);
-    //
-    //    int x = 10;
-    //    int y = 10;
-    //    int count = 0;
-    //    Graphics2D g2d = image.createGraphics ();
-    //    g2d.setComposite (AlphaComposite.getInstance (AlphaComposite.SRC_OVER, (float) 1.0));
-    //
-    //    for (Shape shape : shapes)
-    //    {
-    //      g2d.drawImage (shape.image, x, y, null);
-    //      x += maxWidth + 5;
-    //      if (++count % cols == 0)
-    //      {
-    //        x = 10;
-    //        y += maxHeight + 5;
-    //      }
-    //    }
-    //    g2d.dispose ();
+    Canvas canvas = gc.getCanvas ();
+
+    canvas.setHeight (rows * (pixelSize * maxShapeHeight + 10));
+    canvas.setWidth (cols * (pixelSize * maxShapeHeight + 10));
+
+    gc.setFill (Color.WHITE);
+    gc.fillRect (0, 0, canvas.getWidth (), canvas.getHeight ());
+    gc.setFill (Color.BLACK);
+
+    int x = 10;
+    int y = 10;
+    int count = 0;
+
+    for (Shape shape : shapes)
+    {
+      shape.draw (gc, x, y);
+
+      x += (maxShapeWidth + 1) * pixelSize;
+
+      if (++count % cols == 0)
+      {
+        x = 10;
+        y += (maxShapeHeight + 1) * pixelSize;
+      }
+    }
   }
 
   // ---------------------------------------------------------------------------------//
@@ -91,9 +117,9 @@ public class ShapeTable extends AbstractFormattedAppleFile
     StringBuilder text = new StringBuilder ();
 
     text.append (String.format ("File Name      : %s%n", name));
-    text.append (String.format ("File size      : %,d%n", buffer.length));
+    text.append (String.format ("File size      : %,d%n", length));
     text.append (String.format ("Total shapes   : %d%n", shapes.size ()));
-    text.append (String.format ("Max dimensions : %d x %d%n%n", maxWidth, maxHeight));
+    text.append (String.format ("Max dimensions : %d x %d%n%n", maxShapeWidth, maxShapeHeight));
 
     for (Shape shape : shapes)
     {

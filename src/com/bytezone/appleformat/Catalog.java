@@ -38,7 +38,7 @@ public class Catalog implements FormattedAppleFile
   public void writeGraphics (GraphicsContext graphicsContext)
   // ---------------------------------------------------------------------------------//
   {
-    System.out.println ("No can do in Catalog");
+    //    System.out.println ("No can do in Catalog");
   }
 
   // ---------------------------------------------------------------------------------//

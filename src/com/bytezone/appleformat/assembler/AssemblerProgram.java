@@ -136,6 +136,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
@@ -392,7 +393,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
       }
       in.close ();
     }
-    catch (IOException e)
+    catch (IOException | NumberFormatException e)
     {
       e.printStackTrace ();
     }

@@ -23,6 +23,9 @@ public class FormattedAppleFileFactory
     String fileName = appleFile.getFileName ();
     int type = appleFile.getFileType ();
 
+    if (appleFile.getFileSystem ().getFileSystemType () == null)         // unfinished - NuFX etc
+      return new DataFile (fileName, buffer);
+
     return switch (appleFile.getFileSystem ().getFileSystemType ())
     {
       case DOS -> getFormattedDosFile (fileName, type, buffer);
