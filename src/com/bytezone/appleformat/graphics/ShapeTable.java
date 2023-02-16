@@ -54,7 +54,10 @@ public class ShapeTable extends AbstractFormattedAppleFile
       Shape shape = new Shape (buffer, shapeOffset, offset + length, i);
 
       if (!shape.valid)
-        continue;                   // shape table should be abandoned
+      {
+        System.out.println ("Warning: shape ignored for plotting outside grid");
+        continue;
+      }
 
       index.add (shapeOffset);
       shapes.add (shape);
@@ -116,8 +119,6 @@ public class ShapeTable extends AbstractFormattedAppleFile
   {
     StringBuilder text = new StringBuilder ();
 
-    text.append (String.format ("File Name      : %s%n", name));
-    text.append (String.format ("File size      : %,d%n", length));
     text.append (String.format ("Total shapes   : %d%n", shapes.size ()));
     text.append (String.format ("Max dimensions : %d x %d%n%n", maxShapeWidth, maxShapeHeight));
 
@@ -131,18 +132,18 @@ public class ShapeTable extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public static boolean isShapeTable (byte[] buffer, int bufferOffset, int bufferLength)
+  public static boolean isShapeTable (byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    if (bufferLength < 2)
+    if (length < 2)
       return false;
 
-    int totalShapes = Utility.getSignedShort (buffer, bufferOffset);
+    int totalShapes = Utility.getSignedShort (buffer, offset);
     if (totalShapes <= 0)
       return false;
 
-    int min = bufferOffset + totalShapes * 2 + 2;       // skip index
-    int max = bufferOffset + bufferLength;
+    int min = offset + totalShapes * 2 + 2;       // skip index
+    int max = offset + length;
 
     if (min >= max)
       return false;
@@ -154,10 +155,13 @@ public class ShapeTable extends AbstractFormattedAppleFile
     // check each index entry points inside the file (and after the index)
     for (int i = 0; i < totalShapes; i++)
     {
-      int ptr = bufferOffset + Utility.getShort (buffer, bufferOffset + i * 2 + 2);
+      int ptr = offset + Utility.getShort (buffer, offset + i * 2 + 2);
+      //      System.out.printf ("%3d  %04X  %04X  %04X%n", i, min, ptr, max);
       if (ptr < min || ptr >= max)
         return false;
     }
+
+    // nibble0489.po SMALL.LETTERS is clearly a shape table, but some index entries are invalid
 
     return true;
   }

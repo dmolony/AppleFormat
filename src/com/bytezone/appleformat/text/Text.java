@@ -33,6 +33,7 @@ public class Text extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public byte[] getBuffer ()
   // ---------------------------------------------------------------------------------//
   {
@@ -40,6 +41,7 @@ public class Text extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
@@ -47,11 +49,11 @@ public class Text extends AbstractFormattedAppleFile
     {
       StringBuilder text = new StringBuilder ();
 
-      if (textPreferences.showHeader)
-      {
-        text.append ("Name : " + name + "\n");
-        text.append (String.format ("End of file   : %,8d%n%n", buffer.length));
-      }
+      //      if (textPreferences.showHeader)
+      //      {
+      //        text.append ("Name : " + name + "\n");
+      //        text.append (String.format ("End of file   : %,8d%n%n", length));
+      //      }
 
       textFormatter.append (text);
 

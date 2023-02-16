@@ -1,6 +1,10 @@
 package com.bytezone.appleformat;
 
+import com.bytezone.filesystem.AppleFile;
+
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 // -----------------------------------------------------------------------------------//
 public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
@@ -10,6 +14,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final byte[] buffer;
   protected final int offset;
   protected final int length;
+  protected AppleFile appleFile;          // optional, but nearly always there
 
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (String name, byte[] buffer)
@@ -30,6 +35,22 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
+  public void setAppleFile (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    this.appleFile = appleFile;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public AppleFile getAppleFile ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return appleFile;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
@@ -46,10 +67,15 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public void writeGraphics (GraphicsContext graphicsContext)
+  public void writeGraphics (GraphicsContext gc)
   // ---------------------------------------------------------------------------------//
   {
+    Canvas canvas = gc.getCanvas ();
+    canvas.setWidth (1);
+    canvas.setHeight (1);
 
+    gc.setFill (Color.WHITE);
+    gc.fillRect (0, 0, 1, 1);
   }
 
   // ---------------------------------------------------------------------------------//

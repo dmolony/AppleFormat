@@ -1,5 +1,7 @@
 package com.bytezone.appleformat;
 
+import com.bytezone.filesystem.AppleFile;
+
 import javafx.scene.canvas.GraphicsContext;
 
 // -----------------------------------------------------------------------------------//
@@ -17,4 +19,8 @@ public interface FormattedAppleFile
   public int getOffset ();
 
   public int getLength ();
+
+  public void setAppleFile (AppleFile appleFile);
+
+  public AppleFile getAppleFile ();
 }

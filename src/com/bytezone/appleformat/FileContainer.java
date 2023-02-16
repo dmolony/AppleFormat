@@ -1,5 +1,7 @@
 package com.bytezone.appleformat;
 
+import com.bytezone.filesystem.AppleFile;
+
 import javafx.scene.canvas.GraphicsContext;
 
 // -----------------------------------------------------------------------------------//
@@ -13,6 +15,21 @@ public class FileContainer implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     this.formattedAppleFile = formattedAppleFile;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public void setAppleFile (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public AppleFile getAppleFile ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return formattedAppleFile.getAppleFile ();
   }
 
   // ---------------------------------------------------------------------------------//

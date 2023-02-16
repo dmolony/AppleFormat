@@ -2,7 +2,9 @@ package com.bytezone.appleformat;
 
 import com.bytezone.filesystem.AppleFile;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 // -----------------------------------------------------------------------------------//
 public class Catalog implements FormattedAppleFile
@@ -14,7 +16,26 @@ public class Catalog implements FormattedAppleFile
   public Catalog (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
+    assert appleFile.isFileSystem () || appleFile.isFolder ();
+
     this.appleFile = appleFile;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public void setAppleFile (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    assert this.appleFile == appleFile;
+    //    this.appleFile = appleFile;       // pointless
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public AppleFile getAppleFile ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return appleFile;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -35,10 +56,16 @@ public class Catalog implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public void writeGraphics (GraphicsContext graphicsContext)
+  public void writeGraphics (GraphicsContext gc)
   // ---------------------------------------------------------------------------------//
   {
-    //    System.out.println ("No can do in Catalog");
+    Canvas canvas = gc.getCanvas ();
+
+    canvas.setWidth (1);
+    canvas.setHeight (1);
+
+    gc.setFill (Color.WHITE);
+    gc.fillRect (0, 0, 1, 1);
   }
 
   // ---------------------------------------------------------------------------------//

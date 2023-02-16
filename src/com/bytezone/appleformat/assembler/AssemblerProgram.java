@@ -142,8 +142,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   {
     StringBuilder pgm = new StringBuilder ();
 
-    if (assemblerPreferences.showHeader)
-      addHeader (pgm);
+    //    if (assemblerPreferences.showHeader)
+    //      addHeader (pgm);
 
     pgm.append (getListing ());
 

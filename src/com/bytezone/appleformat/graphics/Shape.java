@@ -98,7 +98,7 @@ class Shape
 
     actualLength = ptr - shapeOffset;
 
-    valid = true;
+    valid = true;         // all points are within grid
   }
 
   // ---------------------------------------------------------------------------------//
@@ -124,10 +124,7 @@ class Shape
     for (int row = 0; row < displayGrid.length; row++)
       for (int col = 0; col < displayGrid[0].length; col++)
       {
-        if (displayGrid[row][col] == 0)
-          gc.setFill (Color.ALICEBLUE);
-        else
-          gc.setFill (Color.GREEN);
+        gc.setFill (displayGrid[row][col] == 0 ? Color.ALICEBLUE : Color.GREEN);
         gc.fillRect (x + col * 6, y + row * 6, 5, 5);
       }
   }

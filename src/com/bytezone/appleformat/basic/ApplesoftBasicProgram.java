@@ -15,7 +15,7 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
   private final AppleBasicFormatter appleBasicFormatter;
   private final DebugBasicFormatter debugBasicFormatter;
   private final XrefFormatter xrefFormatter;
-  private final BasicHeaderFormatter headerFormatter;
+  //  private final BasicHeaderFormatter headerFormatter;
 
   boolean showDebugText;
   private int endPtr;
@@ -40,7 +40,7 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
     appleBasicFormatter = new AppleBasicFormatter (this, basicPreferences);
     debugBasicFormatter = new DebugBasicFormatter (this, basicPreferences);
     xrefFormatter = new XrefFormatter (this, basicPreferences);
-    headerFormatter = new BasicHeaderFormatter (this, basicPreferences);
+    //    headerFormatter = new BasicHeaderFormatter (this, basicPreferences);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -50,8 +50,8 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
   {
     StringBuilder text = new StringBuilder ();
 
-    if (basicPreferences.showHeader)
-      headerFormatter.append (text);
+    //    if (basicPreferences.showHeader)
+    //      headerFormatter.append (text);
 
     if (sourceLines.size () == 0)
     {
