@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  protected AppleFile appleFile;          // optional, but nearly always there
+  protected final AppleFile appleFile;
 
   protected final String name;
   protected final byte[] buffer;
@@ -33,7 +33,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     this.offset = offset;
     this.length = length;
 
-    name = appleFile == null ? "unknown" : appleFile.getFileName ();
+    name = appleFile.getFileName ();
   }
 
   // ---------------------------------------------------------------------------------//

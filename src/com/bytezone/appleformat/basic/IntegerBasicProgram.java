@@ -76,9 +76,10 @@ public class IntegerBasicProgram extends BasicProgram
     {
       int address = Utility.intValue (buffer[ptr + 2], buffer[ptr + 3]);
       int remainingBytes = max - ptr - 5;
-      byte[] newBuffer = new byte[remainingBytes];
-      System.arraycopy (buffer, ptr + 4, newBuffer, 0, remainingBytes);
-      AssemblerProgram ap = new AssemblerProgram (null, newBuffer, 0, newBuffer.length, address);
+      //      byte[] newBuffer = new byte[remainingBytes];
+      //      System.arraycopy (buffer, ptr + 4, newBuffer, 0, remainingBytes);
+      AssemblerProgram ap =
+          new AssemblerProgram (getAppleFile (), buffer, ptr + 4, remainingBytes, address);
       pgm.append ("\n" + ap.getText () + "\n");
     }
 
