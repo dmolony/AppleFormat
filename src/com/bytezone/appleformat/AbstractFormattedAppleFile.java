@@ -10,36 +10,39 @@ import javafx.scene.paint.Color;
 public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
+  protected AppleFile appleFile;          // optional, but nearly always there
+
   protected final String name;
   protected final byte[] buffer;
   protected final int offset;
   protected final int length;
-  protected AppleFile appleFile;          // optional, but nearly always there
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (String name, byte[] buffer)
+  public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    this (name, buffer, 0, buffer.length);
+    this (appleFile, buffer, 0, buffer.length);
   }
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (String name, byte[] buffer, int offset, int length)
-  // ---------------------------------------------------------------------------------//
-  {
-    this.name = name;
-    this.buffer = buffer;
-    this.offset = offset;
-    this.length = length;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  public void setAppleFile (AppleFile appleFile)
+  public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
     this.appleFile = appleFile;
+    this.buffer = buffer;
+    this.offset = offset;
+    this.length = length;
+
+    name = appleFile == null ? "unknown" : appleFile.getFileName ();
   }
+
+  // ---------------------------------------------------------------------------------//
+  //  @Override
+  //  public void setAppleFile (AppleFile appleFile)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    this.appleFile = appleFile;
+  //  }
 
   // ---------------------------------------------------------------------------------//
   @Override

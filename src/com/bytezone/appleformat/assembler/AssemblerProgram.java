@@ -12,6 +12,7 @@ import java.util.Map;
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.basic.ApplesoftConstants;
+import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
 public class AssemblerProgram extends AbstractFormattedAppleFile
@@ -42,15 +43,11 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (String name, byte[] buffer, int offset, int length, int address)
+  public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length, int address)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    super (appleFile, buffer, offset, length);
 
-    //    this.name = name;
-    //    this.buffer = buffer;
-    //    this.offset = offset;
-    //    this.length = length;
     this.loadAddress = address;
 
     if (false)
@@ -65,11 +62,11 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (String name, byte[] buffer, int offset, int length, int address,
+  public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length, int address,
       int executeOffset)
   // ---------------------------------------------------------------------------------//
   {
-    this (name, buffer, offset, length, address);
+    this (appleFile, buffer, offset, length, address);
     this.executeOffset = executeOffset;
   }
 

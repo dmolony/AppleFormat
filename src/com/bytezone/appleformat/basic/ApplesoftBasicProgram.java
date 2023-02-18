@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bytezone.appleformat.Utility;
+import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
 public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftConstants
@@ -21,10 +22,10 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
   private int endPtr;
 
   // ---------------------------------------------------------------------------------//
-  public ApplesoftBasicProgram (String name, byte[] buffer, int offset, int length)
+  public ApplesoftBasicProgram (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    super (appleFile, buffer, offset, length);
 
     int ptr = offset;
     while (buffer[ptr + 1] != 0)    // msb of link field

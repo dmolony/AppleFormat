@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
+import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -32,10 +33,10 @@ public class ShapeTable extends AbstractFormattedAppleFile
   private final int maxShapeHeight;
 
   // ---------------------------------------------------------------------------------//
-  public ShapeTable (String name, byte[] buffer, int offset, int length)
+  public ShapeTable (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    super (appleFile, buffer, offset, length);
 
     int minY = Shape.ORIGIN;
     int minX = Shape.ORIGIN;
@@ -81,9 +82,12 @@ public class ShapeTable extends AbstractFormattedAppleFile
   public void writeGraphics (GraphicsContext gc)
   // ---------------------------------------------------------------------------------//
   {
-    int cols = (int) Math.sqrt (shapes.size ());
+    int cols = (int) Math.sqrt (shapes.size ()) + 1;
     int rows = (shapes.size () - 1) / cols + 1;
+
     int pixelSize = 6;
+    int gapPicels = 2;
+    int inset = 10;
 
     Canvas canvas = gc.getCanvas ();
 
@@ -94,20 +98,20 @@ public class ShapeTable extends AbstractFormattedAppleFile
     gc.fillRect (0, 0, canvas.getWidth (), canvas.getHeight ());
     gc.setFill (Color.BLACK);
 
-    int x = 10;
-    int y = 10;
+    int x = inset;
+    int y = inset;
     int count = 0;
 
     for (Shape shape : shapes)
     {
       shape.draw (gc, x, y);
 
-      x += (maxShapeWidth + 1) * pixelSize;
+      x += (maxShapeWidth + gapPicels) * pixelSize;
 
       if (++count % cols == 0)
       {
-        x = 10;
-        y += (maxShapeHeight + 1) * pixelSize;
+        x = inset;
+        y += (maxShapeHeight + gapPicels) * pixelSize;
       }
     }
   }

@@ -1,5 +1,7 @@
 package com.bytezone.appleformat;
 
+import com.bytezone.filesystem.AppleFile;
+
 // -----------------------------------------------------------------------------------//
 public class DataFile extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
@@ -7,19 +9,19 @@ public class DataFile extends AbstractFormattedAppleFile
   int fileType;
 
   // ---------------------------------------------------------------------------------//
-  public DataFile (String name, int type, byte[] buffer)
+  public DataFile (AppleFile appleFile, int type, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer);
+    super (appleFile, buffer);
 
     this.fileType = type;
   }
 
   // ---------------------------------------------------------------------------------//
-  public DataFile (String name, byte[] buffer, int offset, int length, int type)
+  public DataFile (AppleFile appleFile, byte[] buffer, int offset, int length, int type)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    super (appleFile, buffer, offset, length);
 
     this.fileType = type;
   }

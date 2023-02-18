@@ -9,12 +9,14 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
+import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
-public abstract class HiResImage
+public abstract class HiResImage extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   static GraphicsPreferences graphicsPreferences;     // set by MenuHandler
@@ -28,14 +30,28 @@ public abstract class HiResImage
   static final int COLOR_TABLE_OFFSET_AUX_2 = 32_000;
   public static final int FADDEN_AUX = 0x8066;
 
-  String name;
-  byte[] buffer;
+  //  String name;
+  //  byte[] buffer;
   int loadAddress;
   protected BufferedImage image;
 
   private byte[] fourBuf = new byte[4];
   private ColorTable defaultColorTable320 = new ColorTable (0, 0x00);
   private ColorTable defaultColorTable640 = new ColorTable (0, 0x80);
+
+  static PaletteFactory paletteFactory = new PaletteFactory ();
+
+  static final byte[] pngHeader = { (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+
+  static boolean colourQuirks;
+  static boolean monochrome;
+
+  int fileType;
+  int auxType;
+  int eof;
+
+  int paletteIndex;
+  String failureReason = "";
 
   // ---------------------------------------------------------------------------------//
   public static void setGraphicsPreferences (GraphicsPreferences graphicsPreferences)
@@ -128,57 +144,48 @@ public abstract class HiResImage
   // . /1rKR6A_bVniSCtIP_rrv8QLWJdj4h6jEU1jJj0AebWwg/edit#gid=0
   // also - http://lukazi.blogspot.com/2017/03/double-high-resolution-graphics-dhgr.html
 
-  static PaletteFactory paletteFactory = new PaletteFactory ();
-
-  static final byte[] pngHeader = { (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
-
-  static boolean colourQuirks;
-  static boolean monochrome;
-
-  int fileType;
-  int auxType;
-  int eof;
-
-  int paletteIndex;
-  String failureReason = "";
-
   // ---------------------------------------------------------------------------------//
-  public HiResImage (String name, byte[] buffer)
+  public HiResImage (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    this.name = name;
-    this.buffer = buffer;
+    super (appleFile, buffer, offset, length);
+
+    //    this.name = name;
+    //    this.buffer = buffer;
+    eof = length;
   }
 
   // ---------------------------------------------------------------------------------//
-  public HiResImage (String name, byte[] buffer, int loadAddress)
+  public HiResImage (AppleFile appleFile, byte[] buffer, int offset, int length, int loadAddress)
   // ---------------------------------------------------------------------------------//
   {
-    this (name, buffer, loadAddress, false);
+    this (appleFile, buffer, offset, length, loadAddress, false);
   }
 
   // ---------------------------------------------------------------------------------//
-  public HiResImage (String name, byte[] buffer, int loadAddress, boolean scrunched)
+  public HiResImage (AppleFile appleFile, byte[] buffer, int offset, int length, int loadAddress,
+      boolean scrunched)
   // ---------------------------------------------------------------------------------//
   {
-    this (name, buffer);
+    this (appleFile, buffer, offset, length);
 
     this.loadAddress = loadAddress;         // for the disassembly listing
 
-    if (scrunched)
-      this.buffer = unscrunch (buffer);
+    //    if (scrunched)
+    //      this.buffer = unscrunch (buffer);
   }
 
   // ---------------------------------------------------------------------------------//
-  public HiResImage (String name, byte[] buffer, int fileType, int auxType, int eof)
-  // ---------------------------------------------------------------------------------//
-  {
-    this (name, buffer);
-
-    this.fileType = fileType;
-    this.auxType = auxType;
-    this.eof = eof;
-  }
+  //  public HiResImage (String name, byte[] buffer, int offset, int length, int fileType, int auxType,
+  //      int eof)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    this (name, buffer, offset, length);
+  //
+  //    this.fileType = fileType;
+  //    this.auxType = auxType;
+  //    this.eof = eof;
+  //  }
 
   // ---------------------------------------------------------------------------------//
   public boolean isAnimation ()
@@ -285,14 +292,21 @@ public abstract class HiResImage
   // also: https://groups.google.com/forum/#!topic/comp.sys.apple2/zYhZ5YdNNxQ
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    String auxText = "";
-    StringBuilder text = new StringBuilder ();
-    text.append (String.format ("Image File : %s%nFile type  : $%02X    %s%n", name, fileType,
-        ProdosConstants.fileTypes[fileType]));
+    if (appleFile == null)
+      return "AppleFile null";
 
+    StringBuilder text = new StringBuilder ();
+
+    text.append (String.format ("File system : %s%n", appleFile.getFileSystemType ()));
+    text.append (String.format ("File name   : %s%n", name));
+    text.append (String.format ("File type   : $%02X    %s%n", appleFile.getFileType (),
+        appleFile.getFileTypeText ()));
+
+    String auxText = "";
     switch (fileType)
     {
       case ProdosConstants.FILE_TYPE_FOT:          // 0x08
@@ -424,7 +438,7 @@ public abstract class HiResImage
   {
     int savePtr = newPtr;
 
-    while (ptr < max - 1)                 // minimum 2 bytes needed
+    while (ptr < max - 1)                           // minimum 2 bytes needed
     {
       int type = (buffer[ptr] & 0xC0) >>> 6;        // 0-3
       int count = (buffer[ptr++] & 0x3F) + 1;       // 1-64
@@ -461,7 +475,7 @@ public abstract class HiResImage
       }
     }
 
-    return newPtr - savePtr;          // bytes unpacked
+    return newPtr - savePtr;                        // bytes unpacked
   }
 
   // ---------------------------------------------------------------------------------//

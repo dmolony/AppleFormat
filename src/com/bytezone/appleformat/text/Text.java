@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.text;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
 public class Text extends AbstractFormattedAppleFile
@@ -22,10 +23,10 @@ public class Text extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public Text (String name, byte[] buffer, int offset, int length)
+  public Text (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    super (appleFile, buffer, offset, length);
     //    this.name = name;
     //    this.buffer = buffer;
 

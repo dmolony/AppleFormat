@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.basic;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
 public abstract class BasicProgram extends AbstractFormattedAppleFile
@@ -9,10 +10,10 @@ public abstract class BasicProgram extends AbstractFormattedAppleFile
   static BasicPreferences basicPreferences;     // set by MenuHandler
 
   // ---------------------------------------------------------------------------------//
-  public BasicProgram (String name, byte[] buffer, int offset, int length)
+  public BasicProgram (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    super (appleFile, buffer, offset, length);
   }
 
   // ---------------------------------------------------------------------------------//

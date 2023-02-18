@@ -20,7 +20,5 @@ public interface FormattedAppleFile
 
   public int getLength ();
 
-  public void setAppleFile (AppleFile appleFile);
-
   public AppleFile getAppleFile ();
 }

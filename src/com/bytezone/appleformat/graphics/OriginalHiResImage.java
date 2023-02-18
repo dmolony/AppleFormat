@@ -3,6 +3,8 @@ package com.bytezone.appleformat.graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 
+import com.bytezone.filesystem.AppleFile;
+
 // -----------------------------------------------------------------------------------//
 public class OriginalHiResImage extends HiResImage
 // -----------------------------------------------------------------------------------//
@@ -17,33 +19,32 @@ public class OriginalHiResImage extends HiResImage
   private final int[] colourBits = new int[280];
 
   // ---------------------------------------------------------------------------------//
-  public OriginalHiResImage (String name, byte[] buffer, int loadAddress)
+  public OriginalHiResImage (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, loadAddress);
+    super (appleFile, buffer, offset, length);
 
     createImage ();
   }
 
   // ---------------------------------------------------------------------------------//
-  public OriginalHiResImage (String name, byte[] buffer, int loadAddress,
-      boolean scrunched)
+  public OriginalHiResImage (AppleFile appleFile, byte[] buffer, int offset, int length,
+      int loadAddress)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, loadAddress, scrunched);
+    super (appleFile, buffer, offset, length, loadAddress);
 
     createImage ();
   }
 
   // ---------------------------------------------------------------------------------//
-  public OriginalHiResImage (String name, byte[] buffer, int fileType, int auxType,
-      int eof)
-  // ---------------------------------------------------------------------------------//
-  {
-    super (name, buffer, fileType, auxType, eof);
-
-    //    will call createImage () itself
-  }
+  //  public OriginalHiResImage (String name, byte[] buffer, int fileType, int auxType, int eof)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    super (name, buffer, fileType, auxType, eof);
+  //
+  //    //    will call createImage () itself
+  //  }
 
   // https://github.com/Michaelangel007/apple2_hgr_font_tutorial
   // hgr[ y ] = 0x2000 + (y/64)*0x28 + (y%8)*0x400 + ((y/8)&7)*0x80;
@@ -56,8 +57,10 @@ public class OriginalHiResImage extends HiResImage
   // ---------------------------------------------------------------------------------//
   {
     int rows = buffer.length <= 8192 ? 192 : 384;
+
     image = new BufferedImage (280, rows, BufferedImage.TYPE_BYTE_GRAY);
     DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
+
     int element = 0;
 
     for (int page = 0; page < rows / 192; page++)
@@ -86,10 +89,13 @@ public class OriginalHiResImage extends HiResImage
   protected void createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
+    System.out.println ("creating colour");
     paletteIndex = paletteFactory.getCurrentPaletteIndex ();
     int rows = buffer.length <= 8192 ? 192 : 384;
+
     image = new BufferedImage (280, rows, BufferedImage.TYPE_INT_RGB);
     DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
+
     int element = 0;
 
     for (int page = 0; page < rows / 192; page++)

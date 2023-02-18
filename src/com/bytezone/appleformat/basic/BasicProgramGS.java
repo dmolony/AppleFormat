@@ -5,7 +5,8 @@ import static com.bytezone.appleformat.Utility.isHighBitSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.appleformat.Utility;;
+import com.bytezone.appleformat.Utility;
+import com.bytezone.filesystem.AppleFile;;
 
 // -----------------------------------------------------------------------------------//
 public class BasicProgramGS extends BasicProgram
@@ -84,10 +85,10 @@ public class BasicProgramGS extends BasicProgram
   private final List<SourceLine> sourceLines = new ArrayList<> ();
 
   // ---------------------------------------------------------------------------------//
-  public BasicProgramGS (String name, byte[] buffer, int offset, int length)
+  public BasicProgramGS (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    super (appleFile, buffer, offset, length);
 
     // need to validate these files - seem to sometimes contain palette files
     // 0132 816-Paint.po
@@ -107,6 +108,7 @@ public class BasicProgramGS extends BasicProgram
   }
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {

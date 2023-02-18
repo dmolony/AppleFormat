@@ -3,6 +3,7 @@ package com.bytezone.appleformat.basic;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
+import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
 public class IntegerBasicProgram extends BasicProgram
@@ -21,13 +22,14 @@ public class IntegerBasicProgram extends BasicProgram
       "PR#", "IN#", };
 
   // ---------------------------------------------------------------------------------//
-  public IntegerBasicProgram (String name, byte[] buffer, int offset, int length)
+  public IntegerBasicProgram (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (name, buffer, offset, length);
+    super (appleFile, buffer, offset, length);
   }
 
   // ---------------------------------------------------------------------------------//
+  @Override
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
@@ -76,8 +78,7 @@ public class IntegerBasicProgram extends BasicProgram
       int remainingBytes = max - ptr - 5;
       byte[] newBuffer = new byte[remainingBytes];
       System.arraycopy (buffer, ptr + 4, newBuffer, 0, remainingBytes);
-      AssemblerProgram ap =
-          new AssemblerProgram ("embedded", newBuffer, 0, newBuffer.length, address);
+      AssemblerProgram ap = new AssemblerProgram (null, newBuffer, 0, newBuffer.length, address);
       pgm.append ("\n" + ap.getText () + "\n");
     }
 

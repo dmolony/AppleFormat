@@ -23,15 +23,6 @@ public class Catalog implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public void setAppleFile (AppleFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    assert this.appleFile == appleFile;
-    //    this.appleFile = appleFile;       // pointless
-  }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
   public AppleFile getAppleFile ()
   // ---------------------------------------------------------------------------------//
   {
