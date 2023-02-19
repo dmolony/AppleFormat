@@ -23,7 +23,7 @@ public class FormattedAppleFileFactory
 
     byte[] buffer = appleFile.read ();
     int type = appleFile.getFileType ();
-    FileSystemType fileSystemType = appleFile.getFileSystem ().getFileSystemType ();
+    FileSystemType fileSystemType = appleFile.getFileSystemType ();
 
     if (fileSystemType == null)         // shouldn't happen
     {

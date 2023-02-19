@@ -37,14 +37,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public void setAppleFile (AppleFile appleFile)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    this.appleFile = appleFile;
-  //  }
-
-  // ---------------------------------------------------------------------------------//
   @Override
   public AppleFile getAppleFile ()
   // ---------------------------------------------------------------------------------//
@@ -65,7 +57,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public String getExtras ()
   // ---------------------------------------------------------------------------------//
   {
-    return "no additional information";
+    return "No additional information";
   }
 
   // ---------------------------------------------------------------------------------//
