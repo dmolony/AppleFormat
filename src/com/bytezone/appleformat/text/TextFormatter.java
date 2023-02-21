@@ -24,8 +24,7 @@ public class TextFormatter
     int ptr = 0;
     while (ptr < buffer.length)
     {
-      int c = buffer[ptr++] & 0x7F;
-      if (c == 0x00)
+      if (buffer[ptr] == 0x00)
         break;
       String line = getLine (ptr);
       text.append (line + "\n");
