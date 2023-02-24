@@ -48,15 +48,18 @@ public class FormattedAppleFileFactory
     return switch (fileType)
     {
       case 0 -> new Text (appleFile, buffer, 0, buffer.length);
-      case 1 -> new IntegerBasicProgram (appleFile, buffer, 2, Utility.getShort (buffer, 0));
-      case 2 -> new ApplesoftBasicProgram (appleFile, buffer, 2, Utility.getShort (buffer, 0));
+      case 1 -> new IntegerBasicProgram (appleFile, buffer, 2,
+          Utility.getShort (buffer, 0));
+      case 2 -> new ApplesoftBasicProgram (appleFile, buffer, 2,
+          Utility.getShort (buffer, 0));
       case 4, 16 -> checkDosBinary (appleFile, fileType, buffer);
       default -> new DataFile (appleFile, fileType, buffer);
     };
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkDosBinary (FileDos appleFile, int fileType, byte[] buffer)
+  private FormattedAppleFile checkDosBinary (FileDos appleFile, int fileType,
+      byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     if (buffer.length <= 4)
@@ -92,7 +95,7 @@ public class FormattedAppleFileFactory
     {
       length = fork.getLength ();
       buffer = fork.read ();
-      auxType = fork.getParent ().getAuxType ();
+      auxType = fork.getParentFile ().getAuxType ();
     }
     else
     {
@@ -113,8 +116,8 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkProdosBinary (AppleFile appleFile, byte[] buffer, int length,
-      int aux)
+  private FormattedAppleFile checkProdosBinary (AppleFile appleFile, byte[] buffer,
+      int length, int aux)
   // ---------------------------------------------------------------------------------//
   {
     if (ShapeTable.isShapeTable (buffer, 0, length))
@@ -166,7 +169,8 @@ public class FormattedAppleFileFactory
   private boolean isScrunched (String name, int length)
   // ---------------------------------------------------------------------------------//
   {
-    if ((name.equals ("FLY LOGO") || name.equals ("FLY LOGO SCRUNCHED")) && length == 0x14FA)
+    if ((name.equals ("FLY LOGO") || name.equals ("FLY LOGO SCRUNCHED"))
+        && length == 0x14FA)
       return true;
 
     if (name.equals ("BBROS LOGO SCRUNCHED") && length == 0x0FED)
