@@ -12,6 +12,7 @@ import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FilePascal;
 import com.bytezone.filesystem.FileProdos;
+import com.bytezone.filesystem.ForkNuFX;
 import com.bytezone.filesystem.ForkProdos;
 
 // -----------------------------------------------------------------------------------//
@@ -31,7 +32,7 @@ public class FormattedAppleFileFactory
       case PRODOS -> getFormattedProdosFile (appleFile);
       case PASCAL -> getFormattedPascalFile ((FilePascal) appleFile);
       case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
-      case NUFX -> getFormattedNufxFile ((FileNuFX) appleFile);
+      case NUFX -> getFormattedNufxFile (appleFile);
       default -> new DataFile (appleFile, appleFile.getFileType (), appleFile.read ());
     };
 
@@ -93,13 +94,13 @@ public class FormattedAppleFileFactory
 
     if (appleFile instanceof ForkProdos fork)
     {
-      length = fork.getLength ();
+      length = fork.getFileLength ();
       buffer = fork.read ();
       auxType = fork.getParentFile ().getAuxType ();
     }
     else
     {
-      length = appleFile.getLength ();
+      length = appleFile.getFileLength ();
       buffer = appleFile.read ();
       auxType = ((FileProdos) appleFile).getAuxType ();
     }
@@ -153,16 +154,46 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedNufxFile (FileNuFX appleFile)
+  private FormattedAppleFile getFormattedNufxFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = appleFile.read ();
+    int fileSystemId = 0;
+    byte[] buffer = null;
+    int length = 0;
+
+    if (appleFile instanceof ForkNuFX fork)
+    {
+      fork.getFileSystemId ();
+      buffer = fork.read ();
+      length = fork.getFileLength ();
+    }
+    else
+    {
+      FileNuFX file = (FileNuFX) appleFile;
+      fileSystemId = file.getFileSystemId ();
+      buffer = file.read ();
+    }
+
     int fileType = appleFile.getFileType ();
 
-    return switch (fileType)
+    switch (fileSystemId)
     {
-      default -> new DataFile (appleFile, fileType, buffer);
-    };
+      case 1:                                     // Prodos/Sos
+        return switch (fileType)
+        {
+          case 4 -> new Text (appleFile, buffer, 0, length);
+          default -> new DataFile (appleFile, fileType, buffer, 0, length);
+        };
+
+      case 2:                                     // Dos 3.3
+      case 3:                                     // Dos 3.2
+      case 4:                                     // Pascal
+      case 8:                                     // CPM
+        return new DataFile (appleFile, fileType, buffer, 0, length);
+
+      default:
+        return new DataFile (appleFile, fileType, buffer, 0, length);
+    }
   }
 
   // ---------------------------------------------------------------------------------//

@@ -12,13 +12,11 @@ public class DataFile extends AbstractFormattedAppleFile
   public DataFile (AppleFile appleFile, int type, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
-
-    this.fileType = type;
+    this (appleFile, type, buffer, 0, buffer.length);
   }
 
   // ---------------------------------------------------------------------------------//
-  public DataFile (AppleFile appleFile, byte[] buffer, int offset, int length, int type)
+  public DataFile (AppleFile appleFile, int type, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
