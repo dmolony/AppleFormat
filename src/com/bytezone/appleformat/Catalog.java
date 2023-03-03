@@ -16,7 +16,7 @@ public class Catalog implements FormattedAppleFile
   public Catalog (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    assert appleFile.isFileSystem () || appleFile.isFolder () || appleFile.isForkedFile ();
+    assert appleFile.isContainer ();
 
     this.appleFile = appleFile;
   }
