@@ -23,7 +23,7 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    if (appleFile.isFileSystem () || appleFile.isFolder () || appleFile.isForkedFile ())
+    if (appleFile.isContainer ())
       return new Catalog (appleFile);
 
     FormattedAppleFile formattedAppleFile = switch (appleFile.getFileSystemType ())
@@ -112,6 +112,7 @@ public class FormattedAppleFileFactory
       case 0x04 -> new Text (appleFile, buffer, 0, length);
       case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
       case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
+      case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
       default -> new DataFile (appleFile, fileType, buffer);
     };
   }
