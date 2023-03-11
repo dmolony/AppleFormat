@@ -163,18 +163,9 @@ public class Catalog implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    text.append (getCatalog ());
-    return text.toString ();
-  }
 
-  // ---------------------------------------------------------------------------------//
-  public String getCatalog ()
-  // ---------------------------------------------------------------------------------//
-  {
     String underline = "- --- ---  ------------------------------  -----  -------------"
         + "  -- ----  -------------------\n";
-
-    StringBuilder text = new StringBuilder ();
 
     text.append ("L Typ Len  Name                            Addr"
         + "   Length         TS Data  Comment\n");
@@ -184,10 +175,9 @@ public class Catalog implements FormattedAppleFile
 
     for (AppleFile file : fs.getFiles ())
     {
-      String entry = getDetails ((FileDos) file);
       //      if (countEntries (fileEntry) > 1)
       //        entry += "** duplicate **";
-      text.append (entry);
+      text.append (getFileDetails ((FileDos) file));
       text.append ("\n");
     }
 
@@ -205,19 +195,14 @@ public class Catalog implements FormattedAppleFile
               + "Used sectors: %3d    Total sectors: %3d",
           freeSectors, totalSectors - freeSectors, totalSectors));
 
-    //    String volumeText = volumeNo == 0 ? "" : "Side " + volumeNo + " ";
-
-    //    return new DefaultAppleFileSource (volumeText + "DOS Volume " + dosVTOCSector.volume,
-    //        text.toString (), this);
     return text.toString ();
   }
 
   // ---------------------------------------------------------------------------------//
-  String getDetails (FileDos file)
+  String getFileDetails (FileDos file)
   // ---------------------------------------------------------------------------------//
   {
-    int actualSize = file.getTotalIndexSectors () + file.getTotalDataSectors ()
-        - file.getTextFileGaps ();
+    int actualSize = file.getTotalIndexSectors () + file.getTotalDataSectors ();
 
     String addressText =
         file.getAddress () == 0 ? "" : String.format ("$%4X", file.getAddress ());
@@ -230,15 +215,16 @@ public class Catalog implements FormattedAppleFile
 
     if (file.getSectorCount () != actualSize)
       message += "Actual size (" + actualSize + ") ";
-    if (file.getTotalDataSectors () == 0)
-      message += "No data ";
+    //    if (file.getTotalDataSectors () == 0)
+    //      message += "No data ";
     if (file.getSectorCount () > 999)
       message += "Reported " + file.getSectorCount ();
 
     String text = String.format ("%1s  %1s  %03d  %-30.30s  %-5s  %-13s %3d %3d   %s",
         lockedFlag, file.getFileTypeText (), file.getSectorCount () % 1000,
         file.getFileName (), addressText, lengthText, file.getTotalIndexSectors (),
-        (file.getTotalDataSectors () - file.getTextFileGaps ()), message.trim ());
+        file.getTotalDataSectors (), message.trim ());
+
     //    if (actualSize == 0)
     //      text = text.substring (0, 50);
 
