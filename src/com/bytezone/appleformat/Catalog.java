@@ -318,16 +318,19 @@ public class Catalog implements FormattedAppleFile
       return text.toString ();
     }
 
-    FsNuFX fs = (FsNuFX) appleFile;
+    if (appleFile instanceof FsNuFX fs)
+    {
+      //    FsNuFX fs = (FsNuFX) appleFile;
 
-    text.append (String.format (" %-15.15s Created:%-17s Mod:%-17s   Recs:%5d%n%n",
-        fs.getFileName (), fs.getCreated ().format2 (), fs.getModified ().format2 (),
-        fs.getFiles ().size ()));
+      text.append (String.format (" %-15.15s Created:%-17s Mod:%-17s   Recs:%5d%n%n",
+          fs.getFileName (), fs.getCreated ().format2 (), fs.getModified ().format2 (),
+          fs.getFiles ().size ()));
 
-    text.append (" Name                        Type Auxtyp Archived"
-        + "         Fmat Size Un-Length\n");
+      text.append (" Name                        Type Auxtyp Archived"
+          + "         Fmat Size Un-Length\n");
 
-    text.append (String.format ("%s%n", UNDERLINE_NUFX));
+      text.append (String.format ("%s%n", UNDERLINE_NUFX));
+    }
 
     int totalUncompressedSize = 0;
     int totalCompressedSize = 0;
@@ -336,8 +339,6 @@ public class Catalog implements FormattedAppleFile
     {
       if (file instanceof FileNuFX file2)
       {
-        //          FileNuFX file2 = (FileNuFX) file;       // could be a FS
-
         String lockedFlag = (file2.getAccess () | 0xC3) == 1 ? "+" : " ";
         String forkedFlag = file2.hasResource () ? "+" : " ";
 
@@ -361,13 +362,16 @@ public class Catalog implements FormattedAppleFile
         text.append (file.getFileName () + "\n");
     }
 
-    text.append (String.format ("%s%n", UNDERLINE_NUFX));
+    if (appleFile instanceof FsNuFX)
+    {
+      text.append (String.format ("%s%n", UNDERLINE_NUFX));
 
-    float pct = 0;
-    if (totalUncompressedSize > 0)
-      pct = totalCompressedSize * 100 / totalUncompressedSize;
-    text.append (String.format (" Uncomp:%7d  Comp:%7d  %%of orig:%3.0f%%%n%n",
-        totalUncompressedSize, totalCompressedSize, pct));
+      float pct = 0;
+      if (totalUncompressedSize > 0)
+        pct = totalCompressedSize * 100 / totalUncompressedSize;
+      text.append (String.format (" Uncomp:%7d  Comp:%7d  %%of orig:%3.0f%%%n%n",
+          totalUncompressedSize, totalCompressedSize, pct));
+    }
 
     return text.toString ();
   }
