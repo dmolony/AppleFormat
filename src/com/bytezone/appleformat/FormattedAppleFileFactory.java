@@ -7,6 +7,7 @@ import com.bytezone.appleformat.graphics.OriginalHiResImage;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.FileNuFX;
@@ -33,6 +34,7 @@ public class FormattedAppleFileFactory
       case PASCAL -> getFormattedPascalFile ((FilePascal) appleFile);
       case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
       case NUFX -> getFormattedNufxFile (appleFile);
+      case BIN2 -> getFormattedBin2File ((FileBinary2) appleFile);
       default -> new DataFile (appleFile, appleFile.getFileType (), appleFile.read ());
     };
 
@@ -155,34 +157,76 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile getFormattedBin2File (FileBinary2 appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] buffer = appleFile.read ();
+    int fileType = appleFile.getFileType ();
+    int length = appleFile.getEof ();
+    int auxType = appleFile.getAuxType ();
+
+    switch (appleFile.getOsType ())
+    {
+      case 0:                                           // Prodos
+        return switch (fileType)
+        {
+          case 0x04 -> new Text (appleFile, buffer, 0, length);
+          case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
+          case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
+          case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
+          default -> new DataFile (appleFile, fileType, buffer);
+        };
+
+      case 1:                                           // Dos 3.3
+      case 2:                                           // Dos 3.2 or 3.1
+        return new DataFile (appleFile, fileType, buffer);
+
+      case 3:                                           // Pascal
+        return new DataFile (appleFile, fileType, buffer);
+    }
+
+    return new DataFile (appleFile, fileType, buffer);
+  }
+
+  // ---------------------------------------------------------------------------------//
   private FormattedAppleFile getFormattedNufxFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     int fileSystemId = 0;
     byte[] buffer = null;
     int length = 0;
+    int auxType = 0;
 
     if (appleFile instanceof ForkNuFX fork)
     {
       fork.getFileSystemId ();
       buffer = fork.read ();
       length = fork.getFileLength ();
+      //      auxType = ???
     }
     else
     {
       FileNuFX file = (FileNuFX) appleFile;
       fileSystemId = file.getFileSystemId ();
       buffer = file.read ();
+      length = file.getFileLength ();
+      auxType = file.getAuxType ();
     }
 
     int fileType = appleFile.getFileType ();
+
+    if (buffer == null)
+      return new DataFile (appleFile, fileType, buffer, 0, 0);
 
     switch (fileSystemId)
     {
       case 1:                                     // Prodos/Sos
         return switch (fileType)
         {
-          case 4 -> new Text (appleFile, buffer, 0, length);
+          case 0x04 -> new Text (appleFile, buffer, 0, length);
+          case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
+          case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
+          case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
           default -> new DataFile (appleFile, fileType, buffer, 0, length);
         };
 

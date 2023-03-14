@@ -8,10 +8,14 @@ import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileDos;
+import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FilePascal;
 import com.bytezone.filesystem.FileProdos;
+import com.bytezone.filesystem.FolderProdos;
+import com.bytezone.filesystem.ForkProdos;
 import com.bytezone.filesystem.FsCpm;
 import com.bytezone.filesystem.FsDos;
+import com.bytezone.filesystem.FsNuFX;
 import com.bytezone.filesystem.FsPascal;
 import com.bytezone.filesystem.FsProdos;
 import com.bytezone.filesystem.ProdosConstants;
@@ -30,6 +34,10 @@ public class Catalog implements FormattedAppleFile
 
   private static final DateTimeFormatter dtf =
       DateTimeFormatter.ofLocalizedDate (FormatStyle.SHORT);
+
+  private static final String UNDERLINE_NUFX =
+      "------------------------------------------------------"
+          + "-----------------------";
 
   AppleFile appleFile;
 
@@ -67,6 +75,11 @@ public class Catalog implements FormattedAppleFile
       case ZIP -> getZipCatalog ();
       case LBR -> getLbrCatalog ();
       case NUFX -> getNuFXCatalog ();
+      case UNIDOS -> getUnidosCatalog ();
+      case HYBRID -> getHybridCatalog ();
+      case BIN2 -> getBin2Catalog ();
+      case WOZ1 -> getWoz1Catalog ();
+      case WOZ2 -> getWoz2Catalog ();
       default -> "dunno";
     };
   }
@@ -85,12 +98,6 @@ public class Catalog implements FormattedAppleFile
       case ProdosConstants.FILE_TYPE_PIC:
       case ProdosConstants.FILE_TYPE_FOT:
         return String.format ("A=$%4X", file.getAuxType ());
-
-      //      case FILE_TYPE_AWP:
-      //        int flags = Utility.intValue (buffer[i + 32], buffer[i + 31]);  // aux backwards!
-      //        if (flags != 0)
-      //          filename = convert (filename, flags);
-      //        break;
     }
 
     return "";
@@ -236,7 +243,11 @@ public class Catalog implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    text.append ("Still working on it");
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
     return text.toString ();
   }
 
@@ -245,7 +256,11 @@ public class Catalog implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    text.append ("Still working on it");
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
     return text.toString ();
   }
 
@@ -254,7 +269,11 @@ public class Catalog implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    text.append ("Still working on it");
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
     return text.toString ();
   }
 
@@ -263,7 +282,11 @@ public class Catalog implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    text.append ("Still working on it");
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
     return text.toString ();
   }
 
@@ -272,7 +295,11 @@ public class Catalog implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    text.append ("Still working on it");
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
     return text.toString ();
   }
 
@@ -281,7 +308,131 @@ public class Catalog implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    text.append ("Still working on it");
+    String threadFormats[] = { "unc", "sq ", "lz1", "lz2", "", "" };
+
+    if (appleFile instanceof FileNuFX)          // forked file
+    {
+      for (AppleFile file2 : appleFile.getFiles ())
+        text.append (file2.getFileName () + "\n");
+      //      System.out.println (appleFile);
+      return text.toString ();
+    }
+
+    FsNuFX fs = (FsNuFX) appleFile;
+
+    text.append (String.format (" %-15.15s Created:%-17s Mod:%-17s   Recs:%5d%n%n",
+        fs.getFileName (), fs.getCreated ().format2 (), fs.getModified ().format2 (),
+        fs.getFiles ().size ()));
+
+    text.append (" Name                        Type Auxtyp Archived"
+        + "         Fmat Size Un-Length\n");
+
+    text.append (String.format ("%s%n", UNDERLINE_NUFX));
+
+    int totalUncompressedSize = 0;
+    int totalCompressedSize = 0;
+
+    for (AppleFile file : appleFile.getFiles ())
+    {
+      if (file instanceof FileNuFX file2)
+      {
+        //          FileNuFX file2 = (FileNuFX) file;       // could be a FS
+
+        String lockedFlag = (file2.getAccess () | 0xC3) == 1 ? "+" : " ";
+        String forkedFlag = file2.hasResource () ? "+" : " ";
+
+        if (file2.hasDisk ())
+          return String.format ("%s%-27.27s %-4s %-6s %-15s  %s  %3.0f%%   %7d%n",
+              lockedFlag, file.getFileName (), "Disk",
+              (file2.getUncompressedSize () / 1024) + "k",
+              file2.getArchived ().format2 (), threadFormats[file2.getThreadFormat ()],
+              file2.getCompressedPct (), file2.getUncompressedSize ());
+        else
+          text.append (String.format ("%s%-27.27s %s%s $%04X  %-15s  %s  %3.0f%%   %7d%n",
+              lockedFlag, file2.getFullFileName (), file.getFileTypeText (), forkedFlag,
+              file2.getAuxType (), file2.getArchived ().format2 (),
+              threadFormats[file2.getThreadFormat ()], file2.getCompressedPct (),
+              file2.getUncompressedSize ()));
+
+        totalUncompressedSize += file2.getUncompressedSize ();
+        totalCompressedSize += file2.getCompressedSize ();
+      }
+      else
+        text.append (file.getFileName () + "\n");
+    }
+
+    text.append (String.format ("%s%n", UNDERLINE_NUFX));
+
+    float pct = 0;
+    if (totalUncompressedSize > 0)
+      pct = totalCompressedSize * 100 / totalUncompressedSize;
+    text.append (String.format (" Uncomp:%7d  Comp:%7d  %%of orig:%3.0f%%%n%n",
+        totalUncompressedSize, totalCompressedSize, pct));
+
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public String getHybridCatalog ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public String getUnidosCatalog ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (String.format ("%s%n", file.getFileName ()));
+
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public String getBin2Catalog ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public String getWoz1Catalog ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public String getWoz2Catalog ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    for (AppleFile file : appleFile.getFiles ())
+      text.append (
+          String.format ("%-15s %s%n", file.getFileName (), file.getFileSystemType ()));
+
     return text.toString ();
   }
 
@@ -294,7 +445,7 @@ public class Catalog implements FormattedAppleFile
 
     if (appleFile.isFileSystem ())
     {
-      fs = (FsProdos) appleFile;     // could be FolderProdos!!
+      fs = (FsProdos) appleFile;
       String root = appleFile.isFileSystem () ? "/" : "";
       text.append (root + fs.getVolumeName () + "\n\n");
     }
@@ -306,10 +457,33 @@ public class Catalog implements FormattedAppleFile
 
     for (AppleFile file : appleFile.getFiles ())
     {
-      if (file.isFile ())
+      if (file.isFileSystem ())                             // LBR or PAR
+        file = ((AppleFileSystem) file).getAppleFile ();
+
+      if (file.isFork ())
       {
-        LocalDateTime created = ((FileProdos) file).getCreated ();
-        LocalDateTime modified = ((FileProdos) file).getModified ();
+        FileProdos parent = ((ForkProdos) file).getParentFile ();
+
+        LocalDateTime created = parent.getCreated ();
+        LocalDateTime modified = parent.getModified ();
+
+        String dateCreated = created == null ? NO_DATE : created.format (sdf);
+        String timeCreated = created == null ? "" : created.format (stf);
+        String dateModified = modified == null ? NO_DATE : modified.format (sdf);
+        String timeModified = modified == null ? "" : modified.format (stf);
+
+        text.append (String.format (" %-15s       %5d  %9s %5s  %9s %5s %8d%n",
+            file.getFileName (), file.getTotalBlocks (), dateModified, timeModified,
+            dateCreated, timeCreated, file.getFileLength (), file.getFileLength ()));
+      }
+      else if (file.isFile ())
+      {
+        FileProdos prodos = (FileProdos) file;
+
+        LocalDateTime created = prodos.getCreated ();
+        LocalDateTime modified = prodos.getModified ();
+
+        int fileLength = file.isForkedFile () ? 0 : file.getFileLength ();
 
         String dateCreated = created == null ? NO_DATE : created.format (sdf);
         String timeCreated = created == null ? "" : created.format (stf);
@@ -318,23 +492,27 @@ public class Catalog implements FormattedAppleFile
 
         String forkFlag = file.isForkedFile () ? "+" : " ";
 
-        text.append (
-            String.format ("%s%-15s %3s%s  %5d  %9s %5s  %9s %5s %8d %7s    %04X%n",
-                file.isLocked () ? "*" : " ", file.getFileName (),
-                file.getFileTypeText (), forkFlag, file.getTotalBlocks (), dateModified,
-                timeModified, dateCreated, timeCreated, file.getFileLength (),
-                getSubType ((FileProdos) file), ((FileProdos) file).getAuxType ()));
+        text.append (String.format (
+            "%s%-15s %3s%s  %5d  %9s %5s  %9s %5s %8d %7s    %04X%n",
+            file.isLocked () ? "*" : " ", file.getFileName (), file.getFileTypeText (),
+            forkFlag, file.getTotalBlocks (), dateModified, timeModified, dateCreated,
+            timeCreated, fileLength, getSubType (prodos), prodos.getAuxType ()));
       }
       else if (file.isFolder ())
       {
-        text.append (file.getFileName () + "\n");
+        LocalDateTime created = ((FolderProdos) file).getCreated ();
+        LocalDateTime modified = ((FolderProdos) file).getModified ();
+
+        String dateCreated = created == null ? NO_DATE : created.format (sdf);
+        String timeCreated = created == null ? "" : created.format (stf);
+        String dateModified = modified == null ? NO_DATE : modified.format (sdf);
+        String timeModified = modified == null ? "" : modified.format (stf);
+
+        text.append (String.format ("%s%-15s %3s   %5d  %9s %5s  %9s %5s %8d %n",
+            file.isLocked () ? "*" : " ", file.getFileName (), file.getFileTypeText (),
+            file.getTotalBlocks (), dateModified, timeModified, dateCreated, timeCreated,
+            file.getFileLength ()));
       }
-      else if (file.isForkedFile ())
-      {
-        text.append (file.getFileName () + "\n");
-      }
-      else if (file.isFileSystem ())
-        text.append (((AppleFileSystem) file).getAppleFile ().getFileName () + "\n");
     }
 
     int totalBlocks = fs.getTotalBlocks ();

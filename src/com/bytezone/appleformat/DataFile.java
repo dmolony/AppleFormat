@@ -29,6 +29,9 @@ public class DataFile extends AbstractFormattedAppleFile
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
+    if (buffer == null)
+      return "This file has no data\n\n" + appleFile.getErrorMessage ();
+
     return "File type: " + fileType;
   }
 }
