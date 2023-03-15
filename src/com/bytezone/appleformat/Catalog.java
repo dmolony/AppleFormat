@@ -32,6 +32,7 @@ public class Catalog implements FormattedAppleFile
   private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern ("d-LLL-yy");
   private static final DateTimeFormatter stf = DateTimeFormatter.ofPattern ("H:mm");
   private static final String NO_DATE = "<NO DATE>";
+  private static final String[] threadFormats = { "unc", "sq ", "lz1", "lz2", "", "" };
 
   private static final DateTimeFormatter dtf =
       DateTimeFormatter.ofLocalizedDate (FormatStyle.SHORT);
@@ -309,19 +310,18 @@ public class Catalog implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    String threadFormats[] = { "unc", "sq ", "lz1", "lz2", "", "" };
 
     if (appleFile instanceof FileNuFX)          // forked file
     {
       for (AppleFile file2 : appleFile.getFiles ())
-        text.append (file2.getFileName () + "\n");
+        text.append (file2.getFileName () + "(fork) \n");
       return text.toString ();
     }
 
     if (appleFile instanceof FolderNuFX)
     {
       for (AppleFile file2 : appleFile.getFiles ())
-        text.append (file2.getFileName () + "\n");
+        text.append (getNuFXLine ((FileNuFX) file2));
       return text.toString ();
     }
 
@@ -344,27 +344,20 @@ public class Catalog implements FormattedAppleFile
     {
       if (file instanceof FileNuFX file2)
       {
-        String lockedFlag = (file2.getAccess () | 0xC3) == 1 ? "+" : " ";
-        String forkedFlag = file2.hasResource () ? "+" : " ";
-
-        if (file2.hasDisk ())
-          return String.format ("%s%-27.27s %-4s %-6s %-15s  %s  %3.0f%%   %7d%n",
-              lockedFlag, file.getFileName (), "Disk",
-              (file2.getUncompressedSize () / 1024) + "k",
-              file2.getArchived ().format2 (), threadFormats[file2.getThreadFormat ()],
-              file2.getCompressedPct (), file2.getUncompressedSize ());
-        else
-          text.append (String.format ("%s%-27.27s %s%s $%04X  %-15s  %s  %3.0f%%   %7d%n",
-              lockedFlag, file2.getFullFileName (), file.getFileTypeText (), forkedFlag,
-              file2.getAuxType (), file2.getArchived ().format2 (),
-              threadFormats[file2.getThreadFormat ()], file2.getCompressedPct (),
-              file2.getUncompressedSize ()));
+        text.append (getNuFXLine (file2));
 
         totalUncompressedSize += file2.getUncompressedSize ();
         totalCompressedSize += file2.getCompressedSize ();
       }
+      else if (file.isFileSystem ())
+      {
+        FileNuFX file2 = (FileNuFX) ((AppleFileSystem) file).getAppleFile ();
+        text.append (getNuFXLine (file2));
+        totalUncompressedSize += file2.getUncompressedSize ();
+        totalCompressedSize += file2.getCompressedSize ();
+      }
       else
-        text.append (file.getFileName () + "\n");
+        text.append (file.getFileName () + " ??? \n");
     }
 
     if (appleFile instanceof FsNuFX)
@@ -379,6 +372,27 @@ public class Catalog implements FormattedAppleFile
     }
 
     return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private String getNuFXLine (FileNuFX file)
+  // ---------------------------------------------------------------------------------//
+  {
+    String lockedFlag = (file.getAccess () | 0xC3) == 1 ? "+" : " ";
+    String forkedFlag = file.hasResource () ? "+" : " ";
+
+    if (file.hasDisk ())
+      return String.format ("%s%-27.27s %-4s %-6s %-15s  %s  %3.0f%%   %7d%n", lockedFlag,
+          file.getFileName (), "Disk", (file.getUncompressedSize () / 1024) + "k",
+          file.getArchived ().format2 (), threadFormats[file.getThreadFormat ()],
+          file.getCompressedPct (), file.getUncompressedSize ());
+    else
+      return String.format ("%s%-27.27s %s%s $%04X  %-15s  %s  %3.0f%%   %7d%n",
+          lockedFlag, file.getFullFileName (), file.getFileTypeText (), forkedFlag,
+          file.getAuxType (), file.getArchived ().format2 (),
+          threadFormats[file.getThreadFormat ()], file.getCompressedPct (),
+          file.getUncompressedSize ());
+
   }
 
   // ---------------------------------------------------------------------------------//

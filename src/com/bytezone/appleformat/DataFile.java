@@ -32,6 +32,6 @@ public class DataFile extends AbstractFormattedAppleFile
     if (buffer == null)
       return "This file has no data\n\n" + appleFile.getErrorMessage ();
 
-    return "File type: " + fileType;
+    return String.format ("File type: %02X  %<,d", fileType);
   }
 }
