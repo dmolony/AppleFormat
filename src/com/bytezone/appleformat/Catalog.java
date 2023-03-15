@@ -11,6 +11,7 @@ import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FilePascal;
 import com.bytezone.filesystem.FileProdos;
+import com.bytezone.filesystem.FolderNuFX;
 import com.bytezone.filesystem.FolderProdos;
 import com.bytezone.filesystem.ForkProdos;
 import com.bytezone.filesystem.FsCpm;
@@ -314,14 +315,18 @@ public class Catalog implements FormattedAppleFile
     {
       for (AppleFile file2 : appleFile.getFiles ())
         text.append (file2.getFileName () + "\n");
-      //      System.out.println (appleFile);
+      return text.toString ();
+    }
+
+    if (appleFile instanceof FolderNuFX)
+    {
+      for (AppleFile file2 : appleFile.getFiles ())
+        text.append (file2.getFileName () + "\n");
       return text.toString ();
     }
 
     if (appleFile instanceof FsNuFX fs)
     {
-      //    FsNuFX fs = (FsNuFX) appleFile;
-
       text.append (String.format (" %-15.15s Created:%-17s Mod:%-17s   Recs:%5d%n%n",
           fs.getFileName (), fs.getCreated ().format2 (), fs.getModified ().format2 (),
           fs.getFiles ().size ()));
