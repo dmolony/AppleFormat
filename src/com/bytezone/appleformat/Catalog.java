@@ -11,7 +11,7 @@ import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FilePascal;
 import com.bytezone.filesystem.FileProdos;
-import com.bytezone.filesystem.FolderNuFX;
+import com.bytezone.filesystem.Folder;
 import com.bytezone.filesystem.FolderProdos;
 import com.bytezone.filesystem.ForkProdos;
 import com.bytezone.filesystem.FsCpm;
@@ -318,7 +318,7 @@ public class Catalog implements FormattedAppleFile
       return text.toString ();
     }
 
-    if (appleFile instanceof FolderNuFX)
+    if (appleFile instanceof Folder)
     {
       for (AppleFile file2 : appleFile.getFiles ())
         text.append (getNuFXLine ((FileNuFX) file2));
