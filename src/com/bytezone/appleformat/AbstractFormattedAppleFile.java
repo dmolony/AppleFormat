@@ -25,7 +25,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer, int offset,
+      int length)
   // ---------------------------------------------------------------------------------//
   {
     this.appleFile = appleFile;
@@ -37,12 +38,12 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  public AppleFile getAppleFile ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return appleFile;
-  }
+  //  @Override
+  //  public AppleFile getAppleFile ()
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    return appleFile;
+  //  }
 
   // ---------------------------------------------------------------------------------//
   @Override

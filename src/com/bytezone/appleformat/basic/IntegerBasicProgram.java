@@ -9,17 +9,18 @@ import com.bytezone.filesystem.AppleFile;
 public class IntegerBasicProgram extends BasicProgram
 // -----------------------------------------------------------------------------------//
 {
-  private static String[] tokens = { "?", "?", "?", " : ", "?", "?", "?", "?", "?", "?", "?", "?",
-      "CLR", "?", "?", "?", "HIMEM: ", "LOMEM: ", " + ", " - ", " * ", " / ", " = ", " # ", " >= ",
-      " > ", " <= ", " <> ", " < ", " AND ", " OR ", " MOD ", "^", "+", "(", ",", " THEN ",
-      " THEN ", ",", ",", "\"", "\"", "(", "!", "!", "(", "PEEK ", "RND ", "SGN", "ABS", "PDL",
-      "RNDX", "(", "+", "-", "NOT ", "(", "=", "#", "LEN(", "ASC(", "SCRN(", ",", "(", "$", "$",
-      "(", ", ", ",", ";", ";", ";", ",", ",", ",", "TEXT", "GR ", "CALL ", "DIM ", "DIM ", "TAB ",
-      "END", "INPUT ", "INPUT ", "INPUT ", "FOR ", " = ", " TO ", " STEP ", "NEXT ", ",", "RETURN",
-      "GOSUB ", "REM ", "LET ", "GOTO ", "IF ", "PRINT ", "PRINT ", "PRINT", "POKE ", ",", "COLOR=",
-      "PLOT", ",", "HLIN", ",", " AT ", "VLIN ", ",", " AT ", "VTAB ", " = ", " = ", ")", ")",
-      "LIST ", ",", "LIST ", "POP ", "NODSP ", "NODSP ", "NOTRACE ", "DSP ", "DSP ", "TRACE ",
-      "PR#", "IN#", };
+  private static String[] tokens = { "?", "?", "?", " : ", "?", "?", "?", "?", "?", "?",
+      "?", "?", "CLR", "?", "?", "?", "HIMEM: ", "LOMEM: ", " + ", " - ", " * ", " / ",
+      " = ", " # ", " >= ", " > ", " <= ", " <> ", " < ", " AND ", " OR ", " MOD ", "^",
+      "+", "(", ",", " THEN ", " THEN ", ",", ",", "\"", "\"", "(", "!", "!", "(",
+      "PEEK ", "RND ", "SGN", "ABS", "PDL", "RNDX", "(", "+", "-", "NOT ", "(", "=", "#",
+      "LEN(", "ASC(", "SCRN(", ",", "(", "$", "$", "(", ", ", ",", ";", ";", ";", ",",
+      ",", ",", "TEXT", "GR ", "CALL ", "DIM ", "DIM ", "TAB ", "END", "INPUT ", "INPUT ",
+      "INPUT ", "FOR ", " = ", " TO ", " STEP ", "NEXT ", ",", "RETURN", "GOSUB ", "REM ",
+      "LET ", "GOTO ", "IF ", "PRINT ", "PRINT ", "PRINT", "POKE ", ",", "COLOR=", "PLOT",
+      ",", "HLIN", ",", " AT ", "VLIN ", ",", " AT ", "VTAB ", " = ", " = ", ")", ")",
+      "LIST ", ",", "LIST ", "POP ", "NODSP ", "NODSP ", "NOTRACE ", "DSP ", "DSP ",
+      "TRACE ", "PR#", "IN#", };
 
   // ---------------------------------------------------------------------------------//
   public IntegerBasicProgram (AppleFile appleFile, byte[] buffer, int offset, int length)
@@ -79,7 +80,7 @@ public class IntegerBasicProgram extends BasicProgram
       //      byte[] newBuffer = new byte[remainingBytes];
       //      System.arraycopy (buffer, ptr + 4, newBuffer, 0, remainingBytes);
       AssemblerProgram ap =
-          new AssemblerProgram (getAppleFile (), buffer, ptr + 4, remainingBytes, address);
+          new AssemblerProgram (null, buffer, ptr + 4, remainingBytes, address);
       pgm.append ("\n" + ap.getText () + "\n");
     }
 
@@ -241,8 +242,8 @@ public class IntegerBasicProgram extends BasicProgram
     StringBuffer pgm = new StringBuffer ();
 
     pgm.append ("Name : " + name + "\n");
-    pgm.append (
-        "Length : $" + HexFormatter.format4 (buffer.length) + " (" + buffer.length + ")\n\n");
+    pgm.append ("Length : $" + HexFormatter.format4 (buffer.length) + " (" + buffer.length
+        + ")\n\n");
 
     int ptr = 0;
 

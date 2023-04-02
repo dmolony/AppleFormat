@@ -43,7 +43,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length, int address)
+  public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length,
+      int address)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
@@ -52,8 +53,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
 
     if (false)
       System.out.printf (
-          "name: %s, buffer length: %04X, offset: %04X, length: %04X, address: %04X%n", name,
-          buffer.length, offset, length, address);
+          "name: %s, buffer length: %04X, offset: %04X, length: %04X, address: %04X%n",
+          name, buffer.length, offset, length, address);
 
     if (equates == null)
       getEquates ();
@@ -62,8 +63,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length, int address,
-      int executeOffset)
+  public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length,
+      int address, int executeOffset)
   // ---------------------------------------------------------------------------------//
   {
     this (appleFile, buffer, offset, length, address);
@@ -95,8 +96,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     if (extraBuffer.length == 0)
       return text;
 
-    return text + "\n\nData outside actual buffer:\n\n"
-        + HexFormatter.format (extraBuffer, 0, extraBuffer.length, loadAddress + buffer.length);
+    return text + "\n\nData outside actual buffer:\n\n" + HexFormatter
+        .format (extraBuffer, 0, extraBuffer.length, loadAddress + buffer.length);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -171,7 +172,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
       StringBuilder line = new StringBuilder ();
 
       String arrowText = assemblerPreferences.showTargets ? getArrow (cmd) : "";
-      line.append (String.format ("%3.3s %04X: %02X ", arrowText, cmd.address, cmd.value));
+      line.append (
+          String.format ("%3.3s %04X: %02X ", arrowText, cmd.address, cmd.value));
 
       if (cmd.size > 1)
         line.append (String.format ("%02X ", cmd.operand1));
@@ -362,7 +364,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   private boolean isLocal (int target)
   // ---------------------------------------------------------------------------------//
   {
-    return target >= loadAddress && target < loadAddress + buffer.length + extraBuffer.length;
+    return target >= loadAddress
+        && target < loadAddress + buffer.length + extraBuffer.length;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -466,8 +469,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
 
     public String toStatisticsString ()
     {
-      return String.format ("%2d, %2d, %2d, %2d, %2d", digits, letters, punctuation, controlChars,
-          spaces);
+      return String.format ("%2d, %2d, %2d, %2d, %2d", digits, letters, punctuation,
+          controlChars, spaces);
     }
 
     @Override

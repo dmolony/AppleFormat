@@ -6,7 +6,9 @@ import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.graphics.OriginalHiResImage;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
+import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileDos;
@@ -24,8 +26,8 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    if (appleFile.isContainer ())
-      return new Catalog (appleFile);
+    if (appleFile instanceof AppleContainer container)
+      return new Catalog (container);
 
     FormattedAppleFile formattedAppleFile = switch (appleFile.getFileSystemType ())
     {
@@ -39,6 +41,16 @@ public class FormattedAppleFileFactory
     };
 
     return formattedAppleFile;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public FormattedAppleFile getFormattedAppleFile (AppleFileSystem appleFileSystem)
+  // ---------------------------------------------------------------------------------//
+  {
+    if (appleFileSystem instanceof AppleContainer container)
+      return new Catalog (container);
+
+    return null;
   }
 
   // ---------------------------------------------------------------------------------//
