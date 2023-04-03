@@ -29,6 +29,9 @@ public class FormattedAppleFileFactory
     if (appleFile instanceof AppleContainer container)
       return new Catalog (container);
 
+    if (appleFile.isEmbeddedFileSystem ())          // NuFX disk image
+      return new Catalog (appleFile.getEmbeddedFileSystem ());
+
     FormattedAppleFile formattedAppleFile = switch (appleFile.getFileSystemType ())
     {
       case DOS -> getFormattedDosFile ((FileDos) appleFile);
