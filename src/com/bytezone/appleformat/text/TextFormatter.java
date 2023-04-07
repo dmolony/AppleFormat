@@ -26,6 +26,7 @@ public class TextFormatter
     {
       if (buffer[ptr] == 0x00)
         break;
+
       String line = getLine (ptr);
       text.append (line + "\n");
       ptr += line.length () + 1;

@@ -1,6 +1,7 @@
 package com.bytezone.appleformat;
 
 import com.bytezone.filesystem.AppleContainer;
+import com.bytezone.filesystem.ForkedFile;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,29 +11,29 @@ import javafx.scene.paint.Color;
 public class Catalog implements FormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  AppleContainer appleFile;
+  AppleContainer container;
+  ForkedFile forkedFile;
 
   // ---------------------------------------------------------------------------------//
   public Catalog (AppleContainer appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this.appleFile = appleFile;
+    this.container = appleFile;
   }
 
   // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public AppleFile getAppleFile ()
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    return appleFile;
-  //  }
+  public Catalog (ForkedFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    this.forkedFile = appleFile;
+  }
 
   // ---------------------------------------------------------------------------------//
   @Override
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    return appleFile.getCatalog ();
+    return forkedFile != null ? forkedFile.getCatalog () : container.getCatalog ();
   }
 
   // ---------------------------------------------------------------------------------//

@@ -17,6 +17,7 @@ import com.bytezone.filesystem.FilePascal;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.ForkNuFX;
 import com.bytezone.filesystem.ForkProdos;
+import com.bytezone.filesystem.ForkedFile;
 
 // -----------------------------------------------------------------------------------//
 public class FormattedAppleFileFactory
@@ -29,8 +30,11 @@ public class FormattedAppleFileFactory
     if (appleFile instanceof AppleContainer container)
       return new Catalog (container);
 
-    if (appleFile.isEmbeddedFileSystem ())          // NuFX disk image
+    if (appleFile.isEmbeddedFileSystem ())
       return new Catalog (appleFile.getEmbeddedFileSystem ());
+
+    if (appleFile.isForkedFile ())
+      return new Catalog ((ForkedFile) appleFile);
 
     FormattedAppleFile formattedAppleFile = switch (appleFile.getFileSystemType ())
     {
@@ -50,10 +54,7 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFileSystem appleFileSystem)
   // ---------------------------------------------------------------------------------//
   {
-    if (appleFileSystem instanceof AppleContainer container)
-      return new Catalog (container);
-
-    return null;
+    return new Catalog (appleFileSystem);
   }
 
   // ---------------------------------------------------------------------------------//
