@@ -92,8 +92,9 @@ public class SubLine implements ApplesoftConstants
       else if (isEndOfLine (firstByte))          // empty subline
         return;
       else                                       // probably Beagle Bros 0D or 0A
-        System.out.printf ("%s unexpected bytes at line %5d:%n%s%n", sourceLine.program.getName (),
-            sourceLine.lineNumber, HexFormatter.formatNoHeader (buffer, startPtr, length));
+        System.out.printf ("%s unexpected bytes at line %5d:%n%s%n",
+            sourceLine.program.getName (), sourceLine.lineNumber,
+            HexFormatter.formatNoHeader (buffer, startPtr, length));
     }
 
     String var = "";
@@ -201,10 +202,13 @@ public class SubLine implements ApplesoftConstants
   private void checkFunction (String var, byte terminator)
   // ---------------------------------------------------------------------------------//
   {
-    assert terminator == ASCII_LEFT_BRACKET;
+    //  assert terminator == ASCII_LEFT_BRACKET : "Bad terminator: " + (char) terminator;
 
-    if (!functions.contains (var))
-      functions.add (var);
+    if (terminator == ASCII_LEFT_BRACKET)
+    {
+      if (!functions.contains (var))
+        functions.add (var);
+    }
   }
 
   // ---------------------------------------------------------------------------------//
@@ -313,7 +317,8 @@ public class SubLine implements ApplesoftConstants
         int rightBracket = getPosition (lineBuffer, leftBracket + 1, ASCII_RIGHT_BRACKET);
 
         functionName = new String (lineBuffer, 1, leftBracket - 1);
-        functionArgument = new String (lineBuffer, leftBracket + 1, rightBracket - leftBracket - 1);
+        functionArgument =
+            new String (lineBuffer, leftBracket + 1, rightBracket - leftBracket - 1);
         functions.add (functionName);
 
         break;

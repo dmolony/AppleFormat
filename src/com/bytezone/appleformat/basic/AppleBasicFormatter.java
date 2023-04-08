@@ -15,7 +15,8 @@ public class AppleBasicFormatter extends BasicFormatter
   private final LineFormatter wrapFormatter = new WrapLine ();
 
   // ---------------------------------------------------------------------------------//
-  public AppleBasicFormatter (ApplesoftBasicProgram program, BasicPreferences basicPreferences)
+  public AppleBasicFormatter (ApplesoftBasicProgram program,
+      BasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (program, basicPreferences);
@@ -31,7 +32,8 @@ public class AppleBasicFormatter extends BasicFormatter
     int linkField;
 
     StringBuilder currentLine = new StringBuilder ();
-    LineFormatter formatter = basicPreferences.appleLineWrap ? wrapFormatter : flatFormatter;
+    LineFormatter formatter =
+        basicPreferences.appleLineWrap ? wrapFormatter : flatFormatter;
 
     while ((linkField = getShort (buffer, ptr)) != 0)
     {
@@ -42,8 +44,8 @@ public class AppleBasicFormatter extends BasicFormatter
       ptr = formatter.formatLine (currentLine, ptr);
 
       if (ptr != (linkField - loadAddress))
-        System.out.printf ("%s: ptr: %04X, nextLine: %04X%n", program.getName (), ptr + loadAddress,
-            linkField);
+        System.out.printf ("%s: ptr: %04X, nextLine: %04X%n", program.getName (),
+            ptr + loadAddress, linkField);
 
       currentLine.append (NEWLINE);
       fullText.append (currentLine);
