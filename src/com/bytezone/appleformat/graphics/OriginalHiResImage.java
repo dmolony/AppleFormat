@@ -90,6 +90,7 @@ public class OriginalHiResImage extends HiResImage
   // ---------------------------------------------------------------------------------//
   {
     System.out.println ("creating colour");
+
     paletteIndex = paletteFactory.getCurrentPaletteIndex ();
     int rows = buffer.length <= 8192 ? 192 : 384;
 
