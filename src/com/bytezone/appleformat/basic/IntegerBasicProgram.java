@@ -36,8 +36,8 @@ public class IntegerBasicProgram extends BasicProgram
   {
     StringBuilder pgm = new StringBuilder ();
 
-    pgm.append ("Name    : " + name + "\n");
-    pgm.append (String.format ("Length  : $%04X (%<,d)%n%n", length));
+    //    pgm.append ("Name    : " + name + "\n");
+    //    pgm.append (String.format ("Length  : $%04X (%<,d)%n%n", length));
 
     int ptr = offset;
     int max = offset + length;
@@ -80,7 +80,7 @@ public class IntegerBasicProgram extends BasicProgram
       //      byte[] newBuffer = new byte[remainingBytes];
       //      System.arraycopy (buffer, ptr + 4, newBuffer, 0, remainingBytes);
       AssemblerProgram ap =
-          new AssemblerProgram (null, buffer, ptr + 4, remainingBytes, address);
+          new AssemblerProgram (appleFile, buffer, ptr + 4, remainingBytes, address);
       pgm.append ("\n" + ap.getText () + "\n");
     }
 
@@ -241,9 +241,9 @@ public class IntegerBasicProgram extends BasicProgram
 
     StringBuffer pgm = new StringBuffer ();
 
-    pgm.append ("Name : " + name + "\n");
-    pgm.append ("Length : $" + HexFormatter.format4 (buffer.length) + " (" + buffer.length
-        + ")\n\n");
+    //    pgm.append ("Name : " + name + "\n");
+    //    pgm.append ("Length : $" + HexFormatter.format4 (buffer.length) + " (" + buffer.length
+    //        + ")\n\n");
 
     int ptr = 0;
 
