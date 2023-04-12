@@ -2,7 +2,9 @@ package com.bytezone.appleformat;
 
 import java.io.File;
 
+import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.ForkedFile;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,6 +22,39 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final byte[] buffer;
   protected final int offset;
   protected final int length;
+
+  protected final AppleContainer container;
+  protected final ForkedFile forkedFile;
+
+  // ---------------------------------------------------------------------------------//
+  public AbstractFormattedAppleFile (AppleContainer appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    this.container = appleFile;
+    name = "";
+
+    forkedFile = null;
+    this.appleFile = null;
+    this.buffer = null;
+    this.offset = 0;
+    this.length = 0;
+    localFile = null;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public AbstractFormattedAppleFile (ForkedFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    this.forkedFile = appleFile;
+    name = "";
+
+    container = null;
+    this.appleFile = null;
+    this.buffer = null;
+    this.offset = 0;
+    this.length = 0;
+    localFile = null;
+  }
 
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer)
@@ -41,6 +76,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     name = appleFile.getFileName ();
 
     localFile = null;
+    forkedFile = null;
+    container = null;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -51,6 +88,9 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     this.buffer = null;
     this.offset = 0;
     this.length = 0;
+
+    forkedFile = null;
+    container = null;
 
     name = localFile.getName ();
 
