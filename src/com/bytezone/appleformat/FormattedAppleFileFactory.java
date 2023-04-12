@@ -1,5 +1,7 @@
 package com.bytezone.appleformat;
 
+import java.io.File;
+
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
@@ -23,6 +25,13 @@ import com.bytezone.filesystem.ForkedFile;
 public class FormattedAppleFileFactory
 // -----------------------------------------------------------------------------------//
 {
+  // ---------------------------------------------------------------------------------//
+  public FormattedAppleFile getFormattedAppleFile (File localFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    return new LocalFolder (localFile);
+  }
+
   // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
