@@ -1,5 +1,7 @@
 package com.bytezone.appleformat;
 
+import java.io.File;
+
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.canvas.Canvas;
@@ -10,6 +12,8 @@ import javafx.scene.paint.Color;
 public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
+  protected final File localFile;
+
   protected final AppleFile appleFile;
 
   protected final String name;
@@ -35,15 +39,23 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     this.length = length;
 
     name = appleFile.getFileName ();
+
+    localFile = null;
   }
 
   // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public AppleFile getAppleFile ()
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    return appleFile;
-  //  }
+  public AbstractFormattedAppleFile (File localFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    this.appleFile = null;
+    this.buffer = null;
+    this.offset = 0;
+    this.length = 0;
+
+    name = localFile.getName ();
+
+    this.localFile = localFile;
+  }
 
   // ---------------------------------------------------------------------------------//
   @Override
