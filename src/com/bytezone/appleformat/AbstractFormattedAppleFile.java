@@ -6,9 +6,8 @@ import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.ForkedFile;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 
 // -----------------------------------------------------------------------------------//
 public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
@@ -25,6 +24,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   protected final AppleContainer container;
   protected final ForkedFile forkedFile;
+
+  protected final WritableImage emptyImage = new WritableImage (1, 1);
 
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (AppleContainer appleFile)
@@ -114,16 +115,24 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
+  //  @Override
+  //  public void writeGraphics (GraphicsContext gc)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    Canvas canvas = gc.getCanvas ();
+  //    canvas.setWidth (1);
+  //    canvas.setHeight (1);
+  //
+  //    gc.setFill (Color.WHITE);
+  //    gc.fillRect (0, 0, 1, 1);
+  //  }
+
+  // ---------------------------------------------------------------------------------//
   @Override
-  public void writeGraphics (GraphicsContext gc)
+  public Image writeImage ()
   // ---------------------------------------------------------------------------------//
   {
-    Canvas canvas = gc.getCanvas ();
-    canvas.setWidth (1);
-    canvas.setHeight (1);
-
-    gc.setFill (Color.WHITE);
-    gc.fillRect (0, 0, 1, 1);
+    return emptyImage;
   }
 
   // ---------------------------------------------------------------------------------//

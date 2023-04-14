@@ -5,7 +5,7 @@ import java.io.File;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
-import com.bytezone.appleformat.graphics.OriginalHiResImage;
+import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleContainer;
@@ -102,7 +102,7 @@ public class FormattedAppleFileFactory
     if (address == 0x2000 || address == 0x4000)
     {
       if (length > 0x1F00 && length <= 0x4000)
-        return new OriginalHiResImage (appleFile, buffer, 4, length, address);
+        return new AppleGraphics (appleFile, buffer, 4, length, address);
 
       //        if (isScrunched (fileName, length))
       //          return new OriginalHiResImage (fileName, buffer, address, true);
@@ -151,6 +151,12 @@ public class FormattedAppleFileFactory
   {
     if (ShapeTable.isShapeTable (buffer, 0, length))
       return new ShapeTable (appleFile, buffer, 0, length);
+
+    if (aux == 0x2000 || aux == 0x4000)
+    {
+      if (length > 0x1F00 && length <= 0x4000)
+        return new AppleGraphics (appleFile, buffer, 0, length, aux);
+    }
 
     return new AssemblerProgram (appleFile, buffer, 0, length, aux);
   }

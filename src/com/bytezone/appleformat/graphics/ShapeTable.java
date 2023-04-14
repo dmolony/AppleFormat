@@ -7,9 +7,9 @@ import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 
 /*-
  *  Offset     Meaning
@@ -79,24 +79,20 @@ public class ShapeTable extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public void writeGraphics (GraphicsContext gc)
+  public Image writeImage ()
   // ---------------------------------------------------------------------------------//
   {
     int cols = (int) Math.sqrt (shapes.size ()) + 1;
     int rows = (shapes.size () - 1) / cols + 1;
 
-    int pixelSize = 6;
-    int gapPicels = 2;
+    int gapPixels = 2;
     int inset = 10;
 
-    Canvas canvas = gc.getCanvas ();
+    WritableImage image = new WritableImage ( //
+        inset * 2 + cols * (maxShapeWidth + gapPixels) - gapPixels,
+        inset * 2 + rows * (maxShapeHeight + gapPixels) - gapPixels);
 
-    canvas.setHeight (rows * (pixelSize * maxShapeHeight + 10));
-    canvas.setWidth (cols * (pixelSize * maxShapeHeight + 10));
-
-    gc.setFill (Color.WHITE);
-    gc.fillRect (0, 0, canvas.getWidth (), canvas.getHeight ());
-    gc.setFill (Color.BLACK);
+    PixelWriter pw = image.getPixelWriter ();
 
     int x = inset;
     int y = inset;
@@ -104,16 +100,18 @@ public class ShapeTable extends AbstractFormattedAppleFile
 
     for (Shape shape : shapes)
     {
-      shape.draw (gc, x, y);
+      shape.draw (pw, x, y);
 
-      x += (maxShapeWidth + gapPicels) * pixelSize;
+      x += (maxShapeWidth + gapPixels);
 
       if (++count % cols == 0)
       {
         x = inset;
-        y += (maxShapeHeight + gapPicels) * pixelSize;
+        y += (maxShapeHeight + gapPixels);
       }
     }
+
+    return image;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -124,7 +122,8 @@ public class ShapeTable extends AbstractFormattedAppleFile
     StringBuilder text = new StringBuilder ();
 
     text.append (String.format ("Total shapes   : %d%n", shapes.size ()));
-    text.append (String.format ("Max dimensions : %d x %d%n%n", maxShapeWidth, maxShapeHeight));
+    text.append (
+        String.format ("Max dimensions : %d x %d%n%n", maxShapeWidth, maxShapeHeight));
 
     for (Shape shape : shapes)
     {
@@ -165,7 +164,8 @@ public class ShapeTable extends AbstractFormattedAppleFile
         return false;
     }
 
-    // nibble0489.po SMALL.LETTERS is clearly a shape table, but some index entries are invalid
+    // nibble0489.po SMALL.LETTERS is clearly a shape table, 
+    // but some index entries are invalid
 
     return true;
   }

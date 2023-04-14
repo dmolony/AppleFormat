@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.bytezone.appleformat.HexFormatter;
 
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
 // -----------------------------------------------------------------------------------//
@@ -118,14 +118,14 @@ class Shape
   }
 
   // ---------------------------------------------------------------------------------//
-  void draw (GraphicsContext gc, int x, int y)
+  void draw (PixelWriter pw, int x, int y)
   // ---------------------------------------------------------------------------------//
   {
     for (int row = 0; row < displayGrid.length; row++)
       for (int col = 0; col < displayGrid[0].length; col++)
       {
-        gc.setFill (displayGrid[row][col] == 0 ? Color.ALICEBLUE : Color.GREEN);
-        gc.fillRect (x + col * 6, y + row * 6, 5, 5);
+        Color color = displayGrid[row][col] == 0 ? Color.ALICEBLUE : Color.GREEN;
+        pw.setColor (x + col, y + row, color);
       }
   }
 
@@ -160,7 +160,8 @@ class Shape
 
     // append the shape's data
     int offset = shapeOffset;
-    for (String hexLine : split (HexFormatter.getHexString (buffer, shapeOffset, actualLength)))
+    for (String hexLine : split (
+        HexFormatter.getHexString (buffer, shapeOffset, actualLength)))
     {
       text.append (String.format ("  %04X : %s%n", offset, hexLine));
       offset += 16;
