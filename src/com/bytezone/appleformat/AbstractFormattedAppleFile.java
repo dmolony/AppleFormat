@@ -115,19 +115,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public void writeGraphics (GraphicsContext gc)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    Canvas canvas = gc.getCanvas ();
-  //    canvas.setWidth (1);
-  //    canvas.setHeight (1);
-  //
-  //    gc.setFill (Color.WHITE);
-  //    gc.fillRect (0, 0, 1, 1);
-  //  }
-
-  // ---------------------------------------------------------------------------------//
   @Override
   public Image getImage ()
   // ---------------------------------------------------------------------------------//

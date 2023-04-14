@@ -1,5 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
+import javafx.scene.paint.Color;
+
 // -----------------------------------------------------------------------------------//
 public class Palette
 // -----------------------------------------------------------------------------------//
@@ -32,14 +34,23 @@ public class Palette
    LR: Lo-Res   HR: Hi-Res   DHR: Double Hi-Res 
    */
   private final String name;
-  private final int[] colours;
+  private final Color[] colours = new Color[16];
 
   // ---------------------------------------------------------------------------------//
   public Palette (String name, int[] colours)
   // ---------------------------------------------------------------------------------//
   {
     this.name = name;
-    this.colours = colours;
+
+    int ptr = 0;
+    for (int colour : colours)
+    {
+      int r = (colour & 0xFF0000) >>> 16;
+      int g = (colour & 0x00FF00) >>> 8;
+      int b = (colour & 0x0000FF);
+
+      this.colours[ptr++] = Color.rgb (r, g, b);
+    }
   }
 
   // ---------------------------------------------------------------------------------//
@@ -50,7 +61,7 @@ public class Palette
   }
 
   // ---------------------------------------------------------------------------------//
-  public int[] getColours ()
+  public Color[] getColours ()
   // ---------------------------------------------------------------------------------//
   {
     return colours;
