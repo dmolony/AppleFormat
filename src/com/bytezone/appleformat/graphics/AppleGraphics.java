@@ -43,11 +43,12 @@ public class AppleGraphics extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     int rows = length <= 8192 ? 192 : 384;
+    int pages = rows / 192;
 
     WritableImage image = new WritableImage (280, rows);
     PixelWriter pw = image.getPixelWriter ();
 
-    for (int page = 0; page < rows / 192; page++)
+    for (int page = 0; page < pages; page++)
       for (int i = 0; i < 3; i++)
         for (int j = 0; j < 8; j++)
           for (int k = 0; k < 8; k++)
@@ -93,6 +94,7 @@ public class AppleGraphics extends AbstractFormattedAppleFile
           for (int k = 0; k < 8; k++)
           {
             fillLine (page * 0x2000 + i * 0x28 + j * 0x80 + k * 0x400 + offset);
+
             int x = 0;
             int y = page * 192 + i * 64 + j * 8 + k;
 
@@ -112,7 +114,6 @@ public class AppleGraphics extends AbstractFormattedAppleFile
 
     int max = Math.min (base + 40, offset + length);
     int linePtr = 0;
-    //    assert colourBits != null;
 
     for (int ptr = base; ptr < max; ptr++)
     {
