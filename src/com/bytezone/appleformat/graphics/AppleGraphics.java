@@ -71,7 +71,7 @@ public class AppleGraphics extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image writeImage ()
+  public Image getImage ()
   // ---------------------------------------------------------------------------------//
   {
     int rows = length <= 8192 ? 192 : 384;

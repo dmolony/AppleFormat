@@ -41,10 +41,10 @@ public class FileContainer implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image writeImage ()
+  public Image getImage ()
   // ---------------------------------------------------------------------------------//
   {
-    return formattedAppleFile.writeImage ();
+    return formattedAppleFile.getImage ();
   }
 
   // ---------------------------------------------------------------------------------//

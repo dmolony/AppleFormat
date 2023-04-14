@@ -10,9 +10,7 @@ public interface FormattedAppleFile
 
   public String getExtras ();
 
-  //  public void writeGraphics (GraphicsContext graphicsContext);
-
-  public Image writeImage ();
+  public Image getImage ();
 
   public byte[] getBuffer ();
 

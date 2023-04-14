@@ -129,7 +129,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image writeImage ()
+  public Image getImage ()
   // ---------------------------------------------------------------------------------//
   {
     return emptyImage;
