@@ -44,7 +44,8 @@ public class HexFormatter
   }
 
   // ---------------------------------------------------------------------------------//
-  public static String formatNoHeader (byte[] buffer, int offset, int length, int startingAddress)
+  public static String formatNoHeader (byte[] buffer, int offset, int length,
+      int startingAddress)
   // ---------------------------------------------------------------------------------//
   {
     return format (buffer, offset, length, false, startingAddress);
@@ -110,7 +111,8 @@ public class HexFormatter
         if (freq[i] > 0)
         {
           totalBits += (Integer.bitCount (i) * freq[i]);
-          line.append (String.format ("%02X  %3d   %d%n", i, freq[i], Integer.bitCount (i)));
+          line.append (
+              String.format ("%02X  %3d   %d%n", i, freq[i], Integer.bitCount (i)));
         }
       line.append (String.format ("%nTotal bits : %d%n", totalBits));
     }
@@ -240,7 +242,8 @@ public class HexFormatter
   }
 
   // ---------------------------------------------------------------------------------//
-  public static String getHexStringReversed (byte[] buffer, int offset, int length, boolean space)
+  public static String getHexStringReversed (byte[] buffer, int offset, int length,
+      boolean space)
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder hex = new StringBuilder ();

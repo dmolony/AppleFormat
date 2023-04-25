@@ -21,9 +21,10 @@ public abstract class HiResImage extends AbstractFormattedAppleFile
 {
   static GraphicsPreferences graphicsPreferences;     // set by MenuHandler
 
-  static final String[] auxTypes = { "Paintworks Packed SHR Image", "Packed Super Hi-Res Image",
-      "Super Hi-Res Image (Apple Preferred Format)", "Packed QuickDraw II PICT File",
-      "Packed Super Hi-Res 3200 color image", "DreamGraphix" };
+  static final String[] auxTypes =
+      { "Paintworks Packed SHR Image", "Packed Super Hi-Res Image",
+          "Super Hi-Res Image (Apple Preferred Format)", "Packed QuickDraw II PICT File",
+          "Packed Super Hi-Res 3200 color image", "DreamGraphix" };
 
   static final int COLOR_TABLE_SIZE = 32;
   static final int COLOR_TABLE_OFFSET_AUX_0 = 32_256;
@@ -41,7 +42,8 @@ public abstract class HiResImage extends AbstractFormattedAppleFile
 
   static PaletteFactory paletteFactory = new PaletteFactory ();
 
-  static final byte[] pngHeader = { (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+  static final byte[] pngHeader =
+      { (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 
   static boolean colourQuirks;
   static boolean monochrome;
@@ -61,9 +63,9 @@ public abstract class HiResImage extends AbstractFormattedAppleFile
   }
 
   // ---- ---- ------ -------------------------------------- ------------------------
-  // File Type Aux Name Description
+  // File Type Aux    Name                                   Description
   // ---- ---- ------ -------------------------------------- ------------------------
-  // $06 BIN isGif() OriginalHiResImage
+  // $06  BIN   isGif() OriginalHiResImage
   // $06 BIN isPng() OriginalHiResImage
   // $06 BIN .BMP isBmp() OriginalHiResImage
   // $06 BIN .AUX DoubleHiResImage
@@ -94,14 +96,14 @@ public abstract class HiResImage extends AbstractFormattedAppleFile
   // $C0 PNT $8006 GIF
   // ---- ---- ------ -------------------------------------- ------------------------
   // * $C1 PIC $0000 IIGS Super Hi-Res Image SHRPictureFile2
-  // $C1 PIC $0001 IIGS QuickDraw II PICT File SHRPictureFile2 *
+  //   $C1 PIC $0001 IIGS QuickDraw II PICT File SHRPictureFile2 *
   // * $C1 PIC $0002 Super Hi-Res 3200 (Brooks) SHRPictureFile2 .3200
-  // $C1 PIC $2000 = $C1/0000
-  // $C1 PIC $4100 = $C1/0000
-  // $C1 PIC $4950 = $C1/0000
-  // $C1 PIC $8001 Allison raw image
-  // $C1 PIC $8002 Thunderscan
-  // $C1 PIC $8003 DreamGraphix
+  //   $C1 PIC $2000 = $C1/0000
+  //   $C1 PIC $4100 = $C1/0000
+  //   $C1 PIC $4950 = $C1/0000
+  //   $C1 PIC $8001 Allison raw image
+  //   $C1 PIC $8002 Thunderscan
+  //   $C1 PIC $8003 DreamGraphix
   // ---- ---- ------ -------------------------------------- ------------------------
   // $C2 ANI Paintworks animation
   // $C3 PAL Paintworks palette
@@ -156,15 +158,16 @@ public abstract class HiResImage extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public HiResImage (AppleFile appleFile, byte[] buffer, int offset, int length, int loadAddress)
+  public HiResImage (AppleFile appleFile, byte[] buffer, int offset, int length,
+      int loadAddress)
   // ---------------------------------------------------------------------------------//
   {
     this (appleFile, buffer, offset, length, loadAddress, false);
   }
 
   // ---------------------------------------------------------------------------------//
-  public HiResImage (AppleFile appleFile, byte[] buffer, int offset, int length, int loadAddress,
-      boolean scrunched)
+  public HiResImage (AppleFile appleFile, byte[] buffer, int offset, int length,
+      int loadAddress, boolean scrunched)
   // ---------------------------------------------------------------------------------//
   {
     this (appleFile, buffer, offset, length);
@@ -422,7 +425,8 @@ public abstract class HiResImage extends AbstractFormattedAppleFile
   {
     if (dataBuffer.getSize () < rgbList.length + element)
     {
-      System.out.printf ("Bollocks: %d %d %d%n", dataBuffer.getSize (), rgbList.length, element);
+      System.out.printf ("Bollocks: %d %d %d%n", dataBuffer.getSize (), rgbList.length,
+          element);
       return element;
     }
 
@@ -491,12 +495,13 @@ public abstract class HiResImage extends AbstractFormattedAppleFile
       int type = (buffer[ptr] & 0xC0) >>> 6;        // 0-3
       int count = (buffer[ptr++] & 0x3F) + 1;       // 1-64
 
-      text.append (String.format ("%04X/%04d: %02X  (%d,%2d)  ", ptr - 1, size, buffer[ptr - 1],
-          type, count));
+      text.append (String.format ("%04X/%04d: %02X  (%d,%2d)  ", ptr - 1, size,
+          buffer[ptr - 1], type, count));
 
       if (type == 0)
       {
-        text.append (String.format ("%s%n", HexFormatter.getHexString (buffer, ptr, count)));
+        text.append (
+            String.format ("%s%n", HexFormatter.getHexString (buffer, ptr, count)));
         ptr += count;
         size += count;
       }
@@ -680,8 +685,8 @@ public abstract class HiResImage extends AbstractFormattedAppleFile
     if (buffer.length < 4)
       return false;
 
-    return buffer[0] == (byte) 0xC1 && buffer[1] == (byte) 0xD0 && buffer[2] == (byte) 0xD0
-        && buffer[3] == 0;
+    return buffer[0] == (byte) 0xC1 && buffer[1] == (byte) 0xD0
+        && buffer[2] == (byte) 0xD0 && buffer[3] == 0;
   }
 
   // ---------------------------------------------------------------------------------//

@@ -6,6 +6,8 @@ import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.graphics.AppleGraphics;
+import com.bytezone.appleformat.graphics.AppleGraphicsPic;
+import com.bytezone.appleformat.graphics.AppleGraphicsPnt;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleContainer;
@@ -138,6 +140,8 @@ public class FormattedAppleFileFactory
     {
       case 0x04 -> new Text (appleFile, buffer, 0, length);
       case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
+      case 0xC0 -> new AppleGraphicsPnt (appleFile, buffer, auxType);
+      case 0xC1 -> new AppleGraphicsPic (appleFile, buffer, auxType);
       case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
       case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
       default -> new DataFile (appleFile, fileType, buffer);

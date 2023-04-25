@@ -18,7 +18,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final AppleFile appleFile;
 
   protected final String name;
-  protected final byte[] buffer;
+  protected byte[] buffer;
   protected final int offset;
   protected final int length;
 

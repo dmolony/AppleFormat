@@ -82,7 +82,6 @@ public class AppleGraphics extends AbstractFormattedAppleFile
   protected Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
-    //    int paletteIndex = paletteFactory.getCurrentPaletteIndex ();
     int rows = length <= 8192 ? 192 : 384;
 
     WritableImage image = new WritableImage (280, rows);
