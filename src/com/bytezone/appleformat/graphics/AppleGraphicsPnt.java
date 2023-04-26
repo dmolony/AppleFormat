@@ -27,7 +27,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   private ColorTable defaultColorTable640 = new ColorTable (0, 0x80);
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphicsPnt (AppleFile appleFile, byte[] buffer, int aux)
+  public AppleGraphicsPnt (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer);
@@ -39,7 +39,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
 
       if (len == 0 || len > buffer.length)
       {
-        System.out.printf ("Block length: %d%n", len);
+        //        System.out.printf ("Block length: %d%n", len);
         break;
       }
 
@@ -52,7 +52,6 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
         case "MAIN":
           mainBlock = new Main (kind, data);
           blocks.add (mainBlock);
-          this.buffer = mainBlock.unpackedBuffer;
           break;
 
         case "MULTIPAL":
@@ -93,7 +92,15 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       ptr += len;
     }
 
-    //    createColourImage ();
+    this.buffer = mainBlock.unpackedBuffer;
+
+    if (false)
+      for (int i = 0; i < 4; i++)
+        for (int j = 4; j < 8; j++)
+          System.out.printf ("%s %s  %s  %s%n", defaultColorTable640.entries[i].color,
+              Utility.getColorName (defaultColorTable640.entries[i].color),
+              defaultColorTable640.entries[j].color,
+              Utility.getColorName (defaultColorTable640.entries[j].color));
   }
 
   // ---------------------------------------------------------------------------------//
@@ -102,18 +109,16 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return createColourImage ();
+    //    return createMonochromeImage ();
   }
 
   // ---------------------------------------------------------------------------------//
   Image createMonochromeImage ()
   // ---------------------------------------------------------------------------------//
   {
-    //    image = new BufferedImage (320, 200, BufferedImage.TYPE_BYTE_GRAY);
-    //    DataBuffer db = image.getRaster ().getDataBuffer ();
     WritableImage image = new WritableImage (320, 200);
     PixelWriter pw = image.getPixelWriter ();
 
-    //    int element = 0;
     int ptr = 0;
 
     for (int row = 0; row < 200; row++)
@@ -124,14 +129,10 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
         ptr++;
 
         if (pix1 > 0)
-          //          db.setElem (element, 255);
           pw.setColor (col, row, Color.BLACK);
 
         if (pix2 > 0)
-          //          db.setElem (element + 1, 255);
           pw.setColor (col + 1, row, Color.BLACK);
-
-        //        element += 2;
       }
 
     return image;
@@ -149,68 +150,67 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
 
     boolean mode320 = (mainBlock.masterMode & 0x80) == 0;
 
-    int imageWidth = mainBlock.pixelsPerScanLine;
-    if (mode320)
-      imageWidth *= 2;        // every horizontal pixel is drawn twice
+    // these calculations assume that in mode640 the screen has twice the
+    // horizontal resolution, so the pixelsPerScanLine value is double the
+    // visible pixels.
+    int pixelWidth = mainBlock.pixelsPerScanLine / (mode320 ? 1 : 2);
+    int dataWidth = pixelWidth / 2;
 
-    //    image = new BufferedImage (imageWidth, mainBlock.numScanLines * 2,
-    //        BufferedImage.TYPE_INT_RGB);
-    //    DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
+    if (false)
+    {
+      System.out.println (mode320 ? "mode320" : "mode640");
+      System.out.printf ("Pixels per scan line: %3d%n", mainBlock.pixelsPerScanLine);
+      System.out.printf ("Pixel width         : %3d%n", pixelWidth);
+      System.out.printf ("Data width          : %3d%n", dataWidth);
+    }
 
-    WritableImage image = new WritableImage (imageWidth, mainBlock.numScanLines * 2);
+    WritableImage image = new WritableImage (pixelWidth, mainBlock.numScanLines);
     PixelWriter pw = image.getPixelWriter ();
 
-    int element = 0;
     int ptr = 0;
 
-    for (int line = 0; line < mainBlock.numScanLines; line++)
+    for (int row = 0; row < mainBlock.numScanLines; row++)
     {
-      DirEntry dirEntry = mainBlock.scanLineDirectory[line];
-      int hi = dirEntry.mode & 0xFF00;      // always 0
-      int lo = dirEntry.mode & 0x00FF;      // mode bit if hi == 0
+      DirEntry dirEntry = mainBlock.scanLineDirectory[row];
 
-      boolean fillMode = (dirEntry.mode & 0x20) != 0;
-      // assert fillMode == false;
+      if (dirEntry.mode320 != mode320)        // haven't seen it happen yet
+        System.out.printf ("mode mismatch: %02X  %02X%n", dirEntry.mode,
+            mainBlock.masterMode);
 
-      if (hi != 0)
-        System.out.println ("hi not zero");
+      ColorTable colorTable = multipalBlock != null ?           //
+          multipalBlock.colorTables[row] :                      //
+          mainBlock.colorTables[dirEntry.colorTable];
 
-      ColorTable colorTable = //
-          multipalBlock != null ? multipalBlock.colorTables[line]
-              : mainBlock.colorTables[lo & 0x0F];
+      if (dirEntry.mode320)                     // two pixels per byte
+        mode320Line (ptr, dataWidth, colorTable, pw, row);
+      else                                      // two dithered pixels per byte
+        mode640Line (ptr, dataWidth, colorTable, pw, row);
 
-      int dataWidth = mainBlock.pixelsPerScanLine / (mode320 ? 2 : 4);
-
-      if (mode320)       // two pixels per byte, each shown twice
-        ptr = mode320Line (ptr++, element, dataWidth, colorTable, pw, imageWidth);
-      else              // four pixels per byte
-        ptr = mode640Line (ptr, element, dataWidth, colorTable, pw, imageWidth);
-
-      element += imageWidth * 2;        // drawing two lines at a time
+      ptr += dataWidth;
     }
 
     return image;
   }
 
   // ---------------------------------------------------------------------------------//
-  int mode320Line (int ptr, int element, int dataWidth, ColorTable colorTable,
-      PixelWriter pw, int imageWidth)
+  void mode320Line (int ptr, int dataWidth, ColorTable colorTable, PixelWriter pw,
+      int row)
   // ---------------------------------------------------------------------------------//
   {
     if (colorTable == null)
       colorTable = defaultColorTable320;
 
-    int row = ptr / dataWidth;
     int col = 0;
 
-    for (int i = 0; i < dataWidth; i++)
+    for (int i = 0; i < dataWidth; i++)           // # of bytes per scanline
     {
       if (ptr >= buffer.length)
       {
         System.out.printf ("too big: %d  %d%n", ptr, buffer.length);
-        return ptr;
+        return;
       }
-      // get two pixels from this byte
+
+      // get two indices from this byte
       int left = (buffer[ptr] & 0xF0) >>> 4;
       int right = buffer[ptr++] & 0x0F;
 
@@ -221,44 +221,53 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       pw.setColor (col++, row, rgbLeft);
       pw.setColor (col++, row, rgbRight);
     }
-
-    return ptr;
   }
 
   // ---------------------------------------------------------------------------------//
-  int mode640Line (int ptr, int element, int dataWidth, ColorTable colorTable,
-      PixelWriter pw, int imageWidth)
+  void mode640Line (int ptr, int dataWidth, ColorTable colorTable, PixelWriter pw,
+      int row)
   // ---------------------------------------------------------------------------------//
   {
     if (colorTable == null)
       colorTable = defaultColorTable640;
 
-    int row = ptr / dataWidth;
     int col = 0;
 
-    for (int i = 0; i < dataWidth; i++)
+    for (int i = 0; i < dataWidth; i++)           // # of bytes per scanline
     {
-      // get four pixels from this byte
+      // get four indices from this byte
       int p1 = (buffer[ptr] & 0xC0) >>> 6;
       int p2 = (buffer[ptr] & 0x30) >> 4;
       int p3 = (buffer[ptr] & 0x0C) >> 2;
-      int p4 = (buffer[ptr] & 0x03);
+      int p4 = (buffer[ptr++] & 0x03);
 
-      // get pixel colors
-      Color rgb1 = colorTable.entries[p1 + 8].color;
-      Color rgb2 = colorTable.entries[p2 + 12].color;
+      // get pixel colors from mini-palette
       Color rgb3 = colorTable.entries[p3].color;
       Color rgb4 = colorTable.entries[p4 + 4].color;
+      Color rgb1 = colorTable.entries[p1 + 8].color;
+      Color rgb2 = colorTable.entries[p2 + 12].color;
 
-      pw.setColor (col++, row, rgb1);
-      pw.setColor (col++, row, rgb2);
-      pw.setColor (col++, row, rgb3);
-      pw.setColor (col++, row, rgb4);
-
-      ptr++;
+      pw.setColor (col++, row, dither (rgb1, rgb2));
+      pw.setColor (col++, row, dither (rgb3, rgb4));
     }
+  }
 
-    return ptr;
+  // ---------------------------------------------------------------------------------//
+  private Color dither (Color left, Color right)
+  // ---------------------------------------------------------------------------------//
+  {
+    if (left.equals (Color.BLACK) && right.equals (Color.WHITE))
+      return Color.DARKGRAY;
+    if (left.equals (Color.WHITE) && right.equals (Color.BLACK))
+      return Color.DARKGRAY;
+    if (left.equals (right))
+      return left;
+
+    int red = (int) (((left.getRed () + right.getRed ()) / 2) * 255);
+    int green = (int) ((left.getGreen () + right.getGreen ()) / 2 * 255);
+    int blue = (int) ((left.getBlue () + right.getBlue ()) / 2 * 255);
+
+    return Color.rgb (red, green, blue);
   }
 
   // ---------------------------------------------------------------------------------//

@@ -16,7 +16,13 @@ class ColorEntry
   // -------------------------------------------------------------------------------//
   {
     value = (red << 8) | (green << 4) | blue;
-    color = Color.rgb (red, green, blue);
+
+    int r1 = red | (red << 4);
+    int g1 = green | (green << 4);
+    int b1 = blue | (blue << 4);
+
+    color = Color.rgb (r1, g1, b1);
+    //    color = Color.rgb (red, green, blue);
   }
 
   // -------------------------------------------------------------------------------//
@@ -28,8 +34,24 @@ class ColorEntry
     int red = ((value >> 8) & 0x0f) * 17;
     int green = ((value >> 4) & 0x0f) * 17;
     int blue = (value & 0x0f) * 17;
+    //    int red = ((value >> 8) & 0x0f) | ((value >> 4) & 0xF0);
+    //    int green = ((value >> 4) & 0x0f) | (value & 0xF0);
+    //    int blue = (value & 0x0f) | ((value << 4) & 0xF0);
 
     color = Color.rgb (red, green, blue);
+  }
+
+  // -------------------------------------------------------------------------------//
+  public ColorEntry (Color color)
+  // -------------------------------------------------------------------------------//
+  {
+    this.color = color;
+
+    int red = (int) (color.getRed () * 15);
+    int green = (int) (color.getGreen () * 15);
+    int blue = (int) (color.getBlue () * 15);
+
+    value = (red << 8) | (green << 4) | blue;
   }
 
   // -------------------------------------------------------------------------------//

@@ -1,5 +1,12 @@
 package com.bytezone.appleformat;
 
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_BASIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BINARY;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PNT;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
+
 import java.io.File;
 
 import com.bytezone.appleformat.assembler.AssemblerProgram;
@@ -113,40 +120,59 @@ public class FormattedAppleFileFactory
     return new AssemblerProgram (appleFile, buffer, 4, length, address);
   }
 
+  // http://www.1000bit.it/support/manuali/apple/technotes/ftyp/ft.about.html
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile getFormattedProdosFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     int length = 0;
     byte[] buffer;
-    int auxType;
+    int aux;
 
     if (appleFile instanceof ForkProdos fork)
     {
       length = fork.getFileLength ();
       buffer = fork.read ();
-      auxType = fork.getParentFile ().getAuxType ();
+      aux = fork.getParentFile ().getAuxType ();
     }
     else
     {
       length = appleFile.getFileLength ();
       buffer = appleFile.read ();
-      auxType = ((FileProdos) appleFile).getAuxType ();
+      aux = ((FileProdos) appleFile).getAuxType ();
     }
 
     int fileType = appleFile.getFileType ();
 
     return switch (fileType)
     {
-      case 0x04 -> new Text (appleFile, buffer, 0, length);
-      case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
-      case 0xC0 -> new AppleGraphicsPnt (appleFile, buffer, auxType);
-      case 0xC1 -> new AppleGraphicsPic (appleFile, buffer, auxType);
-      case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
-      case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
+      case FILE_TYPE_TEXT -> new Text (appleFile, buffer, 0, length);
+      case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, buffer, length, aux);
+      case FILE_TYPE_PNT -> checkGraphics (appleFile, fileType, aux, buffer);
+      case FILE_TYPE_PIC -> checkGraphics (appleFile, fileType, aux, buffer);
+      case FILE_TYPE_APPLESOFT_BASIC -> new ApplesoftBasicProgram (appleFile, buffer, 0,
+          length);
+      case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, buffer, 0,
+          length);
       default -> new DataFile (appleFile, fileType, buffer);
     };
   }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkGraphics (AppleFile appleFile, int fileType, int aux,
+      byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    if (fileType == FILE_TYPE_PNT && aux == 2)
+      return new AppleGraphicsPnt (appleFile, buffer);
+
+    return new AppleGraphicsPic (appleFile, buffer, aux);
+  }
+
+  // Another notable exception is the Fotofile (FOT) format inherited by ProDOS
+  // from Apple SOS, which included metadata in the 121st byte (the first byte of
+  // the first hole) indicating how it should be displayed (color mode, resolution),
+  // or converted to other graphics formats.
 
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkProdosBinary (AppleFile appleFile, byte[] buffer,
