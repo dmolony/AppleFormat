@@ -148,33 +148,15 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       return null;
     }
 
-    boolean mode320 = (mainBlock.masterMode & 0x80) == 0;
-
-    // these calculations assume that in mode640 the screen has twice the
-    // horizontal resolution, so the pixelsPerScanLine value is double the
-    // actual number of pixels.
-    int pixelWidth = mainBlock.pixelsPerScanLine;
-    if (!mode320)
-      pixelWidth /= 2;
-    int dataWidth = pixelWidth / 2;           // two visible pixels per byte
-
-    if (false)
-    {
-      System.out.printf ("Name                : %s%n", name);
-      System.out.printf ("Mode                : %s%n", mode320 ? "mode320" : "mode640");
-      System.out.printf ("Pixels per scan line: %3d%n", mainBlock.pixelsPerScanLine);
-      System.out.printf ("Pixel width         : %3d%n", pixelWidth);
-      System.out.printf ("Data width          : %3d%n", dataWidth);
-    }
-
-    WritableImage image = new WritableImage (pixelWidth, mainBlock.numScanLines);
+    WritableImage image =
+        new WritableImage (mainBlock.pixelWidth, mainBlock.numScanLines);
     PixelWriter pw = image.getPixelWriter ();
 
     for (int row = 0; row < mainBlock.numScanLines; row++)
     {
       DirEntry dirEntry = mainBlock.scanLineDirectory[row];
 
-      if (dirEntry.mode320 != mode320)        // haven't seen it happen yet
+      if (dirEntry.mode640 != mainBlock.mode640)        // haven't seen it happen yet
         System.out.printf ("mode mismatch: %02X  %02X  %s%n", dirEntry.mode,
             mainBlock.masterMode, name);
 
@@ -182,17 +164,17 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
           multipalBlock.colorTables[row] :                      //
           mainBlock.colorTables[dirEntry.colorTable];
 
-      if (dirEntry.mode320)                     // two pixels per byte
-        mode320Line (pw, row, dataWidth, colorTable);
-      else                                      // two dithered pixels per byte
-        mode640Line (pw, row, dataWidth, colorTable);
+      if (dirEntry.mode640)
+        mode640Line (pw, row, colorTable);
+      else
+        mode320Line (pw, row, colorTable);
     }
 
     return image;
   }
 
   // ---------------------------------------------------------------------------------//
-  void mode320Line (PixelWriter pw, int row, int dataWidth, ColorTable colorTable)
+  void mode320Line (PixelWriter pw, int row, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
     if (colorTable == null)
@@ -203,14 +185,8 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     int col = 0;
     int ptr = 0;
 
-    for (int i = 0; i < dataWidth; i++)           // # of bytes per scanline
+    for (int i = 0; i < unpackedLine.length; i++)
     {
-      if (ptr >= unpackedLine.length)
-      {
-        System.out.printf ("too big: %d  %d  %s%n", ptr, unpackedLine.length, name);
-        return;
-      }
-
       // get two indices from this byte
       int left = (unpackedLine[ptr] & 0xF0) >>> 4;
       int right = unpackedLine[ptr++] & 0x0F;
@@ -219,13 +195,14 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       Color rgbLeft = colorTable.entries[left].color;
       Color rgbRight = colorTable.entries[right].color;
 
+      // draw pixels
       pw.setColor (col++, row, rgbLeft);
       pw.setColor (col++, row, rgbRight);
     }
   }
 
   // ---------------------------------------------------------------------------------//
-  void mode640Line (PixelWriter pw, int row, int dataWidth, ColorTable colorTable)
+  void mode640Line (PixelWriter pw, int row, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
     if (colorTable == null)
@@ -236,7 +213,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     int col = 0;
     int ptr = 0;
 
-    for (int i = 0; i < dataWidth; i++)           // # of bytes per scanline
+    for (int i = 0; i < unpackedLine.length; i++)
     {
       // get four indices from this byte
       int p1 = (unpackedLine[ptr] & 0xC0) >>> 6;
@@ -250,6 +227,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       Color rgb1 = colorTable.entries[p1 + 8].color;
       Color rgb2 = colorTable.entries[p2 + 12].color;
 
+      // draw pixels
       pw.setColor (col++, row, dither (rgb1, rgb2));
       pw.setColor (col++, row, dither (rgb3, rgb4));
     }
@@ -335,8 +313,10 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     ColorTable[] colorTables;           // [numColorTables]
     int numScanLines;                   // image height in pixels
     DirEntry[] scanLineDirectory;       // [numScanLines]
+    boolean mode320;
     boolean mode640;
     int dataWidth;                      // bytes per line
+    int pixelWidth;                     // actual pixel width
     int[] dataOffsets;                  // pointer to each line of packed data
 
     // -------------------------------------------------------------------------------//
@@ -349,8 +329,16 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       masterMode = Utility.getShort (data, ptr);
       pixelsPerScanLine = Utility.getShort (data, ptr + 2);
       numColorTables = Utility.getShort (data, ptr + 4);
+      mode320 = (masterMode & 0x80) == 0;
       mode640 = (masterMode & 0x80) != 0;
       dataWidth = pixelsPerScanLine / (mode640 ? 4 : 2);
+
+      // this calculation assumes that in mode640 the screen has twice the
+      // horizontal resolution, so the pixelsPerScanLine value is double the
+      // actual number of pixels.
+      pixelWidth = pixelsPerScanLine;
+      if (mode640)
+        pixelWidth /= 2;
 
       ptr += 6;
       colorTables = new ColorTable[numColorTables];
