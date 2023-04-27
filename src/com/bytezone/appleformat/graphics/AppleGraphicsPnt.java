@@ -20,7 +20,6 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   private final List<Block> blocks = new ArrayList<> ();
   private Main mainBlock;
   private Multipal multipalBlock;
-  private final boolean debug = false;
 
   private ColorTable defaultColorTable320 = new ColorTable (0, 0x00);
   private ColorTable defaultColorTable640 = new ColorTable (0, 0x80);
@@ -39,7 +38,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
 
       if (len == 0 || len > buffer.length)
       {
-        //        System.out.printf ("Block length: %d%n", len);
+        System.out.printf ("Block length: %d%n", len);
         break;
       }
 
@@ -63,8 +62,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
         case "MASK":
         case "PATS":
         case "SCIB":
-          if (debug)
-            System.out.println (kind + " not written");
+          System.out.println (kind + " not written");
           blocks.add (new Block (kind, data));
           break;
 
@@ -91,14 +89,6 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
 
       ptr += len;
     }
-
-    if (false)
-      for (int i = 0; i < 4; i++)
-        for (int j = 4; j < 8; j++)
-          System.out.printf ("%s %s  %s  %s%n", defaultColorTable640.entries[i].color,
-              Utility.getColorName (defaultColorTable640.entries[i].color),
-              defaultColorTable640.entries[j].color,
-              Utility.getColorName (defaultColorTable640.entries[j].color));
   }
 
   // ---------------------------------------------------------------------------------//
@@ -150,7 +140,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
 
     WritableImage image =
         new WritableImage (mainBlock.pixelWidth, mainBlock.numScanLines);
-    PixelWriter pw = image.getPixelWriter ();
+    PixelWriter pixelWriter = image.getPixelWriter ();
 
     for (int row = 0; row < mainBlock.numScanLines; row++)
     {
@@ -165,16 +155,16 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
           mainBlock.colorTables[dirEntry.colorTable];
 
       if (dirEntry.mode640)
-        mode640Line (pw, row, colorTable);
+        mode640Line (pixelWriter, row, colorTable);
       else
-        mode320Line (pw, row, colorTable);
+        mode320Line (pixelWriter, row, colorTable);
     }
 
     return image;
   }
 
   // ---------------------------------------------------------------------------------//
-  void mode320Line (PixelWriter pw, int row, ColorTable colorTable)
+  void mode320Line (PixelWriter pixelWriter, int row, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
     if (colorTable == null)
@@ -196,13 +186,13 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       Color rgbRight = colorTable.entries[right].color;
 
       // draw pixels
-      pw.setColor (col++, row, rgbLeft);
-      pw.setColor (col++, row, rgbRight);
+      pixelWriter.setColor (col++, row, rgbLeft);
+      pixelWriter.setColor (col++, row, rgbRight);
     }
   }
 
   // ---------------------------------------------------------------------------------//
-  void mode640Line (PixelWriter pw, int row, ColorTable colorTable)
+  void mode640Line (PixelWriter pixelWriter, int row, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
     if (colorTable == null)
@@ -228,8 +218,8 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       Color rgb2 = colorTable.entries[p2 + 12].color;
 
       // draw pixels
-      pw.setColor (col++, row, dither (rgb1, rgb2));
-      pw.setColor (col++, row, dither (rgb3, rgb4));
+      pixelWriter.setColor (col++, row, dither (rgb1, rgb2));
+      pixelWriter.setColor (col++, row, dither (rgb3, rgb4));
     }
   }
 
@@ -264,6 +254,139 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     }
 
     return Utility.rtrim (text);
+  }
+
+  // -------------------------------------------------------------------------------//
+  @Override
+  public String getExtras ()
+  // -------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    text.append (String.format ("Kind ................. %s%n", mainBlock.kind));
+    text.append (String.format ("MasterMode ........... %04X%n", mainBlock.masterMode));
+    text.append (String.format ("PixelsPerScanLine .... %d / %d = %d bytes%n",
+        mainBlock.pixelsPerScanLine, (mainBlock.mode640 ? 4 : 2), mainBlock.dataWidth));
+    text.append (String.format ("NumColorTables ....... %d%n", mainBlock.numColorTables));
+    text.append (String.format ("NumScanLines ......... %d%n%n", mainBlock.numScanLines));
+
+    text.append ("Color Tables\n");
+    text.append ("------------\n\n");
+
+    text.append (" # ");
+    for (int i = 0; i < 16; i++)
+      text.append (String.format ("  %02X  ", i));
+    text.deleteCharAt (text.length () - 1);
+    text.deleteCharAt (text.length () - 1);
+    text.append ("\n---");
+
+    for (int i = 0; i < 16; i++)
+      text.append (" ---- ");
+
+    text.deleteCharAt (text.length () - 1);
+    text.append ("\n");
+
+    for (ColorTable colorTable : mainBlock.colorTables)
+    {
+      text.append (colorTable.toLine ());
+      text.append ("\n");
+    }
+
+    text.append ("\nScan Lines\n");
+    text.append ("----------\n\n");
+
+    text.append (" #   Mode  Len       Packed Data\n");
+    text.append ("---  ----  ---   ---------------------------------------");
+    text.append ("--------------------------------\n");
+
+    int lineSize = 24;
+    for (int i = 0; i < mainBlock.scanLineDirectory.length; i++)
+    {
+      DirEntry dirEntry = mainBlock.scanLineDirectory[i];
+
+      int ptr = mainBlock.dataOffsets[i];
+      int max = ptr + dirEntry.numBytes;
+
+      text.append (
+          String.format ("%3d  %04X  %3d   ", i, dirEntry.mode, dirEntry.numBytes));
+
+      boolean firstLine = true;
+      while (true)
+      {
+        String hex = HexFormatter.getHexString (mainBlock.data, ptr, lineSize);
+        text.append (hex);
+        if (firstLine)
+        {
+          firstLine = false;
+          if (hex.length () < 71)
+            text.append (("                                        "
+                + "                               ").substring (hex.length ()));
+        }
+
+        ptr += lineSize;
+        if (ptr >= max)
+          break;
+
+        text.append ("\n                 ");
+      }
+
+      text.append ("\n");
+
+      if (true)
+      {
+        text.append ("\n");
+        text.append (debug (mainBlock.data, mainBlock.dataOffsets[i], dirEntry.numBytes));
+        text.append ("\n");
+      }
+    }
+
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  String debug (byte[] buffer, int ptr, int length)
+  // ---------------------------------------------------------------------------------//
+  {
+    int size = 0;
+    int max = ptr + length;
+    StringBuffer text = new StringBuffer ();
+
+    while (ptr < max)
+    {
+      int type = (buffer[ptr] & 0xC0) >>> 6;        // 0-3
+      int count = (buffer[ptr++] & 0x3F) + 1;       // 1-64
+
+      text.append (String.format ("%04X/%04d: %02X  (%d,%2d)  ", ptr - 1, size,
+          buffer[ptr - 1], type, count));
+
+      if (type == 0)
+      {
+        text.append (
+            String.format ("%s%n", HexFormatter.getHexString (buffer, ptr, count)));
+        ptr += count;
+        size += count;
+      }
+      else if (type == 1)
+      {
+        text.append (String.format ("%s%n", HexFormatter.getHexString (buffer, ptr, 1)));
+        ptr++;
+        size += count;
+      }
+      else if (type == 2)
+      {
+        text.append (String.format ("%s%n", HexFormatter.getHexString (buffer, ptr, 4)));
+        ptr += 4;
+        size += count * 4;
+      }
+      else
+      {
+        text.append (String.format ("%s%n", HexFormatter.getHexString (buffer, ptr, 1)));
+        ptr++;
+        size += count * 4;
+      }
+    }
+
+    return text.toString ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -391,8 +514,8 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
           dataOffsets[line] + dirEntry.numBytes, unpackedLine, 0);
 
       if (bytesUnpacked != dataWidth && true)
-        System.out.printf ("Unexpected line width %3d  %5d  %3d  %3d  %s%n", line, 0,
-            bytesUnpacked, dataWidth, name);
+        System.out.printf ("Unexpected line width in %s - %3d  %3d  %3d%n", name, line,
+            bytesUnpacked, dataWidth);
 
       return unpackedLine;
     }
