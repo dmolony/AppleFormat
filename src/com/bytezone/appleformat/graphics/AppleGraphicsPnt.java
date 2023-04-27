@@ -310,10 +310,11 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     int masterMode;                     // 0 = Brooks, 0 = PNT 320 80 = PNT 640
     int pixelsPerScanLine;              // image width in pixels
     int numColorTables;                 // 1 = Brooks, 16 = Other (may be zero)
-    ColorTable[] colorTables;           // [numColorTables]
     int numScanLines;                   // image height in pixels
+
+    ColorTable[] colorTables;           // [numColorTables]
     DirEntry[] scanLineDirectory;       // [numScanLines]
-    boolean mode320;
+
     boolean mode640;
     int dataWidth;                      // bytes per line
     int pixelWidth;                     // actual pixel width
@@ -326,10 +327,13 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       super (kind, data);
 
       int ptr = 5 + kind.length ();
+
       masterMode = Utility.getShort (data, ptr);
       pixelsPerScanLine = Utility.getShort (data, ptr + 2);
       numColorTables = Utility.getShort (data, ptr + 4);
-      mode320 = (masterMode & 0x80) == 0;
+
+      ptr += 6;
+
       mode640 = (masterMode & 0x80) != 0;
       dataWidth = pixelsPerScanLine / (mode640 ? 4 : 2);
 
@@ -340,7 +344,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       if (mode640)
         pixelWidth /= 2;
 
-      ptr += 6;
+      // create color tables
       colorTables = new ColorTable[numColorTables];
       for (int i = 0; i < numColorTables; i++)
       {
@@ -351,9 +355,8 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       numScanLines = Utility.getShort (data, ptr);
       ptr += 2;
 
+      // create directory entries
       scanLineDirectory = new DirEntry[numScanLines];
-      dataOffsets = new int[numScanLines];
-
       for (int line = 0; line < numScanLines; line++)
       {
         DirEntry dirEntry = new DirEntry (data, ptr);
@@ -361,6 +364,8 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
         ptr += 4;
       }
 
+      // create array of offsets to unpacked data
+      dataOffsets = new int[numScanLines];
       for (int line = 0; line < numScanLines; line++)
       {
         int numBytes = scanLineDirectory[line].numBytes;
