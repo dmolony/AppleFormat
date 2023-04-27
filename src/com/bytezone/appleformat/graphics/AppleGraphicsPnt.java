@@ -22,9 +22,9 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   private Multipal multipalBlock;
   private final boolean debug = false;
 
-  private byte[] fourBuf = new byte[4];
   private ColorTable defaultColorTable320 = new ColorTable (0, 0x00);
   private ColorTable defaultColorTable640 = new ColorTable (0, 0x80);
+  private Image image;
 
   // ---------------------------------------------------------------------------------//
   public AppleGraphicsPnt (AppleFile appleFile, byte[] buffer)
@@ -92,8 +92,6 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       ptr += len;
     }
 
-    this.buffer = mainBlock.unpackedBuffer;
-
     if (false)
       for (int i = 0; i < 4; i++)
         for (int j = 4; j < 8; j++)
@@ -108,12 +106,14 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   public Image getImage ()
   // ---------------------------------------------------------------------------------//
   {
-    return createColourImage ();
-    //    return createMonochromeImage ();
+    if (image == null)
+      image = createColourImage ();
+
+    return image;
   }
 
   // ---------------------------------------------------------------------------------//
-  Image createMonochromeImage ()
+  private Image createMonochromeImage ()
   // ---------------------------------------------------------------------------------//
   {
     WritableImage image = new WritableImage (320, 200);
@@ -139,7 +139,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  Image createColourImage ()
+  private Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
     if (mainBlock == null)
@@ -152,13 +152,16 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
 
     // these calculations assume that in mode640 the screen has twice the
     // horizontal resolution, so the pixelsPerScanLine value is double the
-    // visible pixels.
-    int pixelWidth = mainBlock.pixelsPerScanLine / (mode320 ? 1 : 2);
-    int dataWidth = pixelWidth / 2;
+    // actual number of pixels.
+    int pixelWidth = mainBlock.pixelsPerScanLine;
+    if (!mode320)
+      pixelWidth /= 2;
+    int dataWidth = pixelWidth / 2;           // two visible pixels per byte
 
     if (false)
     {
-      System.out.println (mode320 ? "mode320" : "mode640");
+      System.out.printf ("Name                : %s%n", name);
+      System.out.printf ("Mode                : %s%n", mode320 ? "mode320" : "mode640");
       System.out.printf ("Pixels per scan line: %3d%n", mainBlock.pixelsPerScanLine);
       System.out.printf ("Pixel width         : %3d%n", pixelWidth);
       System.out.printf ("Data width          : %3d%n", dataWidth);
@@ -167,52 +170,50 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     WritableImage image = new WritableImage (pixelWidth, mainBlock.numScanLines);
     PixelWriter pw = image.getPixelWriter ();
 
-    int ptr = 0;
-
     for (int row = 0; row < mainBlock.numScanLines; row++)
     {
       DirEntry dirEntry = mainBlock.scanLineDirectory[row];
 
       if (dirEntry.mode320 != mode320)        // haven't seen it happen yet
-        System.out.printf ("mode mismatch: %02X  %02X%n", dirEntry.mode,
-            mainBlock.masterMode);
+        System.out.printf ("mode mismatch: %02X  %02X  %s%n", dirEntry.mode,
+            mainBlock.masterMode, name);
 
       ColorTable colorTable = multipalBlock != null ?           //
           multipalBlock.colorTables[row] :                      //
           mainBlock.colorTables[dirEntry.colorTable];
 
       if (dirEntry.mode320)                     // two pixels per byte
-        mode320Line (ptr, dataWidth, colorTable, pw, row);
+        mode320Line (pw, row, dataWidth, colorTable);
       else                                      // two dithered pixels per byte
-        mode640Line (ptr, dataWidth, colorTable, pw, row);
-
-      ptr += dataWidth;
+        mode640Line (pw, row, dataWidth, colorTable);
     }
 
     return image;
   }
 
   // ---------------------------------------------------------------------------------//
-  void mode320Line (int ptr, int dataWidth, ColorTable colorTable, PixelWriter pw,
-      int row)
+  void mode320Line (PixelWriter pw, int row, int dataWidth, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
     if (colorTable == null)
       colorTable = defaultColorTable320;
 
+    byte[] unpackedLine = mainBlock.unpackLine (row);
+
     int col = 0;
+    int ptr = 0;
 
     for (int i = 0; i < dataWidth; i++)           // # of bytes per scanline
     {
-      if (ptr >= buffer.length)
+      if (ptr >= unpackedLine.length)
       {
-        System.out.printf ("too big: %d  %d%n", ptr, buffer.length);
+        System.out.printf ("too big: %d  %d  %s%n", ptr, unpackedLine.length, name);
         return;
       }
 
       // get two indices from this byte
-      int left = (buffer[ptr] & 0xF0) >>> 4;
-      int right = buffer[ptr++] & 0x0F;
+      int left = (unpackedLine[ptr] & 0xF0) >>> 4;
+      int right = unpackedLine[ptr++] & 0x0F;
 
       // get pixel colors
       Color rgbLeft = colorTable.entries[left].color;
@@ -224,22 +225,24 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  void mode640Line (int ptr, int dataWidth, ColorTable colorTable, PixelWriter pw,
-      int row)
+  void mode640Line (PixelWriter pw, int row, int dataWidth, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
     if (colorTable == null)
       colorTable = defaultColorTable640;
 
+    byte[] unpackedLine = mainBlock.unpackLine (row);
+
     int col = 0;
+    int ptr = 0;
 
     for (int i = 0; i < dataWidth; i++)           // # of bytes per scanline
     {
       // get four indices from this byte
-      int p1 = (buffer[ptr] & 0xC0) >>> 6;
-      int p2 = (buffer[ptr] & 0x30) >> 4;
-      int p3 = (buffer[ptr] & 0x0C) >> 2;
-      int p4 = (buffer[ptr++] & 0x03);
+      int p1 = (unpackedLine[ptr] & 0xC0) >>> 6;
+      int p2 = (unpackedLine[ptr] & 0x30) >> 4;
+      int p3 = (unpackedLine[ptr] & 0x0C) >> 2;
+      int p4 = (unpackedLine[ptr++] & 0x03);
 
       // get pixel colors from mini-palette
       Color rgb3 = colorTable.entries[p3].color;
@@ -256,64 +259,14 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   private Color dither (Color left, Color right)
   // ---------------------------------------------------------------------------------//
   {
-    if (left.equals (Color.BLACK) && right.equals (Color.WHITE))
-      return Color.DARKGRAY;
-    if (left.equals (Color.WHITE) && right.equals (Color.BLACK))
-      return Color.DARKGRAY;
     if (left.equals (right))
       return left;
 
-    int red = (int) (((left.getRed () + right.getRed ()) / 2) * 255);
+    int red = (int) ((left.getRed () + right.getRed ()) / 2 * 255);
     int green = (int) ((left.getGreen () + right.getGreen ()) / 2 * 255);
     int blue = (int) ((left.getBlue () + right.getBlue ()) / 2 * 255);
 
     return Color.rgb (red, green, blue);
-  }
-
-  // ---------------------------------------------------------------------------------//
-  int unpack (byte[] buffer, int ptr, int max, byte[] newBuf, int newPtr)
-  // ---------------------------------------------------------------------------------//
-  {
-    int savePtr = newPtr;
-
-    while (ptr < max - 1)                 // minimum 2 bytes needed
-    {
-      int type = (buffer[ptr] & 0xC0) >>> 6;        // 0-3
-      int count = (buffer[ptr++] & 0x3F) + 1;       // 1-64
-
-      switch (type)
-      {
-        case 0:                                     // 2-65 bytes
-          while (count-- != 0 && newPtr < newBuf.length && ptr < max)
-            newBuf[newPtr++] = buffer[ptr++];
-          break;
-
-        case 1:                                     // 2 bytes
-          byte b = buffer[ptr++];
-          while (count-- != 0 && newPtr < newBuf.length)
-            newBuf[newPtr++] = b;
-          break;
-
-        case 2:                                     // 5 bytes
-          for (int i = 0; i < 4; i++)
-            fourBuf[i] = ptr < max ? buffer[ptr++] : 0;
-
-          while (count-- != 0)
-            for (int i = 0; i < 4; i++)
-              if (newPtr < newBuf.length)
-                newBuf[newPtr++] = fourBuf[i];
-          break;
-
-        case 3:                                     // 2 bytes
-          b = buffer[ptr++];
-          count *= 4;
-          while (count-- != 0 && newPtr < newBuf.length)
-            newBuf[newPtr++] = b;
-          break;
-      }
-    }
-
-    return newPtr - savePtr;          // bytes unpacked
   }
 
   // ---------------------------------------------------------------------------------//
@@ -323,9 +276,16 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   {
     StringBuilder text = new StringBuilder ();
 
-    text.append ("Paint");
+    if (mainBlock == null)
+      text.append ("** Failure    : No MAIN block\n\n");
 
-    return text.toString ();
+    for (Block block : blocks)
+    {
+      text.append (block);
+      text.append ("\n\n");
+    }
+
+    return Utility.rtrim (text);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -361,7 +321,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
         text.append (HexFormatter.format (data, headerSize, data.length - headerSize));
       }
 
-      return text.toString ();
+      return Utility.rtrim (text);
     }
   }
 
@@ -375,10 +335,9 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     ColorTable[] colorTables;           // [numColorTables]
     int numScanLines;                   // image height in pixels
     DirEntry[] scanLineDirectory;       // [numScanLines]
-    byte[][] packedScanLines;
     boolean mode640;
-    int dataWidth;
-    byte[] unpackedBuffer;
+    int dataWidth;                      // bytes per line
+    int[] dataOffsets;                  // pointer to each line of packed data
 
     // -------------------------------------------------------------------------------//
     public Main (String kind, byte[] data)
@@ -391,6 +350,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       pixelsPerScanLine = Utility.getShort (data, ptr + 2);
       numColorTables = Utility.getShort (data, ptr + 4);
       mode640 = (masterMode & 0x80) != 0;
+      dataWidth = pixelsPerScanLine / (mode640 ? 4 : 2);
 
       ptr += 6;
       colorTables = new ColorTable[numColorTables];
@@ -404,13 +364,12 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       ptr += 2;
 
       scanLineDirectory = new DirEntry[numScanLines];
-      packedScanLines = new byte[numScanLines][];
+      dataOffsets = new int[numScanLines];
 
       for (int line = 0; line < numScanLines; line++)
       {
         DirEntry dirEntry = new DirEntry (data, ptr);
         scanLineDirectory[line] = dirEntry;
-        packedScanLines[line] = new byte[dirEntry.numBytes];
         ptr += 4;
       }
 
@@ -423,31 +382,26 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
           break;
         }
 
-        System.arraycopy (data, ptr, packedScanLines[line], 0, numBytes);
+        dataOffsets[line] = ptr;
         ptr += numBytes;
       }
+    }
 
-      dataWidth = pixelsPerScanLine / (mode640 ? 4 : 2);
+    // -------------------------------------------------------------------------------//
+    byte[] unpackLine (int line)
+    // -------------------------------------------------------------------------------//
+    {
+      byte[] unpackedLine = new byte[dataWidth];
+      DirEntry dirEntry = scanLineDirectory[line];
 
-      unpackedBuffer = new byte[numScanLines * dataWidth];
-      ptr = 0;
-      for (int line = 0; line < numScanLines; line++)
-      {
-        // if (isOddAndEmpty (packedScanLines[line]))
-        // {
-        // System.out.println ("Odd number of bytes in empty buffer in " + name);
-        // break;
-        // }
+      int bytesUnpacked = Utility.unpackBytes (data, dataOffsets[line],
+          dataOffsets[line] + dirEntry.numBytes, unpackedLine, 0);
 
-        int bytesUnpacked = unpack (packedScanLines[line], 0,
-            packedScanLines[line].length, unpackedBuffer, ptr);
+      if (bytesUnpacked != dataWidth && true)
+        System.out.printf ("Unexpected line width %3d  %5d  %3d  %3d  %s%n", line, 0,
+            bytesUnpacked, dataWidth, name);
 
-        if (bytesUnpacked != dataWidth && false)
-          System.out.printf ("Unexpected line width %3d  %5d  %3d  %3d%n", line, ptr,
-              bytesUnpacked, dataWidth);
-
-        ptr += dataWidth;
-      }
+      return unpackedLine;
     }
 
     // -------------------------------------------------------------------------------//
@@ -457,6 +411,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     {
       StringBuilder text = new StringBuilder (super.toString ());
 
+      text.append ("\n\n");
       text.append (String.format ("Master mode ................. %d%n", masterMode));
       text.append (
           String.format ("Pixels per scan line ........ %d%n", pixelsPerScanLine));
@@ -465,7 +420,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       text.append (String.format ("Mode640 ..................... %s%n", mode640));
       text.append (String.format ("Data width .................. %d%n", dataWidth));
 
-      return text.toString ();
+      return Utility.rtrim (text);
     }
   }
 
@@ -485,8 +440,9 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     public String toString ()
     // -------------------------------------------------------------------------------//
     {
-      StringBuilder text = new StringBuilder ();
+      StringBuilder text = new StringBuilder (super.toString ());
 
+      text.append ("\n\n");
       text.append (String.format ("Block ..... %s%n", kind));
       text.append (String.format ("Size ...... %04X  %<d%n%n", size));
 
@@ -497,9 +453,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
         ptr += 4;
       }
 
-      text.deleteCharAt (text.length () - 1);
-
-      return text.toString ();
+      return Utility.rtrim (text);
     }
   }
 

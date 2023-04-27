@@ -47,6 +47,8 @@ public final class Utility
   private static final List<String> suffixes = Arrays.asList ("po", "dsk", "do", "hdv",
       "2mg", "d13", "sdk", "shk", "bxy", "bny", "bqy", "woz", "img", "dimg");
 
+  private static final byte[] fourBuf = new byte[4];
+
   record ColorRecord (Color color, String name)
   {
   };
@@ -651,6 +653,53 @@ public final class Utility
         return false;
 
     return true;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static int unpackBytes (byte[] buffer, int ptr, int max, byte[] newBuffer,
+      int newPtr)
+  // ---------------------------------------------------------------------------------//
+  {
+    int savePtr = newPtr;
+
+    while (ptr < max - 1)                           // minimum 2 bytes needed
+    {
+      int type = (buffer[ptr] & 0xC0) >>> 6;        // 0-3
+      int count = (buffer[ptr++] & 0x3F) + 1;       // 1-64
+
+      switch (type)
+      {
+        case 0:                                     // 2-65 bytes
+          while (count-- != 0 && newPtr < newBuffer.length && ptr < max)
+            newBuffer[newPtr++] = buffer[ptr++];
+          break;
+
+        case 1:                                     // 2 bytes
+          byte b = buffer[ptr++];
+          while (count-- != 0 && newPtr < newBuffer.length)
+            newBuffer[newPtr++] = b;
+          break;
+
+        case 2:                                     // 5 bytes
+          for (int i = 0; i < 4; i++)
+            fourBuf[i] = ptr < max ? buffer[ptr++] : 0;
+
+          while (count-- != 0)
+            for (int i = 0; i < 4; i++)
+              if (newPtr < newBuffer.length)
+                newBuffer[newPtr++] = fourBuf[i];
+          break;
+
+        case 3:                                     // 2 bytes
+          b = buffer[ptr++];
+          count *= 4;
+          while (count-- != 0 && newPtr < newBuffer.length)
+            newBuffer[newPtr++] = b;
+          break;
+      }
+    }
+
+    return newPtr - savePtr;                        // bytes unpacked
   }
 
   // ---------------------------------------------------------------------------------//

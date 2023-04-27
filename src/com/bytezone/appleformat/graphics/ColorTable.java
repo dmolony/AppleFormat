@@ -60,6 +60,24 @@ class ColorTable
     }
   }
 
+  // dither combinations
+  // BLACK    BLACK  -->  BLACK
+  // BLACK    RED    --> 
+  // BLACK    GREEN  --> 
+  // BLACK    WHITE  -->  GRAY
+  // BLUE     BLACK  --> 
+  // BLUE     RED    -->  PURPLE
+  // BLUE     GREEN  --> 
+  // BLUE     WHITE  --> 
+  // YELLOW   BLACK  --> 
+  // YELLOW   RED    --> 
+  // YELLOW   GREEN  --> 
+  // YELLOW   WHITE  --> 
+  // WHITE    BLACK  -->  GRAY
+  // WHITE    RED    --> 
+  // WHITE    GREEN  --> 
+  // WHITE    WHITE  -->  WHITE
+
   // -------------------------------------------------------------------------------//
   public ColorTable (int id, byte[] data, int offset)
   // -------------------------------------------------------------------------------//
