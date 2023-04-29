@@ -19,7 +19,6 @@ import com.bytezone.appleformat.graphics.AppleGraphicsPic0000;
 import com.bytezone.appleformat.graphics.AppleGraphicsPic0001;
 import com.bytezone.appleformat.graphics.AppleGraphicsPnt;
 import com.bytezone.appleformat.graphics.AppleGraphicsPnt0000;
-import com.bytezone.appleformat.graphics.AppleGraphicsPnt1000;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleContainer;
@@ -180,7 +179,7 @@ public class FormattedAppleFileFactory
   // C0  0001  AppleGraphicsPic0000   IIGS Super Hi-Res Graphics Screen Image (packed)
   // C0  0002  AppleGraphicsPnt
   // C0  0003                         IIGS QuickDraw II Picture File (packed)
-  // C0  1000  AppleGraphicsPnt1000
+  // C0  1000  AppleGraphicsPic0000
   // C0  8000  AppleGraphicsPnt0000   Paintworks Gold
 
   // PIC
@@ -215,10 +214,11 @@ public class FormattedAppleFileFactory
       Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
       return new AppleGraphicsPic0001 (appleFile, unpackedBuffer);
     }
-    if (fileType == FILE_TYPE_PNT && aux == 0x1000)
-      return new AppleGraphicsPnt1000 (appleFile, buffer);
 
-    if (fileType == FILE_TYPE_PIC && aux == 0)
+    if (fileType == FILE_TYPE_PNT && aux == 0x1000)             // same as PIC/0000
+      return new AppleGraphicsPic0000 (appleFile, buffer);
+
+    if (fileType == FILE_TYPE_PIC && aux == 0)                  // same as PNT/1000
       return new AppleGraphicsPic0000 (appleFile, buffer);
 
     if (fileType == FILE_TYPE_PIC && aux == 1)
