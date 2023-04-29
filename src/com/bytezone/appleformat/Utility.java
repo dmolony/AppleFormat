@@ -656,6 +656,41 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
+  public static int calculateBufferSize (byte[] buffer, int ptr)
+  // ---------------------------------------------------------------------------------//
+  {
+    int size = 0;
+    while (ptr < buffer.length)
+    {
+      int type = (buffer[ptr] & 0xC0) >>> 6;        // 0-3
+      int count = (buffer[ptr++] & 0x3F) + 1;       // 1-64
+
+      if (type == 0)
+      {
+        ptr += count;
+        size += count;
+      }
+      else if (type == 1)
+      {
+        ptr++;
+        size += count;
+      }
+      else if (type == 2)
+      {
+        ptr += 4;
+        size += count * 4;
+      }
+      else
+      {
+        ptr++;
+        size += count * 4;
+      }
+    }
+
+    return size;
+  }
+
+  // ---------------------------------------------------------------------------------//
   public static int unpackBytes (byte[] buffer, int ptr, int max, byte[] newBuffer,
       int newPtr)
   // ---------------------------------------------------------------------------------//

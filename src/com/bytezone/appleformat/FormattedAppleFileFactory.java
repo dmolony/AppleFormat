@@ -16,7 +16,10 @@ import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
 import com.bytezone.appleformat.graphics.AppleGraphicsPic;
 import com.bytezone.appleformat.graphics.AppleGraphicsPic0000;
+import com.bytezone.appleformat.graphics.AppleGraphicsPic0001;
 import com.bytezone.appleformat.graphics.AppleGraphicsPnt;
+import com.bytezone.appleformat.graphics.AppleGraphicsPnt0000;
+import com.bytezone.appleformat.graphics.AppleGraphicsPnt1000;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleContainer;
@@ -161,28 +164,68 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
+  // BIN
   // 06  0000  AppleGraphicsPic       .3200 (C1 0002)
   // 06  0000  AppleGraphics3201      .3201 
   // 06  2000  AppleGraphics
   // 06  4000  AppleGraphics
 
-  // C0  0001                         IIGS Super Hi-Res Graphics Screen Image (packed)
+  // FOT
+  // 08  ....                         see File Type Note 8
+  // 08  4000                         Hi-Res (packed)
+  // 08  4001                         Double Hi-Res (packed)
+
+  // PNT
+  // C0  0000  AppleGraphicsPnt0000   Paintworks SHR (packed)
+  // C0  0001  AppleGraphicsPic0000   IIGS Super Hi-Res Graphics Screen Image (packed)
   // C0  0002  AppleGraphicsPnt
   // C0  0003                         IIGS QuickDraw II Picture File (packed)
+  // C0  1000  AppleGraphicsPnt1000
+  // C0  8000  AppleGraphicsPnt0000   Paintworks Gold
 
+  // PIC
   // C1  0000  AppleGraphicsPic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
-  // C1  0001                         IIGS QuickDraw II Picture File (unpacked)
+  // C1  0001  AppleGraphicsPic0001   IIGS QuickDraw II Picture File (unpacked)
   // C1  0002  AppleGraphicsPic
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkGraphics (AppleFile appleFile, int fileType, int aux,
       byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
+    if (fileType == FILE_TYPE_PNT && (aux == 0 || aux == 0x8000))
+      return new AppleGraphicsPnt0000 (appleFile, buffer);
+
+    if (fileType == FILE_TYPE_PNT && aux == 1)
+    {
+      int size = Utility.calculateBufferSize (buffer, 0);
+      byte[] unpackedBuffer = new byte[size];
+      Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
+      return new AppleGraphicsPic0000 (appleFile, unpackedBuffer);
+    }
+
     if (fileType == FILE_TYPE_PNT && aux == 2)
       return new AppleGraphicsPnt (appleFile, buffer);
 
+    if (fileType == FILE_TYPE_PNT && aux == 3)
+    {
+      System.out.printf ("Found PNT aux 0003 : %s%n", appleFile.getFileName ());
+
+      int size = Utility.calculateBufferSize (buffer, 0);
+      byte[] unpackedBuffer = new byte[size];
+      Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
+      return new AppleGraphicsPic0001 (appleFile, unpackedBuffer);
+    }
+    if (fileType == FILE_TYPE_PNT && aux == 0x1000)
+      return new AppleGraphicsPnt1000 (appleFile, buffer);
+
     if (fileType == FILE_TYPE_PIC && aux == 0)
       return new AppleGraphicsPic0000 (appleFile, buffer);
+
+    if (fileType == FILE_TYPE_PIC && aux == 1)
+    {
+      System.out.printf ("Found PIC aux 0001 : %s%n", appleFile.getFileName ());
+      return new AppleGraphicsPic0001 (appleFile, buffer);
+    }
 
     if (fileType == FILE_TYPE_PIC && aux == 2)
       return new AppleGraphicsPic (appleFile, buffer);

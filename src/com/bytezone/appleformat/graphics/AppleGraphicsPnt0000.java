@@ -9,31 +9,27 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+// C0 aux 0000
 // -----------------------------------------------------------------------------------//
-public class AppleGraphics3201 extends AbstractFormattedAppleFile
+public class AppleGraphicsPnt0000 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  static final int COLOR_TABLE_SIZE = 32;
+  private ColorTable[] colorTables;
+  byte[] unpackedBuffer;
 
   private Image image;
-  private ColorTable[] colorTables;
-  private byte[] unpackedBuffer;
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphics3201 (AppleFile appleFile, byte[] buffer)
+  public AppleGraphicsPnt0000 (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer);
 
-    colorTables = new ColorTable[200];
-    for (int i = 0; i < colorTables.length; i++)
-    {
-      colorTables[i] = new ColorTable (i, this.buffer, 4 + i * COLOR_TABLE_SIZE);
-      colorTables[i].reverse ();
-    }
+    colorTables = new ColorTable[1];
+    colorTables[0] = new ColorTable (0, this.buffer, 0);
 
-    unpackedBuffer = new byte[Utility.calculateBufferSize (buffer, 6404)];
-    Utility.unpackBytes (buffer, 6404, buffer.length, unpackedBuffer, 0);
+    unpackedBuffer = new byte[Utility.calculateBufferSize (buffer, 0x222)];
+    Utility.unpackBytes (buffer, 0x222, buffer.length, unpackedBuffer, 0);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -54,7 +50,7 @@ public class AppleGraphics3201 extends AbstractFormattedAppleFile
     WritableImage image = new WritableImage (320, 200);
     PixelWriter pixelWriter = image.getPixelWriter ();
 
-    for (int row = 0; row < colorTables.length; row++)
+    for (int row = 0; row < 200; row++)
       mode320Line (pixelWriter, row);
 
     return image;
@@ -64,7 +60,7 @@ public class AppleGraphics3201 extends AbstractFormattedAppleFile
   void mode320Line (PixelWriter pixelWriter, int row)
   // ---------------------------------------------------------------------------------//
   {
-    ColorTable colorTable = colorTables[row];
+    ColorTable colorTable = colorTables[0];
 
     int col = 0;
     int ptr = row * 160;
