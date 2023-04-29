@@ -14,11 +14,11 @@ import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
-import com.bytezone.appleformat.graphics.AppleGraphicsPic0000;
-import com.bytezone.appleformat.graphics.AppleGraphicsPic0001;
-import com.bytezone.appleformat.graphics.AppleGraphicsPic0002;
-import com.bytezone.appleformat.graphics.AppleGraphicsPnt0000;
-import com.bytezone.appleformat.graphics.AppleGraphicsPnt0002;
+import com.bytezone.appleformat.graphics.Pic0000;
+import com.bytezone.appleformat.graphics.Pic0001;
+import com.bytezone.appleformat.graphics.Pic0002;
+import com.bytezone.appleformat.graphics.Pnt0000;
+import com.bytezone.appleformat.graphics.Pnt0002;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleContainer;
@@ -192,18 +192,18 @@ public class FormattedAppleFileFactory
   // ---------------------------------------------------------------------------------//
   {
     if (fileType == FILE_TYPE_PNT && (aux == 0 || aux == 0x8000))
-      return new AppleGraphicsPnt0000 (appleFile, buffer);
+      return new Pnt0000 (appleFile, buffer);
 
     if (fileType == FILE_TYPE_PNT && aux == 1)
     {
       int size = Utility.calculateBufferSize (buffer, 0);
       byte[] unpackedBuffer = new byte[size];
       Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
-      return new AppleGraphicsPic0000 (appleFile, unpackedBuffer);
+      return new Pic0000 (appleFile, unpackedBuffer);
     }
 
     if (fileType == FILE_TYPE_PNT && aux == 2)
-      return new AppleGraphicsPnt0002 (appleFile, buffer);
+      return new Pnt0002 (appleFile, buffer);
 
     if (fileType == FILE_TYPE_PNT && aux == 3)
     {
@@ -212,23 +212,23 @@ public class FormattedAppleFileFactory
       int size = Utility.calculateBufferSize (buffer, 0);
       byte[] unpackedBuffer = new byte[size];
       Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
-      return new AppleGraphicsPic0001 (appleFile, unpackedBuffer);
+      return new Pic0001 (appleFile, unpackedBuffer);
     }
 
     if (fileType == FILE_TYPE_PNT && aux == 0x1000)             // same as PIC/0000
-      return new AppleGraphicsPic0000 (appleFile, buffer);
+      return new Pic0000 (appleFile, buffer);
 
     if (fileType == FILE_TYPE_PIC && aux == 0)                  // same as PNT/1000
-      return new AppleGraphicsPic0000 (appleFile, buffer);
+      return new Pic0000 (appleFile, buffer);
 
     if (fileType == FILE_TYPE_PIC && aux == 1)
     {
       System.out.printf ("Found PIC aux 0001 : %s%n", appleFile.getFileName ());
-      return new AppleGraphicsPic0001 (appleFile, buffer);
+      return new Pic0001 (appleFile, buffer);
     }
 
     if (fileType == FILE_TYPE_PIC && aux == 2)
-      return new AppleGraphicsPic0002 (appleFile, buffer);
+      return new Pic0002 (appleFile, buffer);
 
     return new DataFileProdos ((FileProdos) appleFile, buffer);
   }
@@ -260,7 +260,7 @@ public class FormattedAppleFileFactory
     }
 
     if (aux == 0 && name.endsWith (".3200"))
-      return new AppleGraphicsPic0002 (appleFile, buffer);
+      return new Pic0002 (appleFile, buffer);
 
     if (aux == 0 && name.endsWith (".3201"))
       return new AppleGraphics3201 (appleFile, buffer);

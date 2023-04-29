@@ -9,7 +9,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 // -----------------------------------------------------------------------------------//
-public class AppleGraphicsPic0000 extends AbstractFormattedAppleFile
+public class Pic0000 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   static final int COLOR_TABLE_OFFSET_AUX_0 = 32_256;
@@ -21,7 +21,7 @@ public class AppleGraphicsPic0000 extends AbstractFormattedAppleFile
   private Image image;
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphicsPic0000 (AppleFile appleFile, byte[] buffer)
+  public Pic0000 (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer);
