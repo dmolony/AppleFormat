@@ -150,15 +150,15 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     {
       DirEntry dirEntry = mainBlock.scanLineDirectory[row];
 
-      if (dirEntry.mode640 != mainBlock.mode640)        // haven't seen it happen yet
-        System.out.printf ("mode mismatch: %02X  %02X  %s%n", dirEntry.mode,
-            mainBlock.masterMode, name);
-
       ColorTable colorTable = multipalBlock != null ?           //
           multipalBlock.colorTables[row] :                      //
           mainBlock.colorTables[dirEntry.colorTable];
 
-      if (dirEntry.mode640)
+      // CELTIC.32K has some lines with an SCB of $00FF, but setting those lines
+      // to mode640 does not work correctly. Until I find out what is going on,
+      // I will use the mainBlock.mode640 value.
+
+      if (mainBlock.mode640)
         mode640Line (pixelWriter, row, colorTable);
       else
         mode320Line (pixelWriter, row, colorTable);
