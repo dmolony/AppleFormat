@@ -164,7 +164,7 @@ public class FormattedAppleFileFactory
 
   // ---------------------------------------------------------------------------------//
   // BIN
-  // 06  0000  AppleGraphicsPic0002   .3200 (C1 0002)
+  // 06  0000  Pic0002                .3200 (C1 0002)
   // 06  0000  AppleGraphics3201      .3201 
   // 06  2000  AppleGraphics
   // 06  4000  AppleGraphics
@@ -175,60 +175,68 @@ public class FormattedAppleFileFactory
   // 08  4001                         Double Hi-Res (packed)
 
   // PNT
-  // C0  0000  AppleGraphicsPnt0000   Paintworks SHR (packed)
-  // C0  0001  AppleGraphicsPic0000   IIGS Super Hi-Res Graphics Screen Image (packed)
-  // C0  0002  AppleGraphicsPnt0002
-  // C0  0003  AppleGraphicsPic0001   IIGS QuickDraw II Picture File (packed)
-  // C0  1000  AppleGraphicsPic0000
-  // C0  8000  AppleGraphicsPnt0000   Paintworks Gold
+  // C0  0000  Pnt0000   Paintworks SHR (packed)
+  // C0  0001  Pic0000   IIGS Super Hi-Res Graphics Screen Image (packed)
+  // C0  0002  Pnt0002
+  // C0  0003  Pic0001   IIGS QuickDraw II Picture File (packed)
+  // C0  1000  Pic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
+  // C0  8000  Pnt0000   Paintworks Gold
 
   // PIC
-  // C1  0000  AppleGraphicsPic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
-  // C1  0001  AppleGraphicsPic0001   IIGS QuickDraw II Picture File (unpacked)
-  // C1  0002  AppleGraphicsPic0002
+  // C1  0000  Pic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
+  // C1  0001  Pic0001   IIGS QuickDraw II Picture File (unpacked)
+  // C1  0002  Pic0002
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkGraphics (AppleFile appleFile, int fileType, int aux,
       byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    if (fileType == FILE_TYPE_PNT && (aux == 0 || aux == 0x8000))
-      return new Pnt0000 (appleFile, buffer);
-
-    if (fileType == FILE_TYPE_PNT && aux == 1)
+    switch (fileType)
     {
-      int size = Utility.calculateBufferSize (buffer, 0);
-      byte[] unpackedBuffer = new byte[size];
-      Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
-      return new Pic0000 (appleFile, unpackedBuffer);
+      case FILE_TYPE_PNT:
+        switch (aux)
+        {
+          case 0x0000:
+          case 0x8000:
+            return new Pnt0000 (appleFile, buffer);
+
+          case 0x0001:
+            int size = Utility.calculateBufferSize (buffer, 0);
+            byte[] unpackedBuffer = new byte[size];
+            Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
+            return new Pic0000 (appleFile, unpackedBuffer);
+
+          case 0x0002:
+            return new Pnt0002 (appleFile, buffer);
+
+          case 0x0003:
+            System.out.printf ("Found PNT aux 0003 : %s%n", appleFile.getFileName ());
+
+            size = Utility.calculateBufferSize (buffer, 0);
+            unpackedBuffer = new byte[size];
+            Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
+            return new Pic0001 (appleFile, unpackedBuffer);
+
+          case 0x1000:
+            return new Pic0000 (appleFile, buffer);           // same as PIC/0000
+        }
+        break;
+
+      case FILE_TYPE_PIC:
+        switch (aux)
+        {
+          case 0x0000:
+            return new Pic0000 (appleFile, buffer);           // same as PNT/1000
+
+          case 0x0001:
+            System.out.printf ("Found PIC aux 0001 : %s%n", appleFile.getFileName ());
+            return new Pic0001 (appleFile, buffer);
+
+          case 0x0002:
+            return new Pic0002 (appleFile, buffer);
+        }
+        break;
     }
-
-    if (fileType == FILE_TYPE_PNT && aux == 2)
-      return new Pnt0002 (appleFile, buffer);
-
-    if (fileType == FILE_TYPE_PNT && aux == 3)
-    {
-      System.out.printf ("Found PNT aux 0003 : %s%n", appleFile.getFileName ());
-
-      int size = Utility.calculateBufferSize (buffer, 0);
-      byte[] unpackedBuffer = new byte[size];
-      Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
-      return new Pic0001 (appleFile, unpackedBuffer);
-    }
-
-    if (fileType == FILE_TYPE_PNT && aux == 0x1000)             // same as PIC/0000
-      return new Pic0000 (appleFile, buffer);
-
-    if (fileType == FILE_TYPE_PIC && aux == 0)                  // same as PNT/1000
-      return new Pic0000 (appleFile, buffer);
-
-    if (fileType == FILE_TYPE_PIC && aux == 1)
-    {
-      System.out.printf ("Found PIC aux 0001 : %s%n", appleFile.getFileName ());
-      return new Pic0001 (appleFile, buffer);
-    }
-
-    if (fileType == FILE_TYPE_PIC && aux == 2)
-      return new Pic0002 (appleFile, buffer);
 
     return new DataFileProdos ((FileProdos) appleFile, buffer);
   }
@@ -246,6 +254,9 @@ public class FormattedAppleFileFactory
     if (ShapeTable.isShapeTable (buffer, 0, length))
       return new ShapeTable (appleFile, buffer, 0, length);
 
+    if (isAPP (buffer))
+      return new AppleGraphics3201 (appleFile, buffer);
+
     if (aux == 0x2000 || aux == 0x4000)
     {
       if (length > 0x1F00 && length <= 0x4000)
@@ -253,16 +264,16 @@ public class FormattedAppleFileFactory
     }
 
     String name = appleFile.getFileName ();
-    if (name.endsWith (".3200") && length < 38400)
+    if (name.endsWith (".3200") && length != 38400)
     {
       name = name.replace (".3200", ".3201");
       System.out.printf ("Assuming %s should be %s%n", appleFile.getFileName (), name);
     }
 
-    if (aux == 0 && name.endsWith (".3200"))
+    if (name.endsWith (".3200") && (aux == 0 || aux == 0x1300))
       return new Pic0002 (appleFile, buffer);
 
-    if (aux == 0 && name.endsWith (".3201"))
+    if (name.endsWith (".3201") && aux == 0)
       return new AppleGraphics3201 (appleFile, buffer);
 
     return new AssemblerProgram (appleFile, buffer, 0, length, aux);
@@ -377,6 +388,17 @@ public class FormattedAppleFileFactory
       default:
         return new DataFile (appleFile, fileType, buffer, 0, length);
     }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private boolean isAPP (byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    if (buffer.length < 4)
+      return false;
+
+    return buffer[0] == (byte) 0xC1 && buffer[1] == (byte) 0xD0
+        && buffer[2] == (byte) 0xD0 && buffer[3] == 0;
   }
 
   // ---------------------------------------------------------------------------------//
