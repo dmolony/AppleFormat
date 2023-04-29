@@ -41,21 +41,21 @@ public class PaletteFactory
 
     palettes.add (//
         new Palette ("Applewin (old)", new int[] {//
-            rgb (0, 0, 0),        // black    */
-            rgb (208, 0, 48),     // red      */
-            rgb (128, 80, 0),     // brown    */
-            rgb (255, 128, 0),    // orange   */
-            rgb (0, 128, 0),      // dk green */
-            rgb (128, 128, 128),  // gray     */
-            rgb (0, 255, 0),      // lt green */
-            rgb (255, 255, 0),    // yellow   */
-            rgb (0, 0, 128),      // dk blue  */
-            rgb (255, 0, 255),    // purple   */
-            rgb (192, 192, 192),  // grey     */
-            rgb (255, 144, 128),  // pink     */
-            rgb (0, 0, 255),      // med blue */
-            rgb (96, 160, 255),   // lt blue  */
-            rgb (64, 255, 144),   // aqua     */
+            rgb (0, 0, 0),        // black    
+            rgb (208, 0, 48),     // red      
+            rgb (128, 80, 0),     // brown    
+            rgb (255, 128, 0),    // orange   
+            rgb (0, 128, 0),      // dk green 
+            rgb (128, 128, 128),  // gray     
+            rgb (0, 255, 0),      // lt green 
+            rgb (255, 255, 0),    // yellow   
+            rgb (0, 0, 128),      // dk blue  
+            rgb (255, 0, 255),    // purple   
+            rgb (192, 192, 192),  // grey     
+            rgb (255, 144, 128),  // pink     
+            rgb (0, 0, 255),      // med blue 
+            rgb (96, 160, 255),   // lt blue  
+            rgb (64, 255, 144),   // aqua     
             rgb (255, 255, 255)   // white
         }));
 
@@ -81,21 +81,21 @@ public class PaletteFactory
 
     palettes.add (//
         new Palette ("Kegs", new int[] {//
-            rgb (0, 0, 0),        // black    */
-            rgb (221, 0, 51),     // red      */
-            rgb (136, 85, 34),    // brown    */
-            rgb (255, 102, 0),    // orange   */
-            rgb (0, 119, 0),      // dk green */
-            rgb (85, 85, 85),     // gray     */
-            rgb (0, 221, 0),      // lt green */
-            rgb (255, 255, 0),    // yellow   */
-            rgb (0, 0, 153),      // dk blue  */
-            rgb (221, 0, 221),    // purple   */
-            rgb (170, 170, 170),  // grey     */
-            rgb (255, 153, 136),  // pink     */
-            rgb (34, 34, 255),    // med blue */
-            rgb (102, 170, 255),  // lt blue  */
-            rgb (0, 255, 153),    // aqua     */
+            rgb (0, 0, 0),        // black    
+            rgb (221, 0, 51),     // red      
+            rgb (136, 85, 34),    // brown    
+            rgb (255, 102, 0),    // orange   
+            rgb (0, 119, 0),      // dk green 
+            rgb (85, 85, 85),     // gray     
+            rgb (0, 221, 0),      // lt green 
+            rgb (255, 255, 0),    // yellow   
+            rgb (0, 0, 153),      // dk blue  
+            rgb (221, 0, 221),    // purple   
+            rgb (170, 170, 170),  // grey     
+            rgb (255, 153, 136),  // pink     
+            rgb (34, 34, 255),    // med blue 
+            rgb (102, 170, 255),  // lt blue  
+            rgb (0, 255, 153),    // aqua     
             rgb (255, 255, 255)   // white
         }));
 
@@ -161,22 +161,22 @@ public class PaletteFactory
 
     palettes.add (//
         new Palette ("Wikipedia", new int[] {//
-            rgb (0, 0, 0),        // black */
-            rgb (114, 38, 64),    // red */
-            rgb (64, 76, 0),      // brown */
-            rgb (228, 101, 1),    // orange */
-            rgb (14, 89, 64),     // dk green */
-            rgb (128, 128, 128),  // gray */
-            rgb (27, 203, 1),     // lt green */
-            rgb (191, 204, 128),  // yellow */
-            rgb (64, 51, 127),    // dk blue */
-            rgb (228, 52, 254),   // purple */
-            rgb (128, 128, 128),  // grey */
-            rgb (241, 166, 191),  // pink */
-            rgb (27, 154, 254),   // med blue */
-            rgb (191, 179, 255),  // lt blue */
-            rgb (141, 217, 191),  // aqua */
-            rgb (255, 255, 255)   // white */
+            rgb (0, 0, 0),        // black 
+            rgb (114, 38, 64),    // red 
+            rgb (64, 76, 0),      // brown 
+            rgb (228, 101, 1),    // orange 
+            rgb (14, 89, 64),     // dk green 
+            rgb (128, 128, 128),  // gray 
+            rgb (27, 203, 1),     // lt green 
+            rgb (191, 204, 128),  // yellow 
+            rgb (64, 51, 127),    // dk blue 
+            rgb (228, 52, 254),   // purple 
+            rgb (128, 128, 128),  // grey 
+            rgb (241, 166, 191),  // pink 
+            rgb (27, 154, 254),   // med blue 
+            rgb (191, 179, 255),  // lt blue 
+            rgb (141, 217, 191),  // aqua 
+            rgb (255, 255, 255)   // white 
         }));
   }
 

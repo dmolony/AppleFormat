@@ -9,7 +9,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-// C0 aux 0000
+// C0 (PNT) aux 0000
 // -----------------------------------------------------------------------------------//
 public class Pnt0000 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
@@ -47,10 +47,12 @@ public class Pnt0000 extends AbstractFormattedAppleFile
   private Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
-    WritableImage image = new WritableImage (320, 200);
+    int rows = unpackedBuffer.length / 160;
+
+    WritableImage image = new WritableImage (320, rows);
     PixelWriter pixelWriter = image.getPixelWriter ();
 
-    for (int row = 0; row < 200; row++)
+    for (int row = 0; row < rows; row++)
       mode320Line (pixelWriter, row);
 
     return image;

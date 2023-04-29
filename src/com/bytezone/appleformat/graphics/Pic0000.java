@@ -8,6 +8,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+// C1 (PIC) aux 0000
 // -----------------------------------------------------------------------------------//
 public class Pic0000 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//

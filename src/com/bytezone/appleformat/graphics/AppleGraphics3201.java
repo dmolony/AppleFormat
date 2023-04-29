@@ -9,6 +9,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+// 06 (BIN) 
 // -----------------------------------------------------------------------------------//
 public class AppleGraphics3201 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
