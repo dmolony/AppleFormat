@@ -14,11 +14,11 @@ import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
-import com.bytezone.appleformat.graphics.AppleGraphicsPic;
 import com.bytezone.appleformat.graphics.AppleGraphicsPic0000;
 import com.bytezone.appleformat.graphics.AppleGraphicsPic0001;
-import com.bytezone.appleformat.graphics.AppleGraphicsPnt;
+import com.bytezone.appleformat.graphics.AppleGraphicsPic0002;
 import com.bytezone.appleformat.graphics.AppleGraphicsPnt0000;
+import com.bytezone.appleformat.graphics.AppleGraphicsPnt0002;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleContainer;
@@ -164,7 +164,7 @@ public class FormattedAppleFileFactory
 
   // ---------------------------------------------------------------------------------//
   // BIN
-  // 06  0000  AppleGraphicsPic       .3200 (C1 0002)
+  // 06  0000  AppleGraphicsPic0002   .3200 (C1 0002)
   // 06  0000  AppleGraphics3201      .3201 
   // 06  2000  AppleGraphics
   // 06  4000  AppleGraphics
@@ -177,15 +177,15 @@ public class FormattedAppleFileFactory
   // PNT
   // C0  0000  AppleGraphicsPnt0000   Paintworks SHR (packed)
   // C0  0001  AppleGraphicsPic0000   IIGS Super Hi-Res Graphics Screen Image (packed)
-  // C0  0002  AppleGraphicsPnt
-  // C0  0003                         IIGS QuickDraw II Picture File (packed)
+  // C0  0002  AppleGraphicsPnt0002
+  // C0  0003  AppleGraphicsPic0001   IIGS QuickDraw II Picture File (packed)
   // C0  1000  AppleGraphicsPic0000
   // C0  8000  AppleGraphicsPnt0000   Paintworks Gold
 
   // PIC
   // C1  0000  AppleGraphicsPic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
   // C1  0001  AppleGraphicsPic0001   IIGS QuickDraw II Picture File (unpacked)
-  // C1  0002  AppleGraphicsPic
+  // C1  0002  AppleGraphicsPic0002
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkGraphics (AppleFile appleFile, int fileType, int aux,
       byte[] buffer)
@@ -203,7 +203,7 @@ public class FormattedAppleFileFactory
     }
 
     if (fileType == FILE_TYPE_PNT && aux == 2)
-      return new AppleGraphicsPnt (appleFile, buffer);
+      return new AppleGraphicsPnt0002 (appleFile, buffer);
 
     if (fileType == FILE_TYPE_PNT && aux == 3)
     {
@@ -228,7 +228,7 @@ public class FormattedAppleFileFactory
     }
 
     if (fileType == FILE_TYPE_PIC && aux == 2)
-      return new AppleGraphicsPic (appleFile, buffer);
+      return new AppleGraphicsPic0002 (appleFile, buffer);
 
     return new DataFileProdos ((FileProdos) appleFile, buffer);
   }
@@ -260,7 +260,7 @@ public class FormattedAppleFileFactory
     }
 
     if (aux == 0 && name.endsWith (".3200"))
-      return new AppleGraphicsPic (appleFile, buffer);
+      return new AppleGraphicsPic0002 (appleFile, buffer);
 
     if (aux == 0 && name.endsWith (".3201"))
       return new AppleGraphics3201 (appleFile, buffer);

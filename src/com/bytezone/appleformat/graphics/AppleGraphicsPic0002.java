@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 
 // $C1 (PIC) aux $0002 - Super Hi-res 3200 color screen image
 // -----------------------------------------------------------------------------------//
-public class AppleGraphicsPic extends AbstractFormattedAppleFile
+public class AppleGraphicsPic0002 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   static final int COLOR_TABLE_SIZE = 32;
@@ -24,7 +24,7 @@ public class AppleGraphicsPic extends AbstractFormattedAppleFile
   private Image image;
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphicsPic (AppleFile appleFile, byte[] buffer)
+  public AppleGraphicsPic0002 (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer);

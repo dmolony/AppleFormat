@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 // $C0 (PNT) aux $0002 - Apple IIGS Super Hi-res Picture File (Apple Preferred) 
 // -----------------------------------------------------------------------------------//
-public class AppleGraphicsPnt extends AbstractFormattedAppleFile
+public class AppleGraphicsPnt0002 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   //  private static final String BLANKS =
@@ -30,7 +30,7 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
   private Image image;
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphicsPnt (AppleFile appleFile, byte[] buffer)
+  public AppleGraphicsPnt0002 (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer);
