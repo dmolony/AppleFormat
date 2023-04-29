@@ -1,40 +1,39 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
-import com.bytezone.appleformat.ProdosConstants;
+import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-// $C1 (PIC) aux $0002 - Super Hi-res 3200 color screen image
 // -----------------------------------------------------------------------------------//
-public class AppleGraphicsPic extends AbstractFormattedAppleFile
+public class AppleGraphics3201 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   static final int COLOR_TABLE_SIZE = 32;
-  static final int COLOR_TABLE_OFFSET_AUX_2 = 32_000;
 
-  final ColorTable[] colorTables = new ColorTable[200];
-
-  String failureReason = "";
   private Image image;
+  private ColorTable[] colorTables;
+  private byte[] unpackedBuffer;
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphicsPic (AppleFile appleFile, byte[] buffer)
+  public AppleGraphics3201 (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer);
 
+    colorTables = new ColorTable[200];
     for (int i = 0; i < colorTables.length; i++)
     {
-      colorTables[i] =
-          new ColorTable (i, buffer, COLOR_TABLE_OFFSET_AUX_2 + i * COLOR_TABLE_SIZE);
+      colorTables[i] = new ColorTable (i, this.buffer, 4 + i * COLOR_TABLE_SIZE);
       colorTables[i].reverse ();
     }
+
+    unpackedBuffer = new byte[calculateBufferSize (buffer, 6404)];
+    Utility.unpackBytes (buffer, 6404, buffer.length, unpackedBuffer, 0);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -73,8 +72,8 @@ public class AppleGraphicsPic extends AbstractFormattedAppleFile
     for (int i = 0; i < 160; i++)
     {
       // get two indices from this byte
-      int left = (buffer[ptr] & 0xF0) >>> 4;
-      int right = buffer[ptr++] & 0x0F;
+      int left = (unpackedBuffer[ptr] & 0xF0) >>> 4;
+      int right = unpackedBuffer[ptr++] & 0x0F;
 
       // get pixel colors
       Color rgbLeft = colorTable.entries[left].color;
@@ -87,41 +86,38 @@ public class AppleGraphicsPic extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  public String getText ()
+  int calculateBufferSize (byte[] buffer, int ptr)
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder ();
+    // int ptr = 0;
+    int size = 0;
+    while (ptr < buffer.length)
+    {
+      int type = (buffer[ptr] & 0xC0) >>> 6;        // 0-3
+      int count = (buffer[ptr++] & 0x3F) + 1;       // 1-64
 
-    text.append ("Pic");
+      if (type == 0)
+      {
+        ptr += count;
+        size += count;
+      }
+      else if (type == 1)
+      {
+        ptr++;
+        size += count;
+      }
+      else if (type == 2)
+      {
+        ptr += 4;
+        size += count * 4;
+      }
+      else
+      {
+        ptr++;
+        size += count * 4;
+      }
+    }
 
-    return text.toString ();
-  }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  public String getExtras ()
-  // ---------------------------------------------------------------------------------//
-  {
-    FileProdos file = (FileProdos) appleFile;
-    int aux = file.getAuxType ();
-    String auxText = "";
-    StringBuilder text = new StringBuilder ();
-
-    text.append (String.format ("Image File : %s%nFile type  : $%02X    %s%n", name,
-        file.getFileType (), ProdosConstants.fileTypes[file.getFileType ()]));
-
-    auxText = "Super Hi-Res 3200 color image";
-
-    if (!auxText.isEmpty ())
-      text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
-
-    text.append (String.format ("File size  : %,d%n", buffer.length));
-    text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
-    if (!failureReason.isEmpty ())
-      text.append (String.format ("Failure    : %s%n", failureReason));
-
-    text.deleteCharAt (text.length () - 1);
-    return text.toString ();
+    return size;
   }
 }

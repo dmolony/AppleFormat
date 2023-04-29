@@ -13,10 +13,14 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+// $C0 (PNT) aux $0002 - Apple IIGS Super Hi-res Picture File (Apple Preferred) 
 // -----------------------------------------------------------------------------------//
 public class AppleGraphicsPnt extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
+  //  private static final String BLANKS =
+  //      "                                                                       ";
+
   private final List<Block> blocks = new ArrayList<> ();
   private Main mainBlock;
   private Multipal multipalBlock;
@@ -310,23 +314,19 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
       text.append (
           String.format ("%3d  %04X  %3d   ", i, dirEntry.mode, dirEntry.numBytes));
 
-      boolean firstLine = true;
+      int bytesRemaining = dirEntry.numBytes;
+
       while (true)
       {
-        String hex = HexFormatter.getHexString (mainBlock.data, ptr, lineSize);
+        String hex = HexFormatter.getHexString (mainBlock.data, ptr,
+            Math.min (lineSize, bytesRemaining));
         text.append (hex);
-        if (firstLine)
-        {
-          firstLine = false;
-          if (hex.length () < 71)
-            text.append (("                                        "
-                + "                               ").substring (hex.length ()));
-        }
 
         ptr += lineSize;
         if (ptr >= max)
           break;
 
+        bytesRemaining -= lineSize;
         text.append ("\n                 ");
       }
 
@@ -354,10 +354,12 @@ public class AppleGraphicsPnt extends AbstractFormattedAppleFile
     while (ptr < max)
     {
       int type = (buffer[ptr] & 0xC0) >>> 6;        // 0-3
-      int count = (buffer[ptr++] & 0x3F) + 1;       // 1-64
+      int count = (buffer[ptr] & 0x3F) + 1;         // 1-64
 
-      text.append (String.format ("%04X/%04d: %02X  (%d,%2d)  ", ptr - 1, size,
-          buffer[ptr - 1], type, count));
+      text.append (String.format ("%04X/%04d: %02X  (%d,%2d)  ", ptr, size, buffer[ptr],
+          type, count));
+
+      ptr++;
 
       if (type == 0)
       {

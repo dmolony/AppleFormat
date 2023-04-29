@@ -13,6 +13,7 @@ import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.graphics.AppleGraphics;
+import com.bytezone.appleformat.graphics.AppleGraphics3201;
 import com.bytezone.appleformat.graphics.AppleGraphicsPic;
 import com.bytezone.appleformat.graphics.AppleGraphicsPnt;
 import com.bytezone.appleformat.graphics.ShapeTable;
@@ -154,10 +155,22 @@ public class FormattedAppleFileFactory
           length);
       case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, buffer, 0,
           length);
-      default -> new DataFile (appleFile, fileType, buffer);
+      default -> new DataFileProdos ((FileProdos) appleFile, buffer);
     };
   }
 
+  // 06  0000                    .3200 (C1 0002)
+  // 06  0000  AppleGraphics3201 .3201 
+  // 06  2000  AppleGraphics
+  // 06  4000  AppleGraphics
+
+  // C0  0001                     Apple IIGS Super Hi-Res Graphics Screen Image (packed)
+  // C0  0002  AppleGraphicsPnt
+  // C0  0003                     Apple IIGS QuickDraw II Picture File (packed)
+
+  // C1  0000                     Apple IIGS Super Hi-Res Graphics Screen Image (unpacked)
+  // C1  0001                     Apple IIGS QuickDraw II Picture File (unpacked)
+  // C1  0002  AppleGraphicsPic
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkGraphics (AppleFile appleFile, int fileType, int aux,
       byte[] buffer)
@@ -166,7 +179,10 @@ public class FormattedAppleFileFactory
     if (fileType == FILE_TYPE_PNT && aux == 2)
       return new AppleGraphicsPnt (appleFile, buffer);
 
-    return new AppleGraphicsPic (appleFile, buffer, aux);
+    if (fileType == FILE_TYPE_PIC && aux == 2)
+      return new AppleGraphicsPic (appleFile, buffer);
+
+    return new DataFileProdos ((FileProdos) appleFile, buffer);
   }
 
   // Another notable exception is the Fotofile (FOT) format inherited by ProDOS
@@ -187,6 +203,19 @@ public class FormattedAppleFileFactory
       if (length > 0x1F00 && length <= 0x4000)
         return new AppleGraphics (appleFile, buffer, 0, length, aux);
     }
+
+    String name = appleFile.getFileName ();
+    if (name.endsWith (".3200") && length < 38400)
+    {
+      name = name.replace (".3200", ".3201");
+      System.out.printf ("Assuming %s should be %s%n", appleFile.getFileName (), name);
+    }
+
+    if (aux == 0 && name.endsWith (".3200"))
+      return new AppleGraphicsPic (appleFile, buffer);
+
+    if (aux == 0 && name.endsWith (".3201"))
+      return new AppleGraphics3201 (appleFile, buffer);
 
     return new AssemblerProgram (appleFile, buffer, 0, length, aux);
   }

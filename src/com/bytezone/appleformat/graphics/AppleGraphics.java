@@ -8,6 +8,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+// $06 (BIN) aux $2000 or $4000
 // -----------------------------------------------------------------------------------//
 public class AppleGraphics extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
