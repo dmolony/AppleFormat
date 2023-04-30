@@ -201,24 +201,17 @@ public class FormattedAppleFileFactory
             return new Pnt0000 (appleFile, buffer);
 
           case 0x0001:
-            int size = Utility.calculateBufferSize (buffer, 0);
-            byte[] unpackedBuffer = new byte[size];
-            Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
-            return new Pic0000 (appleFile, unpackedBuffer);
+            return new Pic0000 (appleFile, Utility.unpackBytes (buffer));
 
           case 0x0002:
             return new Pnt0002 (appleFile, buffer);
 
           case 0x0003:
-            System.out.printf ("Found PNT aux 0003 : %s%n", appleFile.getFileName ());
-
-            size = Utility.calculateBufferSize (buffer, 0);
-            unpackedBuffer = new byte[size];
-            Utility.unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
-            return new Pic0001 (appleFile, unpackedBuffer);
+            System.out.printf ("*** Found PNT aux 0003 : %s%n", appleFile.getFileName ());
+            return new Pic0001 (appleFile, Utility.unpackBytes (buffer));
 
           case 0x1000:
-            return new Pic0000 (appleFile, buffer);           // same as PIC/0000
+            return new Pic0000 (appleFile, buffer);
         }
         break;
 
@@ -226,10 +219,10 @@ public class FormattedAppleFileFactory
         switch (aux)
         {
           case 0x0000:
-            return new Pic0000 (appleFile, buffer);           // same as PNT/1000
+            return new Pic0000 (appleFile, buffer);
 
           case 0x0001:
-            System.out.printf ("Found PIC aux 0001 : %s%n", appleFile.getFileName ());
+            System.out.printf ("*** Found PIC aux 0001 : %s%n", appleFile.getFileName ());
             return new Pic0001 (appleFile, buffer);
 
           case 0x0002:

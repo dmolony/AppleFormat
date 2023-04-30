@@ -8,7 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
-// C1 (PIC) aux 0001
+// C0 (PNT) aux 0003 (packed)
+// C1 (PIC) aux 0001 (unpacked)
 // -----------------------------------------------------------------------------------//
 public class Pic0001 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//

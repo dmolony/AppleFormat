@@ -656,6 +656,16 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
+  public static byte[] unpackBytes (byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] unpackedBuffer = new byte[calculateBufferSize (buffer, 0)];
+    unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
+
+    return unpackedBuffer;
+  }
+
+  // ---------------------------------------------------------------------------------//
   public static int calculateBufferSize (byte[] buffer, int ptr)
   // ---------------------------------------------------------------------------------//
   {
