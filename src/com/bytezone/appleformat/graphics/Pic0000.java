@@ -36,9 +36,12 @@ public class Pic0000 extends AbstractFormattedAppleFile
     System.arraycopy (buffer, 32000, controlBytes, 0, controlBytes.length);
 
     colorTables = new ColorTable[16];
+    int ptr = COLOR_TABLE_OFFSET_AUX_0;
     for (int i = 0; i < colorTables.length; i++)
-      colorTables[i] =
-          new ColorTable (i, buffer, COLOR_TABLE_OFFSET_AUX_0 + i * COLOR_TABLE_SIZE);
+    {
+      colorTables[i] = new ColorTable (i, buffer, ptr);
+      ptr += COLOR_TABLE_SIZE;
+    }
   }
 
   // ---------------------------------------------------------------------------------//

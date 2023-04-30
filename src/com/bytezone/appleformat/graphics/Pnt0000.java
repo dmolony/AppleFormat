@@ -18,6 +18,7 @@ public class Pnt0000 extends AbstractFormattedAppleFile
   byte[] unpackedBuffer;
 
   private Image image;
+  int rows;
 
   // ---------------------------------------------------------------------------------//
   public Pnt0000 (AppleFile appleFile, byte[] buffer)
@@ -25,11 +26,16 @@ public class Pnt0000 extends AbstractFormattedAppleFile
   {
     super (appleFile, buffer);
 
+    // 00000 - 00032  1 Color table
+    // 00033 - 00545  empty
+    // 00546 - eof    packed pixel data
+
     colorTables = new ColorTable[1];
     colorTables[0] = new ColorTable (0, this.buffer, 0);
 
     unpackedBuffer = new byte[Utility.calculateBufferSize (buffer, 0x222)];
     Utility.unpackBytes (buffer, 0x222, buffer.length, unpackedBuffer, 0);
+    rows = unpackedBuffer.length / 160;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -47,8 +53,6 @@ public class Pnt0000 extends AbstractFormattedAppleFile
   private Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
-    int rows = unpackedBuffer.length / 160;
-
     WritableImage image = new WritableImage (320, rows);
     PixelWriter pixelWriter = image.getPixelWriter ();
 

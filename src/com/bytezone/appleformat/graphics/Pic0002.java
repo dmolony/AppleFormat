@@ -17,8 +17,9 @@ public class Pic0002 extends AbstractFormattedAppleFile
 {
   static final int COLOR_TABLE_SIZE = 32;
   static final int COLOR_TABLE_OFFSET_AUX_2 = 32_000;
+  static final int NUM_COLOR_TABLES = 200;
 
-  final ColorTable[] colorTables = new ColorTable[200];
+  final ColorTable[] colorTables = new ColorTable[NUM_COLOR_TABLES];
 
   String failureReason = "";
   private Image image;
@@ -29,11 +30,15 @@ public class Pic0002 extends AbstractFormattedAppleFile
   {
     super (appleFile, buffer);
 
-    for (int i = 0; i < colorTables.length; i++)
+    // 00000 - 31999  pixel data 32,000 bytes
+    // 32000 - 38400  200 color tables
+
+    int ptr = COLOR_TABLE_OFFSET_AUX_2;
+    for (int i = 0; i < NUM_COLOR_TABLES; i++)
     {
-      colorTables[i] =
-          new ColorTable (i, buffer, COLOR_TABLE_OFFSET_AUX_2 + i * COLOR_TABLE_SIZE);
+      colorTables[i] = new ColorTable (i, buffer, ptr);
       colorTables[i].reverse ();
+      ptr += COLOR_TABLE_SIZE;
     }
   }
 
@@ -52,10 +57,10 @@ public class Pic0002 extends AbstractFormattedAppleFile
   private Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
-    WritableImage image = new WritableImage (320, 200);
+    WritableImage image = new WritableImage (320, NUM_COLOR_TABLES);
     PixelWriter pixelWriter = image.getPixelWriter ();
 
-    for (int row = 0; row < colorTables.length; row++)
+    for (int row = 0; row < NUM_COLOR_TABLES; row++)
       mode320Line (pixelWriter, row);
 
     return image;
