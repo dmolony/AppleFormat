@@ -470,6 +470,14 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
+  public static String getPascalString (byte[] buffer, int offset)
+  // ---------------------------------------------------------------------------------//
+  {
+    int length = buffer[offset] & 0xFF;
+    return HexFormatter.getString (buffer, offset + 1, length);
+  }
+
+  // ---------------------------------------------------------------------------------//
   public static String getCString (byte[] buffer, int offset)
   // ---------------------------------------------------------------------------------//
   {
@@ -661,6 +669,16 @@ public final class Utility
   {
     byte[] unpackedBuffer = new byte[calculateBufferSize (buffer, 0)];
     unpackBytes (buffer, 0, buffer.length, unpackedBuffer, 0);
+
+    return unpackedBuffer;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static byte[] unpackBytes (byte[] buffer, int offset)
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] unpackedBuffer = new byte[calculateBufferSize (buffer, offset)];
+    unpackBytes (buffer, offset, buffer.length, unpackedBuffer, 0);
 
     return unpackedBuffer;
   }

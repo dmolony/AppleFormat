@@ -1,7 +1,6 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
-import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.FileProdos;
 
@@ -10,7 +9,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-// $C1 (PIC) aux $0002 - Super Hi-res 3200 color screen image
+// $C1 (PIC) aux $0002 - Super Hi-res 3200 color screen image (Brooks)
 // -----------------------------------------------------------------------------------//
 public class Pic0002 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
@@ -93,19 +92,30 @@ public class Pic0002 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String getExtras ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
 
-    text.append ("Pic");
+    text.append ("Color Table\n\n #");
+    for (int i = 0; i < 16; i++)
+      text.append (String.format ("   %02X ", i));
+    text.append ("\n--");
+    for (int i = 0; i < 16; i++)
+      text.append ("  ----");
+    text.append ("\n");
+    for (ColorTable colorTable : colorTables)
+    {
+      text.append (colorTable.toLine ());
+      text.append ("\n");
+    }
 
     return text.toString ();
   }
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getExtras ()
+  public String getText ()
   // ---------------------------------------------------------------------------------//
   {
     FileProdos file = (FileProdos) appleFile;
@@ -113,8 +123,9 @@ public class Pic0002 extends AbstractFormattedAppleFile
     String auxText = "";
     StringBuilder text = new StringBuilder ();
 
-    text.append (String.format ("Image File : %s%nFile type  : $%02X    %s%n", name,
-        file.getFileType (), ProdosConstants.fileTypes[file.getFileType ()]));
+    text.append (String.format ("Image File : %s%n", name));
+    text.append (String.format ("File type  : $%02X    %s%n", file.getFileType (),
+        file.getFileTypeText ()));
 
     auxText = "Super Hi-Res 3200 color image";
 

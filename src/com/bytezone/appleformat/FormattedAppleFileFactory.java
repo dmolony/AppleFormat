@@ -19,7 +19,9 @@ import com.bytezone.appleformat.graphics.Pic0001;
 import com.bytezone.appleformat.graphics.Pic0002;
 import com.bytezone.appleformat.graphics.Pnt0000;
 import com.bytezone.appleformat.graphics.Pnt0002;
+import com.bytezone.appleformat.graphics.Pnt8005;
 import com.bytezone.appleformat.graphics.ShapeTable;
+import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
@@ -163,29 +165,31 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  // BIN
-  // 06  0000  Pic0002                .3200 (C1 0002)
-  // 06  0000  AppleGraphics3201      .3201 
-  // 06  2000  AppleGraphics
-  // 06  4000  AppleGraphics
+  // 06 BIN
+  // 0000  Pic0002                .3200 (C1 0002) (unpacked Brooks)
+  // 0000  AppleGraphics3201      .3201           (packed Brooks?)
+  // 2000  AppleGraphics
+  // 4000  AppleGraphics
 
-  // FOT
-  // 08  ....                         see File Type Note 8
-  // 08  4000                         Hi-Res (packed)
-  // 08  4001                         Double Hi-Res (packed)
+  // 08 FOT
+  // ....                         see File Type Note 8
+  // 4000                         Hi-Res (packed)
+  // 4001                         Double Hi-Res (packed)
 
-  // PNT
-  // C0  0000  Pnt0000   Paintworks SHR (packed)
-  // C0  0001  Pic0000   IIGS Super Hi-Res Graphics Screen Image (packed)
-  // C0  0002  Pnt0002
-  // C0  0003  Pic0001   IIGS QuickDraw II Picture File (packed)
-  // C0  1000  Pic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
-  // C0  8000  Pnt0000   Paintworks Gold
+  // C0 PNT
+  // 0000  Pnt0000   Paintworks SHR (packed)
+  // 0001  Pic0000   IIGS Super Hi-Res Graphics Screen Image (packed)
+  // 0002  Pnt0002   IIGS Super HiRes Picture File (Apple Preferred Format)
+  // 0003  Pic0001   IIGS QuickDraw II Picture File (packed)
+  // 0004            packed Brooks .3201?
+  // 1000  Pic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
+  // 8000  Pnt0000   Paintworks Gold (packed)
+  // 8005  Pnt8005   Dreamworld
 
-  // PIC
-  // C1  0000  Pic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
-  // C1  0001  Pic0001   IIGS QuickDraw II Picture File (unpacked)
-  // C1  0002  Pic0002
+  // C1 PIC
+  // 0000  Pic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
+  // 0001  Pic0001   IIGS QuickDraw II Picture File (unpacked)
+  // 0002  Pic0002   Super HiRes 3200 color screen image (unpacked) (Brooks)
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkGraphics (AppleFile appleFile, int fileType, int aux,
       byte[] buffer)
@@ -210,8 +214,16 @@ public class FormattedAppleFileFactory
             System.out.printf ("*** Found PNT aux 0003 : %s%n", appleFile.getFileName ());
             return new Pic0001 (appleFile, Utility.unpackBytes (buffer));
 
+          case 0x0004:
+            System.out.printf ("*** Found PNT aux 0004 : %s%n", appleFile.getFileName ());
+            return new AppleGraphics3201 (appleFile, buffer);
+
           case 0x1000:
             return new Pic0000 (appleFile, buffer);
+
+          case 0x8005:
+            System.out.printf ("*** Found PNT aux 8005 : %s%n", appleFile.getFileName ());
+            return new Pnt8005 (appleFile, buffer);
         }
         break;
 
@@ -257,7 +269,7 @@ public class FormattedAppleFileFactory
     }
 
     String name = appleFile.getFileName ();
-    if (name.endsWith (".3200") && length != 38400)
+    if (name.endsWith (".3200") && length != 38400 && isAPP (buffer))
     {
       name = name.replace (".3200", ".3201");
       System.out.printf ("Assuming %s should be %s%n", appleFile.getFileName (), name);
@@ -281,6 +293,7 @@ public class FormattedAppleFileFactory
 
     return switch (fileType)
     {
+      case 3 -> new PascalText (appleFile, buffer);
       default -> new DataFile (appleFile, fileType, buffer);
     };
   }

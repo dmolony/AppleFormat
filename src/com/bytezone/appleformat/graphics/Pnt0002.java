@@ -13,7 +13,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-// $C0 (PNT) aux $0002 - Apple IIGS Super Hi-res Picture File (Apple Preferred) 
+// $C0 (PNT) aux $0002 - Apple IIGS Super Hi-res Picture File (Apple Preferred Format) 
 // -----------------------------------------------------------------------------------//
 public class Pnt0002 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//

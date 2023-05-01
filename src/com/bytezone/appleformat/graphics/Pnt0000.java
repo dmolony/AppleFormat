@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 
@@ -9,12 +10,13 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-// C0 (PNT) aux 0000
+// C0 (PNT) aux 0000 Paintworks SHR (packed pixel data)
+// C0 (PNT) aux 8000 Paintworks Gold (packed pixel data)
 // -----------------------------------------------------------------------------------//
 public class Pnt0000 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  private ColorTable[] colorTables;
+  private ColorTable colorTable;
   byte[] unpackedBuffer;
 
   private Image image;
@@ -30,8 +32,7 @@ public class Pnt0000 extends AbstractFormattedAppleFile
     // 00033 - 00545  empty
     // 00546 - eof    packed pixel data
 
-    colorTables = new ColorTable[1];
-    colorTables[0] = new ColorTable (0, this.buffer, 0);
+    colorTable = new ColorTable (0, this.buffer, 0);
 
     unpackedBuffer = new byte[Utility.calculateBufferSize (buffer, 0x222)];
     Utility.unpackBytes (buffer, 0x222, buffer.length, unpackedBuffer, 0);
@@ -66,8 +67,6 @@ public class Pnt0000 extends AbstractFormattedAppleFile
   void mode320Line (PixelWriter pixelWriter, int row)
   // ---------------------------------------------------------------------------------//
   {
-    ColorTable colorTable = colorTables[0];
-
     int col = 0;
     int ptr = row * 160;
 
@@ -85,5 +84,34 @@ public class Pnt0000 extends AbstractFormattedAppleFile
       pixelWriter.setColor (col++, row, rgbLeft);
       pixelWriter.setColor (col++, row, rgbRight);
     }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String getExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    text.append ("Color Table\n\n #");
+    for (int i = 0; i < 16; i++)
+      text.append (String.format ("   %02X ", i));
+    text.append ("\n--");
+    for (int i = 0; i < 16; i++)
+      text.append ("  ----");
+    text.append ("\n");
+
+    text.append (colorTable.toLine ());
+    text.append ("\n");
+
+    text.append ("\nScreen lines\n\n");
+    for (int i = 0; i < rows; i++)
+    {
+      text.append (String.format ("Line: %02X  %<3d%n", i));
+      text.append (HexFormatter.format (unpackedBuffer, i * 160, 160));
+      text.append ("\n\n");
+    }
+
+    return Utility.rtrim (text);
   }
 }

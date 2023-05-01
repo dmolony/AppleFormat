@@ -88,13 +88,21 @@ public class HexFormatter
       for (int j = i; j < max; j++)
       {
         int c = buffer[j] & 0xFF;
-        freq[c]++;
         hexLine.append (String.format ("%02X ", c));
+        freq[c]++;
+
+        if (c > 127)
+        {
+          if (c < 160)
+            c -= 64;
+          else
+            c -= 128;
+        }
 
         if (c < 32 || c == 127)         // non-printable
           trans.append (".");
         else                            // standard ascii
-          trans.append ((char) c & 0x7F);
+          trans.append ((char) c);
       }
 
       while (hexLine.length () < 48)

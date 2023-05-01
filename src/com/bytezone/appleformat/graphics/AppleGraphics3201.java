@@ -3,6 +3,7 @@ package com.bytezone.appleformat.graphics;
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -17,7 +18,7 @@ public class AppleGraphics3201 extends AbstractFormattedAppleFile
   static final int COLOR_TABLE_SIZE = 32;
 
   private Image image;
-  private ColorTable[] colorTables;
+  private final ColorTable[] colorTables = new ColorTable[200];
   private byte[] unpackedBuffer;
 
   // ---------------------------------------------------------------------------------//
@@ -26,15 +27,19 @@ public class AppleGraphics3201 extends AbstractFormattedAppleFile
   {
     super (appleFile, buffer);
 
-    colorTables = new ColorTable[200];
+    //     0 -     3  APP/0
+    //     4 - 06403  200 color tables
+    // 06404 - eof    packed pixel data
+
+    int ptr = 4;
     for (int i = 0; i < colorTables.length; i++)
     {
-      colorTables[i] = new ColorTable (i, this.buffer, 4 + i * COLOR_TABLE_SIZE);
+      colorTables[i] = new ColorTable (i, this.buffer, ptr);
       colorTables[i].reverse ();
+      ptr += COLOR_TABLE_SIZE;
     }
 
-    unpackedBuffer = new byte[Utility.calculateBufferSize (buffer, 6404)];
-    Utility.unpackBytes (buffer, 6404, buffer.length, unpackedBuffer, 0);
+    unpackedBuffer = Utility.unpackBytes (buffer, ptr);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -84,5 +89,28 @@ public class AppleGraphics3201 extends AbstractFormattedAppleFile
       pixelWriter.setColor (col++, row, rgbLeft);
       pixelWriter.setColor (col++, row, rgbRight);
     }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String getText ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    FileProdos file = (FileProdos) appleFile;
+    int aux = file.getAuxType ();
+    String auxText = "";
+
+    text.append (String.format ("Image File : %s%n", name));
+    text.append (String.format ("File type  : $%02X    %s%n", file.getFileType (),
+        file.getFileTypeText ()));
+    text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
+    text.append (String.format ("File size  : %,d%n", buffer.length));
+    text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
+    //    if (!failureReason.isEmpty ())
+    //      text.append (String.format ("Failure    : %s%n", failureReason));
+
+    return Utility.rtrim (text);
   }
 }

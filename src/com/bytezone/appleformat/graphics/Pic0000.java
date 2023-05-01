@@ -8,13 +8,16 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-// C1 (PIC) aux 0000
+// C0 (PNT) aux 0001 IIGS Super Hi-Res Graphics Screen Image (packed)
+// C0 (PNT) aux 1000 IIGS Super Hi-Res Graphics Screen Image (unpacked)
+// C1 (PIC) aux 0000 IIGS Super Hi-Res Graphics Screen Image (unpacked)
 // -----------------------------------------------------------------------------------//
 public class Pic0000 extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   static final int COLOR_TABLE_OFFSET_AUX_0 = 32_256;
   static final int COLOR_TABLE_SIZE = 32;
+  static final int SCAN_LINES = 200;
 
   ColorTable[] colorTables;
   byte[] controlBytes;
@@ -27,12 +30,12 @@ public class Pic0000 extends AbstractFormattedAppleFile
   {
     super (appleFile, buffer);
 
-    // 00000 - 31999  pixel data 32,000 bytes
-    // 32000 - 32199  200 control bytes (one per scan line)
-    // 32200 - 32255  empty
-    // 32256 - 32767  16 color tables of 32 bytes each
+    //      0 - 31,999  pixel data 32,000 bytes
+    // 32,000 - 32,199  200 control bytes (one per scan line)
+    // 32,200 - 32,255  empty
+    // 32,256 - 32,767  16 color tables of 32 bytes each
 
-    controlBytes = new byte[200];
+    controlBytes = new byte[SCAN_LINES];
     System.arraycopy (buffer, 32000, controlBytes, 0, controlBytes.length);
 
     colorTables = new ColorTable[16];
@@ -59,13 +62,13 @@ public class Pic0000 extends AbstractFormattedAppleFile
   private Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
-    WritableImage image = new WritableImage (320, 200);
+    WritableImage image = new WritableImage (320, SCAN_LINES);
     PixelWriter pixelWriter = image.getPixelWriter ();
 
     ColorTable colorTable;
     boolean mode320 = true;
 
-    for (int row = 0; row < 200; row++)
+    for (int row = 0; row < SCAN_LINES; row++)
     {
       int controlByte = controlBytes[row] & 0xFF;
       colorTable = colorTables[controlByte & 0x0F];
