@@ -6,7 +6,6 @@ import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.ForkedFile;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
@@ -121,14 +120,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return emptyImage;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  public Canvas getCanvas ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return null;
   }
 
   // ---------------------------------------------------------------------------------//
