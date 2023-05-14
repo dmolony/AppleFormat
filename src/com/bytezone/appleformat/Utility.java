@@ -198,15 +198,13 @@ public final class Utility
   public static int getShort (byte[] buffer, int ptr)
   // ---------------------------------------------------------------------------------//
   {
-    try
-    {
-      return (buffer[ptr] & 0xFF) | ((buffer[ptr + 1] & 0xFF) << 8);
-    }
-    catch (ArrayIndexOutOfBoundsException e)
+    if (ptr < 0 || ptr + 1 >= buffer.length)
     {
       System.out.printf ("Index out of range (getShort): %04X  %<d%n", ptr);
       return 0;
     }
+
+    return (buffer[ptr] & 0xFF) | ((buffer[ptr + 1] & 0xFF) << 8);
   }
 
   // ---------------------------------------------------------------------------------//

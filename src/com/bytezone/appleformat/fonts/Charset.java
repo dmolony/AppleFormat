@@ -1,8 +1,9 @@
 package com.bytezone.appleformat.fonts;
 
-import java.awt.image.DataBuffer;
-
 import com.bytezone.filesystem.AppleFile;
+
+import javafx.scene.image.PixelWriter;
+import javafx.scene.paint.Color;
 
 // Found on Pascal disks
 // -----------------------------------------------------------------------------------//
@@ -24,22 +25,31 @@ public class Charset extends CharacterList
       characters.add (new CharsetCharacter (buffer, ptr));
       ptr += sizeY;
     }
-
-    buildImage (borderX, borderY, gapX, gapY, sizeX, sizeY, charsX);
   }
 
   // ---------------------------------------------------------------------------------//
   class CharsetCharacter extends Character
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer;
+    int ptr;
+
     // -------------------------------------------------------------------------------//
     public CharsetCharacter (byte[] buffer, int ptr)
     // -------------------------------------------------------------------------------//
     {
       super (sizeX, sizeY);
 
-      DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
-      int element = 0;
+      this.buffer = buffer;
+      this.ptr = ptr;
+    }
+
+    // -------------------------------------------------------------------------------//
+    @Override
+    void draw (PixelWriter pixelWriter, int x, int y)
+    // -------------------------------------------------------------------------------//
+    {
+      int ptr = this.ptr;
       ptr += sizeY;         // start at the end and move backwards
 
       for (int i = 0; i < sizeY; i++)
@@ -47,7 +57,7 @@ public class Charset extends CharacterList
         int value = buffer[--ptr] & 0xFF;
         for (int j = 0; j < sizeX; j++)
         {
-          dataBuffer.setElem (element++, (value & 0x01) == 0 ? 0 : 0xFF);
+          pixelWriter.setColor (x, y, (value & 0x01) == 0 ? Color.WHITE : Color.BLACK);
           value >>>= 1;
         }
       }

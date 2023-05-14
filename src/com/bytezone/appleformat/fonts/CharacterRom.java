@@ -1,9 +1,10 @@
 package com.bytezone.appleformat.fonts;
 
-import java.awt.image.DataBuffer;
-
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.filesystem.AppleFile;
+
+import javafx.scene.image.PixelWriter;
+import javafx.scene.paint.Color;
 
 // see graffidisk.v1.0.2mg
 // -----------------------------------------------------------------------------------//
@@ -29,8 +30,6 @@ public class CharacterRom extends CharacterList
       characters.add (new CharacterRomCharacter (buffer, ptr));
       ptr += sizeY;
     }
-
-    buildImage (borderX, borderY, gapX, gapY, sizeX, sizeY, charsX);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -51,21 +50,32 @@ public class CharacterRom extends CharacterList
   class CharacterRomCharacter extends Character
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer;
+    int ptr;
+
     // -------------------------------------------------------------------------------//
     public CharacterRomCharacter (byte[] buffer, int ptr)
     // -------------------------------------------------------------------------------//
     {
       super (sizeX, sizeY);
 
-      DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
-      int element = 0;
+      this.buffer = buffer;
+      this.ptr = ptr;
+    }
+
+    // -------------------------------------------------------------------------------//
+    @Override
+    void draw (PixelWriter pixelWriter, int x, int y)
+    // -------------------------------------------------------------------------------//
+    {
+      int ptr = this.ptr;
 
       for (int i = 0; i < sizeY; i++)
       {
         int value = buffer[ptr++] & 0xFF;
         for (int j = 0; j < sizeX; j++)
         {
-          dataBuffer.setElem (element++, (value & 0x80) == 0 ? 0 : 0xFF);
+          pixelWriter.setColor (x, y, (value & 0x80) == 0 ? Color.WHITE : Color.BLACK);
           value <<= 1;
         }
       }

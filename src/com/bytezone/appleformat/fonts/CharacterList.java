@@ -1,9 +1,5 @@
 package com.bytezone.appleformat.fonts;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +7,8 @@ import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 
 // -----------------------------------------------------------------------------------//
 abstract class CharacterList extends AbstractFormattedAppleFile
@@ -47,18 +45,23 @@ abstract class CharacterList extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  void buildImage (int borderX, int borderY, int gapX, int gapY, int sizeX, int sizeY,
-      int charsX)
+  Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
-    int charsY = (characters.size () - 1) / charsX + 1;
-    image = new BufferedImage (                                //
-        Utility.dimension (charsX, borderX, sizeX, gapX),      //
-        Utility.dimension (charsY, borderY, sizeY, gapY),      //
-        BufferedImage.TYPE_BYTE_GRAY);
+    if (characters.size () == 0)
+      return null;
 
-    Graphics2D g2d = image.createGraphics ();
-    g2d.setComposite (AlphaComposite.getInstance (AlphaComposite.SRC_OVER, (float) 1.0));
+    int charsX = (int) Math.sqrt (characters.size ());
+    int charsY = (characters.size () - 1) / charsX + 1;
+
+    WritableImage image = new WritableImage (   //
+        dimension (charsX, borderX, sizeX, gapX),
+        dimension (charsY, borderY, sizeY, gapY));
+
+    //    System.out.printf ("Created %d, %d%n", dimension (charsX, borderX, sizeX, gapX),
+    //        dimension (charsY, borderY, sizeY, gapY));
+
+    PixelWriter pixelWriter = image.getPixelWriter ();
 
     int count = 0;
     int x = borderX;
@@ -66,7 +69,7 @@ abstract class CharacterList extends AbstractFormattedAppleFile
 
     for (Character character : characters)
     {
-      g2d.drawImage (character.image, x, y, null);
+      character.draw (pixelWriter, x, y);
       if (++count % charsX == 0)
       {
         x = borderX;
@@ -76,7 +79,14 @@ abstract class CharacterList extends AbstractFormattedAppleFile
         x += sizeX + gapX;
     }
 
-    g2d.dispose ();
+    return image;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private int dimension (int chars, int border, int size, int gap)
+  // ---------------------------------------------------------------------------------//
+  {
+    return border * 2 + chars * (size + gap) - gap;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -99,32 +109,17 @@ abstract class CharacterList extends AbstractFormattedAppleFile
   class Character
   // ---------------------------------------------------------------------------------//
   {
-    BufferedImage image;
-
     // -------------------------------------------------------------------------------//
     public Character (int sizeX, int sizeY)
     // -------------------------------------------------------------------------------//
     {
-      image = new BufferedImage (sizeX, sizeY, BufferedImage.TYPE_BYTE_GRAY);
     }
 
     // -------------------------------------------------------------------------------//
-    @Override
-    public String toString ()
+    void draw (PixelWriter pixelWriter, int x, int y)
     // -------------------------------------------------------------------------------//
     {
-      StringBuilder text = new StringBuilder ();
-      DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
-      int element = 0;
 
-      for (int i = 0; i < sizeY; i++)
-      {
-        for (int j = 0; j < sizeX; j++)
-          text.append (dataBuffer.getElem (element++) == 0 ? "." : "X");
-        text.append ("\n");
-      }
-
-      return text.toString ();
     }
   }
 }

@@ -1,9 +1,5 @@
 package com.bytezone.appleformat.fonts;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +8,12 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.FileProdos;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 
 // see IIGS System 6.0.1 - Disk 5 Fonts.po
 // -----------------------------------------------------------------------------------//
@@ -21,8 +23,6 @@ public class QuickDrawFont extends CharacterList
   Map<Integer, QuickDrawCharacter> qdCharacters = new HashMap<> ();
 
   private boolean corrupt;
-  private final int fileType;
-  private final int auxType;
   private final String fontName;
   private final int headerSize;
   private final int fontSize;
@@ -56,17 +56,15 @@ public class QuickDrawFont extends CharacterList
   private BitSet[] strike;        // bit image of all characters
 
   // ---------------------------------------------------------------------------------//
-  public QuickDrawFont (AppleFile file, byte[] buffer, int fileType, int auxType)
+  public QuickDrawFont (AppleFile file, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     super (file, buffer);
 
-    assert fileType == ProdosConstants.FILE_TYPE_FONT;
-    this.fileType = fileType;
-    this.auxType = auxType;
+    assert file.getFileType () == ProdosConstants.FILE_TYPE_FONT;
 
-    if (auxType != 0)
-      System.out.printf ("Font aux: %04X%n", auxType);
+    if (((FileProdos) file).getAuxType () != 0)
+      System.out.printf ("Font aux: %04X%n", ((FileProdos) file).getAuxType ());
 
     fontName = HexFormatter.getPascalString (buffer, 0);
     int nameLength = (buffer[0] & 0xFF);
@@ -109,19 +107,26 @@ public class QuickDrawFont extends CharacterList
 
     offsetWidthTableSize = (totalCharacters + 1) * 2;
 
-    if (offsetWidthTableOffset + offsetWidthTableSize > buffer.length)
+    if (offsetWidthTableOffset + offsetWidthTableSize > buffer.length
+        || locationTableOffset < 0)
     {
-      System.out.println ("*********** Bad ow length");
+      System.out.println ("*********** Bad row length");
       strike = null;
       corrupt = true;
       return;
     }
 
-    createStrike ();
-    createCharacters ();
+    if (locationTableOffset > 0)
+    {
+      createStrike ();
+      createCharacters ();
+    }
     //    buildDisplay ();
-    buildImage (10, 10, 5, 5, widMax, fRectHeight,
-        (int) (Math.sqrt (totalCharacters) + .5));
+    //    buildImage (10, 10, 5, 5, widMax, fRectHeight,
+    //        (int) (Math.sqrt (totalCharacters) + .5));
+
+    //    System.out.printf ("Total characters %s: %d%n", name, characters.size ());
+    //    System.out.printf ("Total characters %s: %d%n", name, totalCharacters);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -171,7 +176,8 @@ public class QuickDrawFont extends CharacterList
   }
 
   // ---------------------------------------------------------------------------------//
-  private void buildDisplay ()
+  @Override
+  public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
     int inset = 10;
@@ -180,11 +186,9 @@ public class QuickDrawFont extends CharacterList
     int charsWide = (int) (Math.sqrt (totalCharacters) + .5);
     int charsHigh = (totalCharacters - 1) / charsWide + 1;
 
-    image = new BufferedImage (charsWide * (widMax + spacing) + inset * 2,
-        charsHigh * (fRectHeight + spacing) + inset * 2, BufferedImage.TYPE_BYTE_GRAY);
-
-    Graphics2D g2d = image.createGraphics ();
-    g2d.setComposite (AlphaComposite.getInstance (AlphaComposite.SRC_OVER, (float) 1.0));
+    WritableImage image = new WritableImage (charsWide * (widMax + spacing) + inset * 2,
+        charsHigh * (fRectHeight + spacing) + inset * 2);
+    PixelWriter pixelWriter = image.getPixelWriter ();
 
     int x = inset;
     int y = inset;
@@ -202,7 +206,8 @@ public class QuickDrawFont extends CharacterList
       //      int width = buffer[offsetWidthTableOffset + i * 2] & 0xFF;
 
       if (character != null)
-        g2d.drawImage (character.image, x, y, null);
+        //        g2d.drawImage (character.image, x, y, null);
+        character.draw (pixelWriter, x, y);
 
       x += widMax + spacing;
       if (++count % charsWide == 0)
@@ -211,7 +216,8 @@ public class QuickDrawFont extends CharacterList
         y += fRectHeight + spacing;
       }
     }
-    g2d.dispose ();
+
+    return image;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -222,12 +228,15 @@ public class QuickDrawFont extends CharacterList
     StringBuilder text = new StringBuilder ("Name : " + name + "\n\n");
     text.append ("File type : Font\n");
 
-    String auxTypeText =
-        auxType == 0 ? "QuickDraw Font File" : auxType == 1 ? "XX" : "??";
-    text.append (String.format ("Aux type  : %04X  (%s)%n%n", auxType, auxTypeText));
+    FileProdos file = (FileProdos) appleFile;
+
+    String auxTypeText = file.getAuxType () == 0 ? "QuickDraw Font File"
+        : file.getAuxType () == 1 ? "XX" : "??";
+    text.append (
+        String.format ("Aux type  : %04X  (%s)%n%n", file.getAuxType (), auxTypeText));
     text.append (String.format ("Font name    : %s%n", fontName));
     text.append (String.format ("Font family  : %d%n", fontFamily));
-    text.append (String.format ("File type    : %d%n", fileType));
+    text.append (String.format ("File type    : %d%n", file.getFileType ()));
     text.append (String.format ("Font style   : %d%n", fontStyle));
     text.append (String.format ("Font size    : %d%n", fontSize));
     text.append (String.format ("Font version : %d.%d%n", versionMajor, versionMinor));
@@ -269,27 +278,77 @@ public class QuickDrawFont extends CharacterList
           location, pixelWidth, offset, width));
     }
 
-    //    text.append (super.getText ());
+    return Utility.rtrim (text);
+  }
 
-    return text.toString ();
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String getExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    for (Character character : characters)
+    {
+      text.append (character);
+      text.append ("\n\n");
+    }
+
+    return Utility.rtrim (text);
   }
 
   // ---------------------------------------------------------------------------------//
   class QuickDrawCharacter extends Character
   // ---------------------------------------------------------------------------------//
   {
+    int strikeOffset;
+    int strikeWidth;
+
     // -------------------------------------------------------------------------------//
     public QuickDrawCharacter (int strikeOffset, int strikeWidth)
     // -------------------------------------------------------------------------------//
     {
       super (strikeWidth, fRectHeight);
 
-      DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
+      this.strikeOffset = strikeOffset;
+      this.strikeWidth = strikeWidth;
+    }
 
-      int element = 0;
+    // -------------------------------------------------------------------------------//
+    @Override
+    void draw (PixelWriter pixelWriter, int x, int y)
+    // -------------------------------------------------------------------------------//
+    {
       for (int row = 0; row < fRectHeight; row++)
+      {
+        int col = 0;
         for (int j = strikeOffset; j < strikeOffset + strikeWidth; j++)
-          dataBuffer.setElem (element++, strike[row].get (j) ? 255 : 0);
+        {
+          if (strike[row].get (j))
+            pixelWriter.setColor (x + col, y + row, Color.BLACK);
+          //          else
+          //            pixelWriter.setColor (x + col, y + row, Color.WHITE);
+
+          col++;
+        }
+      }
+    }
+
+    // -------------------------------------------------------------------------------//
+    @Override
+    public String toString ()
+    // -------------------------------------------------------------------------------//
+    {
+      StringBuilder text = new StringBuilder ();
+
+      for (int row = 0; row < fRectHeight; row++)
+      {
+        for (int j = strikeOffset; j < strikeOffset + strikeWidth; j++)
+          text.append ((strike[row].get (j) ? "X" : "."));
+        text.append ("\n");
+      }
+
+      return Utility.rtrim (text);
     }
   }
 }

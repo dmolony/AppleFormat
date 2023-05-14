@@ -2,6 +2,7 @@ package com.bytezone.appleformat;
 
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_BASIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BINARY;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FONT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PNT;
@@ -12,6 +13,7 @@ import java.io.File;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
+import com.bytezone.appleformat.fonts.QuickDrawFont;
 import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
 import com.bytezone.appleformat.graphics.Pic0000;
@@ -156,6 +158,7 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, buffer, length, aux);
       case FILE_TYPE_PNT -> checkGraphics (appleFile, fileType, aux, buffer);
       case FILE_TYPE_PIC -> checkGraphics (appleFile, fileType, aux, buffer);
+      case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, buffer);
       case FILE_TYPE_APPLESOFT_BASIC -> new ApplesoftBasicProgram (appleFile, buffer, 0,
           length);
       case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, buffer, 0,

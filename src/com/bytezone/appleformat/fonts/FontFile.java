@@ -1,8 +1,9 @@
 package com.bytezone.appleformat.fonts;
 
-import java.awt.image.DataBuffer;
-
 import com.bytezone.filesystem.AppleFile;
+
+import javafx.scene.image.PixelWriter;
+import javafx.scene.paint.Color;
 
 // -----------------------------------------------------------------------------------//
 public class FontFile extends CharacterList
@@ -24,8 +25,6 @@ public class FontFile extends CharacterList
       characters.add (new FontFileCharacter (buffer, ptr));
       ptr += sizeY;
     }
-
-    buildImage (borderX, borderY, gapX, gapY, sizeX, sizeY, charsX);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -46,21 +45,31 @@ public class FontFile extends CharacterList
   class FontFileCharacter extends Character
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer;
+    int ptr;
+
     // -------------------------------------------------------------------------------//
     public FontFileCharacter (byte[] buffer, int ptr)
     // -------------------------------------------------------------------------------//
     {
       super (sizeX, sizeY);
 
-      DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
-      int element = 0;
+      this.buffer = buffer;
+      this.ptr = ptr;
+    }
 
+    // -------------------------------------------------------------------------------//
+    @Override
+    void draw (PixelWriter pixelWriter, int x, int y)
+    // -------------------------------------------------------------------------------//
+    {
       for (int i = 0; i < sizeY; i++)
       {
         int value = buffer[ptr++] & 0xFF;
         for (int j = 0; j < sizeX; j++)
         {
-          dataBuffer.setElem (element++, (value & 0x01) == 0 ? 0 : 0xFF);
+          pixelWriter.setColor (x + j, y + i,
+              (value & 0x01) == 0 ? Color.WHITE : Color.BLACK);
           value >>>= 1;
         }
       }
