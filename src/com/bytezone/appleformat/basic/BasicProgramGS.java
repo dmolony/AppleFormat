@@ -104,7 +104,6 @@ public class BasicProgramGS extends BasicProgram
       sourceLines.add (sourceLine);
       ptr += sourceLine.length;
     }
-
   }
 
   // ---------------------------------------------------------------------------------//
@@ -207,7 +206,8 @@ public class BasicProgramGS extends BasicProgram
 
     private void append (String word, StringBuilder text)
     {
-      if (word.startsWith (" ") && text.length () > 0 && text.charAt (text.length () - 1) == ' ')
+      if (word.startsWith (" ") && text.length () > 0
+          && text.charAt (text.length () - 1) == ' ')
         text.deleteCharAt (text.length () - 1);
       text.append (word);
     }

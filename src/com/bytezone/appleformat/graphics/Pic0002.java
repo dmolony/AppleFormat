@@ -21,7 +21,7 @@ public class Pic0002 extends AbstractFormattedAppleFile
   final ColorTable[] colorTables = new ColorTable[NUM_COLOR_TABLES];
 
   String failureReason = "";
-  private Image image;
+  //  private Image image;
 
   // ---------------------------------------------------------------------------------//
   public Pic0002 (AppleFile appleFile, byte[] buffer)
@@ -43,13 +43,14 @@ public class Pic0002 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image getImage ()
+  public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
-    if (image == null)
-      image = createColourImage ();
-
-    return image;
+    //    if (image == null)
+    //      image = createColourImage ();
+    //
+    //    return image;
+    return createColourImage ();
   }
 
   // ---------------------------------------------------------------------------------//

@@ -3,6 +3,8 @@ package com.bytezone.appleformat;
 import java.io.File;
 import java.util.Arrays;
 
+import javafx.scene.image.Image;
+
 // -----------------------------------------------------------------------------------//
 public class LocalFolder extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
@@ -12,6 +14,14 @@ public class LocalFolder extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (localFile);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  protected Image buildImage ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return emptyImage;
   }
 
   // ---------------------------------------------------------------------------------//

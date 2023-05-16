@@ -22,7 +22,8 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
   private int endPtr;
 
   // ---------------------------------------------------------------------------------//
-  public ApplesoftBasicProgram (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public ApplesoftBasicProgram (AppleFile appleFile, byte[] buffer, int offset,
+      int length)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);

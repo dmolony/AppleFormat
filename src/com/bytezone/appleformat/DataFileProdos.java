@@ -2,6 +2,8 @@ package com.bytezone.appleformat;
 
 import com.bytezone.filesystem.FileProdos;
 
+import javafx.scene.image.Image;
+
 //-----------------------------------------------------------------------------------//
 public class DataFileProdos extends AbstractFormattedAppleFile
 //-----------------------------------------------------------------------------------//
@@ -19,6 +21,14 @@ public class DataFileProdos extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  protected Image buildImage ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return emptyImage;
   }
 
   // ---------------------------------------------------------------------------------//

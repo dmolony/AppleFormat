@@ -17,7 +17,7 @@ public class AppleGraphics3201 extends AbstractFormattedAppleFile
 {
   static final int COLOR_TABLE_SIZE = 32;
 
-  private Image image;
+  //  private Image image;
   private final ColorTable[] colorTables = new ColorTable[200];
   private byte[] unpackedBuffer;
 
@@ -44,13 +44,14 @@ public class AppleGraphics3201 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image getImage ()
+  public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
-    if (image == null)
-      image = createColourImage ();
-
-    return image;
+    //    if (image == null)
+    //      image = createColourImage ();
+    //
+    //    return image;
+    return createColourImage ();
   }
 
   // ---------------------------------------------------------------------------------//

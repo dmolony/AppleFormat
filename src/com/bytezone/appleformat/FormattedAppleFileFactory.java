@@ -53,27 +53,32 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    if (appleFile instanceof AppleContainer container)
-      return new Catalog (container);
-
-    if (appleFile.isEmbeddedFileSystem ())
-      return new Catalog (appleFile.getEmbeddedFileSystem ());
-
-    if (appleFile.isForkedFile ())
-      return new Catalog ((ForkedFile) appleFile);
-
-    FormattedAppleFile formattedAppleFile = switch (appleFile.getFileSystemType ())
+    try
     {
-      case DOS -> getFormattedDosFile ((FileDos) appleFile);
-      case PRODOS -> getFormattedProdosFile (appleFile);
-      case PASCAL -> getFormattedPascalFile ((FilePascal) appleFile);
-      case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
-      case NUFX -> getFormattedNufxFile (appleFile);
-      case BIN2 -> getFormattedBin2File ((FileBinary2) appleFile);
-      default -> new DataFile (appleFile, appleFile.getFileType (), appleFile.read ());
-    };
+      if (appleFile instanceof AppleContainer container)
+        return new Catalog (container);
 
-    return formattedAppleFile;
+      if (appleFile.isEmbeddedFileSystem ())
+        return new Catalog (appleFile.getEmbeddedFileSystem ());
+
+      if (appleFile.isForkedFile ())
+        return new Catalog ((ForkedFile) appleFile);
+
+      return switch (appleFile.getFileSystemType ())
+      {
+        case DOS -> getFormattedDosFile ((FileDos) appleFile);
+        case PRODOS -> getFormattedProdosFile (appleFile);
+        case PASCAL -> getFormattedPascalFile ((FilePascal) appleFile);
+        case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
+        case NUFX -> getFormattedNufxFile (appleFile);
+        case BIN2 -> getFormattedBin2File ((FileBinary2) appleFile);
+        default -> new DataFile (appleFile, appleFile.getFileType (), appleFile.read ());
+      };
+    }
+    catch (Exception e)
+    {
+      return new FormatError (e);
+    }
   }
 
   // ---------------------------------------------------------------------------------//

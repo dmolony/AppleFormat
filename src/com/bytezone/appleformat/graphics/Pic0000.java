@@ -22,7 +22,7 @@ public class Pic0000 extends AbstractFormattedAppleFile
   ColorTable[] colorTables;
   byte[] controlBytes;
 
-  private Image image;
+  //  private Image image;
 
   // ---------------------------------------------------------------------------------//
   public Pic0000 (AppleFile appleFile, byte[] buffer)
@@ -49,13 +49,15 @@ public class Pic0000 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image getImage ()
+  public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
-    if (image == null)
-      image = createColourImage ();
+    //    if (image == null)
+    //    image = createColourImage ();
 
-    return image;
+    //    return image;
+
+    return createColourImage ();
   }
 
   // ---------------------------------------------------------------------------------//

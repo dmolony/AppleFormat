@@ -24,7 +24,7 @@ abstract class CharacterList extends AbstractFormattedAppleFile
 
   List<Character> characters = new ArrayList<> ();
   int loadAddress;
-  private Image image;
+  //  private Image image;
 
   // ---------------------------------------------------------------------------------//
   public CharacterList (AppleFile file, byte[] buffer)
@@ -34,18 +34,27 @@ abstract class CharacterList extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
+  //  @Override
+  //  public Image getImage ()
+  // ---------------------------------------------------------------------------------//
+  //  {
+  //    try
+  //    {
+  //    if (image == null)
+  //      image = buildImage ();
+  //
+  //    return image;
+  //    }
+  //    catch (Exception e)
+  //    {
+  //      e.printStackTrace ();
+  //      return emptyImage;
+  //    }
+  //  }
+
+  // ---------------------------------------------------------------------------------//
   @Override
-  public Image getImage ()
-  // ---------------------------------------------------------------------------------//
-  {
-    if (image == null)
-      image = buildImage ();
-
-    return image;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  Image buildImage ()
+  protected Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
     if (characters.size () == 0)

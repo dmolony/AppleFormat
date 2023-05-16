@@ -13,6 +13,8 @@ import javafx.scene.image.WritableImage;
 public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
+  protected static final WritableImage emptyImage = new WritableImage (1, 1);
+
   protected final File localFile;
 
   protected final AppleFile appleFile;
@@ -25,7 +27,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final AppleContainer container;
   protected final ForkedFile forkedFile;
 
-  protected final WritableImage emptyImage = new WritableImage (1, 1);
+  private Image image;
 
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (AppleContainer appleFile)
@@ -115,11 +117,29 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  public Image getImage ()
+  protected Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
     return emptyImage;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public final Image getImage ()
+  // ---------------------------------------------------------------------------------//
+  {
+    try
+    {
+      if (image == null)
+        image = buildImage ();
+
+      return image == null ? emptyImage : image;
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace ();
+      return emptyImage;
+    }
   }
 
   // ---------------------------------------------------------------------------------//

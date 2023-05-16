@@ -190,6 +190,9 @@ public class QuickDrawFont extends CharacterList
         charsHigh * (fRectHeight + spacing) + inset * 2);
     PixelWriter pixelWriter = image.getPixelWriter ();
 
+    System.out.printf ("image width: %f, height: %f%n", image.getWidth (),
+        image.getHeight ());
+
     int x = inset;
     int y = inset;
     int count = 0;
@@ -206,7 +209,6 @@ public class QuickDrawFont extends CharacterList
       //      int width = buffer[offsetWidthTableOffset + i * 2] & 0xFF;
 
       if (character != null)
-        //        g2d.drawImage (character.image, x, y, null);
         character.draw (pixelWriter, x, y);
 
       x += widMax + spacing;
@@ -325,9 +327,10 @@ public class QuickDrawFont extends CharacterList
         for (int j = strikeOffset; j < strikeOffset + strikeWidth; j++)
         {
           if (strike[row].get (j))
+          {
+            System.out.printf ("Column: %d%n", j);
             pixelWriter.setColor (x + col, y + row, Color.BLACK);
-          //          else
-          //            pixelWriter.setColor (x + col, y + row, Color.WHITE);
+          }
 
           col++;
         }

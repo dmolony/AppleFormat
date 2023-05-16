@@ -27,7 +27,7 @@ public class Pnt0002 extends AbstractFormattedAppleFile
 
   private ColorTable defaultColorTable320 = new ColorTable (0, 0x00);
   private ColorTable defaultColorTable640 = new ColorTable (0, 0x80);
-  private Image image;
+  //  private Image image;
 
   // ---------------------------------------------------------------------------------//
   public Pnt0002 (AppleFile appleFile, byte[] buffer)
@@ -97,13 +97,14 @@ public class Pnt0002 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image getImage ()
+  public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
-    if (image == null)
-      image = createColourImage ();
-
-    return image;
+    //    if (image == null)
+    //      image = createColourImage ();
+    //
+    //    return image;
+    return createColourImage ();
   }
 
   // ---------------------------------------------------------------------------------//

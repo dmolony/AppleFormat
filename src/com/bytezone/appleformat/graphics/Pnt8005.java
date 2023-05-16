@@ -18,7 +18,7 @@ public class Pnt8005 extends AbstractFormattedAppleFile
   private ColorTable[] colorTables;
   byte[] unpackedBuffer;
 
-  private Image image;
+  //  private Image image;
   int rows;
 
   int imageType;
@@ -63,13 +63,14 @@ public class Pnt8005 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image getImage ()
+  public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
-    if (image == null)
-      image = createColourImage ();
-
-    return image;
+    //    if (image == null)
+    //      image = createColourImage ();
+    //
+    //    return image;
+    return createColourImage ();
   }
 
   // ---------------------------------------------------------------------------------//

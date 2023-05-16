@@ -33,7 +33,7 @@ public class AppleGraphics extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image getImage ()
+  public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
     return showColour ? createColourImage () : createMonochromeImage ();

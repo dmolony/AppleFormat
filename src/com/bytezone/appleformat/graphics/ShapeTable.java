@@ -79,7 +79,7 @@ public class ShapeTable extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Image getImage ()
+  public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
     int cols = (int) Math.sqrt (shapes.size ()) + 1;
