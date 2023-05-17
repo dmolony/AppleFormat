@@ -100,7 +100,7 @@ abstract class CharacterList extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ("Name : " + name + "\n\n");

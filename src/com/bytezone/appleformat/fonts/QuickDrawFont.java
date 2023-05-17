@@ -224,7 +224,7 @@ public class QuickDrawFont extends CharacterList
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ("Name : " + name + "\n\n");
@@ -285,7 +285,7 @@ public class QuickDrawFont extends CharacterList
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getExtras ()
+  public String buildExtras ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();

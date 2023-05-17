@@ -89,7 +89,7 @@ public class Pnt0000 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getExtras ()
+  public String buildExtras ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();

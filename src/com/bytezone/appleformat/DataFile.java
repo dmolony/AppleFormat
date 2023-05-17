@@ -36,7 +36,7 @@ public class DataFile extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     if (buffer == null)

@@ -33,7 +33,7 @@ public class DataFileProdos extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     if (buffer == null)

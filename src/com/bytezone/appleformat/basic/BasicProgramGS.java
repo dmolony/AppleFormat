@@ -108,7 +108,7 @@ public class BasicProgramGS extends BasicProgram
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();

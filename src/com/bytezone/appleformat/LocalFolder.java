@@ -26,7 +26,7 @@ public class LocalFolder extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ("  File size    File name\n");

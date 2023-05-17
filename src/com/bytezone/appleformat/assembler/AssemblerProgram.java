@@ -135,7 +135,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder pgm = new StringBuilder ();

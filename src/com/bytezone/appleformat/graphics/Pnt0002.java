@@ -95,7 +95,7 @@ public class Pnt0002 extends AbstractFormattedAppleFile
     }
   }
 
-  // ---------------------------------------------------------------------------------//
+  // -----------------------------------------------------------------------buildText----------//
   @Override
   public Image buildImage ()
   // ---------------------------------------------------------------------------------//
@@ -244,7 +244,7 @@ public class Pnt0002 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
@@ -263,7 +263,7 @@ public class Pnt0002 extends AbstractFormattedAppleFile
 
   // -------------------------------------------------------------------------------//
   @Override
-  public String getExtras ()
+  public String buildExtras ()
   // -------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();

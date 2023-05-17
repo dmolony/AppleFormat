@@ -187,14 +187,4 @@ public class AppleGraphics extends AbstractFormattedAppleFile
       }
     }
   }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  public String getText ()
-  // ---------------------------------------------------------------------------------//
-  {
-    StringBuilder text = new StringBuilder ();
-
-    return text.toString ();
-  }
 }

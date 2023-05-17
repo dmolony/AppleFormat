@@ -93,7 +93,7 @@ public class Pic0002 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getExtras ()
+  public String buildExtras ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
@@ -116,7 +116,7 @@ public class Pic0002 extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     FileProdos file = (FileProdos) appleFile;

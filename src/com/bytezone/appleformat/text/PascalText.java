@@ -17,7 +17,7 @@ public class PascalText extends Text
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     // Text files are broken up into 1024-byte pages.

@@ -31,7 +31,7 @@ public class IntegerBasicProgram extends BasicProgram
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder pgm = new StringBuilder ();

@@ -47,7 +47,7 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
@@ -71,7 +71,7 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getExtras ()
+  public String buildExtras ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();

@@ -16,47 +16,33 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected static final WritableImage emptyImage = new WritableImage (1, 1);
 
   protected final File localFile;
-
   protected final AppleFile appleFile;
+  protected final AppleContainer container;
+  protected final ForkedFile forkedFile;
 
   protected final String name;
   protected final byte[] buffer;
   protected final int offset;
   protected final int length;
 
-  protected final AppleContainer container;
-  protected final ForkedFile forkedFile;
-
   private Image image;
+  private String text;
+  private String extra;
+  private String meta;
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (AppleContainer appleFile)
+  public AbstractFormattedAppleFile (File localFile)
   // ---------------------------------------------------------------------------------//
   {
-    this.container = appleFile;
-    name = "";
-
+    this.localFile = localFile;
+    appleFile = null;
     forkedFile = null;
-    this.appleFile = null;
-    this.buffer = null;
-    this.offset = 0;
-    this.length = 0;
-    localFile = null;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (ForkedFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    this.forkedFile = appleFile;
-    name = "";
-
     container = null;
-    this.appleFile = null;
-    this.buffer = null;
-    this.offset = 0;
-    this.length = 0;
-    localFile = null;
+
+    name = localFile.getName ();
+    buffer = null;
+    offset = 0;
+    length = 0;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -71,56 +57,97 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
       int length)
   // ---------------------------------------------------------------------------------//
   {
+    localFile = null;
     this.appleFile = appleFile;
+    forkedFile = null;
+    container = null;
+
+    name = appleFile.getFileName ();
     this.buffer = buffer;
     this.offset = offset;
     this.length = length;
+  }
 
-    name = appleFile.getFileName ();
-
+  // ---------------------------------------------------------------------------------//
+  public AbstractFormattedAppleFile (ForkedFile forkedFile)
+  // ---------------------------------------------------------------------------------//
+  {
     localFile = null;
-    forkedFile = null;
+    appleFile = null;
+    this.forkedFile = forkedFile;
     container = null;
+
+    name = "";
+    buffer = null;
+    offset = 0;
+    length = 0;
   }
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (File localFile)
+  public AbstractFormattedAppleFile (AppleContainer container)
   // ---------------------------------------------------------------------------------//
   {
-    this.appleFile = null;
-    this.buffer = null;
-    this.offset = 0;
-    this.length = 0;
-
+    localFile = null;
+    appleFile = null;
     forkedFile = null;
-    container = null;
+    this.container = container;
 
-    name = localFile.getName ();
-
-    this.localFile = localFile;
+    name = "";
+    buffer = null;
+    offset = 0;
+    length = 0;
   }
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getText ()
+  public final String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    return "Unknown file type";
+    try
+    {
+      if (text == null)
+        text = buildText ();
+
+      return buildText ();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace ();
+      return e.getLocalizedMessage ();
+    }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  protected String buildText ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return "No text available";
   }
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public String getExtras ()
+  public final String getExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    try
+    {
+      if (extra == null)
+        extra = buildExtras ();
+
+      return extra;
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace ();
+      return e.getLocalizedMessage ();
+    }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  protected String buildExtras ()
   // ---------------------------------------------------------------------------------//
   {
     return "No additional information";
-  }
-
-  // ---------------------------------------------------------------------------------//
-  protected Image buildImage ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return emptyImage;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -140,6 +167,13 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
       e.printStackTrace ();
       return emptyImage;
     }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  protected Image buildImage ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return emptyImage;
   }
 
   // ---------------------------------------------------------------------------------//
