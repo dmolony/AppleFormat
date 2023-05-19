@@ -24,19 +24,19 @@ public class QuickDrawFont extends CharacterList
 
   private boolean corrupt;
   private final String fontName;
-  private final int headerSize;
+  private final int offsetToMF;
   private final int fontSize;
   private final int fontFamily;
   private final int fontStyle;
   private final int versionMajor;
   private final int versionMinor;
-  private final int extent;
+  private final int fbrExtent;
   private final int fontType;
   private final int firstChar;
   private final int lastChar;
   private final int widMax;
-  private final int kernMax;
-  private final int nDescent;
+  private final short kernMax;
+  private final short nDescent;
   private final int fRectWidth;
   private final int fRectHeight;
   private final int owTLoc;
@@ -47,13 +47,12 @@ public class QuickDrawFont extends CharacterList
 
   private final int totalCharacters;
 
-  private final int fontDefinitionOffset;
-  private final int bitImageOffset;
+  //  private final int bitImageOffset;
   private final int locationTableOffset;
   private final int offsetWidthTableOffset;
   private int offsetWidthTableSize;
 
-  private int actualMaxWidth;
+  private int widestCharacter;
 
   private BitSet[] strike;        // bit image of all characters
 
@@ -73,40 +72,36 @@ public class QuickDrawFont extends CharacterList
 
     int ptr = nameLength + 1;         // start of header record
 
-    headerSize = Utility.getShort (buffer, ptr);
-    fontDefinitionOffset = nameLength + 1 + headerSize * 2;
+    offsetToMF = Utility.getShort (buffer, ptr);
 
     fontFamily = Utility.getShort (buffer, ptr + 2);
     fontStyle = Utility.getShort (buffer, ptr + 4);
     fontSize = Utility.getShort (buffer, ptr + 6);
     versionMajor = buffer[ptr + 8] & 0xFF;
     versionMinor = buffer[ptr + 9] & 0xFF;
-    extent = Utility.getShort (buffer, ptr + 10);
+    fbrExtent = Utility.getShort (buffer, ptr + 10);     // font bounds rectangle extent
 
-    ptr = fontDefinitionOffset;
+    ptr = nameLength + 1 + offsetToMF * 2;
 
     fontType = Utility.getShort (buffer, ptr);
-    firstChar = Utility.getShort (buffer, ptr + 2);
-    lastChar = Utility.getShort (buffer, ptr + 4);
+    firstChar = Utility.getShort (buffer, ptr + 2);       // ascii code of first char
+    lastChar = Utility.getShort (buffer, ptr + 4);        // ascii code of last char
     widMax = Utility.getShort (buffer, ptr + 6);
-    kernMax = Utility.getSignedShort (buffer, ptr + 8);
-    nDescent = Utility.getSignedShort (buffer, ptr + 10);
+    kernMax = (short) Utility.getSignedShort (buffer, ptr + 8);
+    nDescent = (short) Utility.getSignedShort (buffer, ptr + 10);
     fRectWidth = Utility.getShort (buffer, ptr + 12);
     fRectHeight = Utility.getShort (buffer, ptr + 14);
-
     owTLoc = Utility.getShort (buffer, ptr + 16);
-
-    offsetWidthTableOffset = (ptr + 16) + owTLoc * 2;
-    locationTableOffset = offsetWidthTableOffset - (lastChar - firstChar + 3) * 2;
-    bitImageOffset = ptr + 26;
-
     ascent = Utility.getShort (buffer, ptr + 18);
     descent = Utility.getShort (buffer, ptr + 20);
     leading = Utility.getShort (buffer, ptr + 22);
     rowWords = Utility.getShort (buffer, ptr + 24);
 
-    totalCharacters = lastChar - firstChar + 2;       // includes 'missing' character
+    offsetWidthTableOffset = ptr + 16 + owTLoc * 2;
+    locationTableOffset = offsetWidthTableOffset - (lastChar - firstChar + 3) * 2;
+    //    bitImageOffset = ptr + 26;
 
+    totalCharacters = lastChar - firstChar + 2;       // includes 'missing' character
     offsetWidthTableSize = (totalCharacters + 1) * 2;
 
     if (offsetWidthTableOffset + offsetWidthTableSize > buffer.length
@@ -120,30 +115,34 @@ public class QuickDrawFont extends CharacterList
 
     if (locationTableOffset > 0)
     {
-      createStrike ();
+      strike = createStrike (buffer, ptr + 26, fRectHeight, rowWords * 2);
       createCharacters ();
     }
   }
 
   // ---------------------------------------------------------------------------------//
-  private void createStrike ()
+  private BitSet[] createStrike (byte[] buffer, int ptr, int rows, int rowLenBytes)
   // ---------------------------------------------------------------------------------//
   {
-    // create bitset for each row
-    strike = new BitSet[fRectHeight];
-    for (int i = 0; i < fRectHeight; i++)
-      strike[i] = new BitSet (rowWords * 16);
+    BitSet[] strike = new BitSet[rows];
 
-    // convert image data to bitset
-    int rowLenBits = rowWords * 16;                     // # bits in each row
-    int rowLenBytes = rowWords * 2;                     // # bytes in each row
+    for (int row = 0; row < strike.length; row++)
+    {
+      strike[row] = new BitSet (rowLenBytes * 8);
 
-    for (int row = 0; row < fRectHeight; row++)         // for each row in character
-      for (int bit = 0; bit < rowLenBits; bit++)        // for each bit in the row
+      int bitNo = 0;
+      for (int i = 0; i < rowLenBytes; i++)
       {
-        byte b = buffer[bitImageOffset + row * rowLenBytes + bit / 8];
-        strike[row].set (bit, ((b & (0x80 >>> (bit % 8))) != 0));
+        byte b = buffer[ptr++];
+        for (int j = 0; j < 8; j++)
+        {
+          strike[row].set (bitNo++, (b & 0x80) != 0);
+          b <<= 1;
+        }
       }
+    }
+
+    return strike;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -166,7 +165,7 @@ public class QuickDrawFont extends CharacterList
           QuickDrawCharacter c = new QuickDrawCharacter (location, pixelWidth);
           qdCharacters.put (i, c);
           characters.add (c);
-          actualMaxWidth = Math.max (actualMaxWidth, c.strikeWidth);
+          widestCharacter = Math.max (widestCharacter, c.strikeWidth);
         }
       }
     }
@@ -187,11 +186,6 @@ public class QuickDrawFont extends CharacterList
     WritableImage image = new WritableImage (charsWide * (widMax + spacing) + inset * 2,
         charsHigh * (fRectHeight + spacing) + inset * 2);
     PixelWriter pixelWriter = image.getPixelWriter ();
-
-    //    System.out.printf ("total chars: %d%n", totalCharacters);
-    //    System.out.printf ("image width: %f, height: %f%n", image.getWidth (),
-    //        image.getHeight ());
-    //    System.out.printf ("chars x: %d, chars y: %d%n", charsWide, charsHigh);
 
     int x = inset;
     int y = inset;
@@ -231,33 +225,44 @@ public class QuickDrawFont extends CharacterList
 
     StringBuilder text = new StringBuilder ();
 
-    text.append (String.format ("Name          : %s%n", name));
-    text.append (String.format ("File type     : %02X  %<d  %s%n", file.getFileType (),
-        file.getFileTypeText ()));
+    text.append (String.format ("Name ...................... %s%n", name));
+    text.append (String.format ("File type ................. %02X    %s%n",
+        file.getFileType (), file.getFileTypeText ()));
     String auxTypeText = file.getAuxType () == 0 ? "QuickDraw Font File"
-        : file.getAuxType () == 1 ? "XX" : "??";
-    text.append (String.format ("Aux type      : %04X  (%s)%n%n", file.getAuxType (),
-        auxTypeText));
-    text.append (String.format ("Font name     : %s%n", fontName));
-    text.append (String.format ("Font family   : %d%n", fontFamily));
-    text.append (String.format ("Font style    : %d%n", fontStyle));
-    text.append (String.format ("Font size     : %d%n", fontSize));
-    text.append (String.format ("Font version  : %d.%d%n", versionMajor, versionMinor));
-    text.append (String.format ("Font extent   : %d%n%n", extent));
-    text.append (String.format ("Font type     : %04X  %<,d%n", fontType));
-    text.append (String.format ("First char    : %d%n", firstChar));
-    text.append (String.format ("Last char     : %d%n", lastChar));
-    text.append (String.format ("Max width     : %d%n", widMax));
-    text.append (String.format ("Max kern      : %d%n", kernMax));
-    text.append (String.format ("Neg descent   : %d%n", nDescent));
-    text.append (String.format ("Width         : %d%n", fRectWidth));
-    text.append (String.format ("Height        : %d%n", fRectHeight));
-    text.append (String.format ("O/W Offset    : %04X%n", owTLoc));
-    text.append (String.format ("Ascent        : %d%n", ascent));
-    text.append (String.format ("Descent       : %d%n", descent));
-    text.append (String.format ("Leading       : %d%n", leading));
-    text.append (String.format ("Row words     : %d%n%n", rowWords));
-    text.append (String.format ("Widest char   : %d%n%n", actualMaxWidth));
+        : file.getAuxType () == 1 ? "Truetype Font" : "??";
+    text.append (String.format ("Aux type .................. %04X  %s%n%n",
+        file.getAuxType (), auxTypeText));
+    text.append (String.format ("Font name ................. %s%n", fontName));
+    text.append (String.format ("Offset to MF part ......... %d%n", offsetToMF));
+    text.append (String.format ("Font family number ........ %d%n", fontFamily));
+    text.append (String.format ("Style ..................... %d%n", fontStyle));
+    text.append (String.format ("Point size .................%d%n", fontSize));
+    text.append (String.format ("Font version .............. %d.%d%n", versionMajor,
+        versionMinor));
+    text.append (String.format ("Font bounds rect extent ... %d%n%n", fbrExtent));
+    text.append (String.format (
+        "Font type ................. %04X  %<,6d (ignored on IIgs)%n", fontType));
+    text.append (String.format ("Ascii code of first char .. %04X  %<,6d%n", firstChar));
+    text.append (String.format ("Ascii code of last char ... %04X  %<,6d%n", lastChar));
+    text.append (String.format ("Maximum character width ... %04X  %<,6d%n", widMax));
+    text.append (String.format ("Maximum leftward kern ..... %04X  %<,6d%n", kernMax));
+    text.append (String.format ("Negative of descent ....... %04X  %<,6d%n%n", nDescent));
+    text.append (String.format ("Width of font rectangle ... %04X  %<,6d%n", fRectWidth));
+    text.append (
+        String.format ("Height of font rectangle .. %04X  %<,6d%n%n", fRectHeight));
+    text.append (String.format ("Offset to O/W table ....... %04X  %<,6d%n%n", owTLoc));
+    text.append (String.format ("Ascent .................... %04X  %<,6d%n", ascent));
+    text.append (String.format ("Descent ................... %04X  %<,6d%n", descent));
+    text.append (String.format ("Leading ................... %04X  %<,6d%n%n", leading));
+    text.append (String.format ("Width of font strike ...... %04X  %<,6d%n%n", rowWords));
+
+    //    text.append (String.format ("o/w offset ................ %04X  %<,6d%n",
+    //        offsetWidthTableOffset));
+    //    text.append (String.format ("o/w size .................. %04X  %<,6d%n",
+    //        offsetWidthTableSize));
+    //    text.append (String.format ("loc offset ................ %04X  %<,6d%n%n",
+    //        locationTableOffset));
+    //    text.append (String.format ("Widest char ............... %d%n%n", widestCharacter));
 
     if (corrupt)
     {
@@ -270,8 +275,8 @@ public class QuickDrawFont extends CharacterList
 
     for (int i = 0; i < totalCharacters; i++)
     {
-      int offset = buffer[offsetWidthTableOffset + i * 2 + 1] & 0xFF;
       int width = buffer[offsetWidthTableOffset + i * 2] & 0xFF;
+      int offset = buffer[offsetWidthTableOffset + i * 2 + 1] & 0xFF;
 
       if (offset == 255 && width == 255)
         continue;
@@ -280,7 +285,7 @@ public class QuickDrawFont extends CharacterList
       int nextLocation = Utility.getShort (buffer, locationTableOffset + (i + 1) * 2);
       int pixelWidth = nextLocation - location;
 
-      String flag = pixelWidth <= widMax ? " " : "*";
+      String flag = pixelWidth <= widMax ? "" : "*";
 
       text.append (String.format (" %3d     %,5d     %3d     %3d    %3d  %s%n", i,
           location, pixelWidth, offset, width, flag));

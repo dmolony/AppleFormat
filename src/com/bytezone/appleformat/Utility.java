@@ -204,7 +204,7 @@ public final class Utility
       return 0;
     }
 
-    return (buffer[ptr] & 0xFF) | ((buffer[ptr + 1] & 0xFF) << 8);
+    return ((buffer[ptr] & 0xFF) | ((buffer[ptr + 1] & 0xFF) << 8));
   }
 
   // ---------------------------------------------------------------------------------//

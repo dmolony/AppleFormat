@@ -28,7 +28,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   private Image image;
   private String text;
   private String extra;
-  private String meta;
 
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (File localFile)
@@ -113,7 +112,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     catch (Exception e)
     {
       e.printStackTrace ();
-      return e.getLocalizedMessage ();
+      return e.toString ();
     }
   }
 
