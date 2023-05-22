@@ -24,7 +24,6 @@ abstract class CharacterList extends AbstractFormattedAppleFile
 
   List<Character> characters = new ArrayList<> ();
   int loadAddress;
-  //  private Image image;
 
   // ---------------------------------------------------------------------------------//
   public CharacterList (AppleFile file, byte[] buffer)
@@ -32,25 +31,6 @@ abstract class CharacterList extends AbstractFormattedAppleFile
   {
     super (file, buffer);
   }
-
-  // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public Image getImage ()
-  // ---------------------------------------------------------------------------------//
-  //  {
-  //    try
-  //    {
-  //    if (image == null)
-  //      image = buildImage ();
-  //
-  //    return image;
-  //    }
-  //    catch (Exception e)
-  //    {
-  //      e.printStackTrace ();
-  //      return emptyImage;
-  //    }
-  //  }
 
   // ---------------------------------------------------------------------------------//
   @Override
@@ -66,9 +46,6 @@ abstract class CharacterList extends AbstractFormattedAppleFile
     WritableImage image = new WritableImage (   //
         dimension (charsX, borderX, sizeX, gapX),
         dimension (charsY, borderY, sizeY, gapY));
-
-    //    System.out.printf ("Created %d, %d%n", dimension (charsX, borderX, sizeX, gapX),
-    //        dimension (charsY, borderY, sizeY, gapY));
 
     PixelWriter pixelWriter = image.getPixelWriter ();
 
@@ -118,10 +95,15 @@ abstract class CharacterList extends AbstractFormattedAppleFile
   class Character
   // ---------------------------------------------------------------------------------//
   {
+    int height;
+    int width;
+
     // -------------------------------------------------------------------------------//
     public Character (int sizeX, int sizeY)
     // -------------------------------------------------------------------------------//
     {
+      width = sizeX;
+      height = sizeY;
     }
 
     // -------------------------------------------------------------------------------//

@@ -77,6 +77,7 @@ public class FormattedAppleFileFactory
     }
     catch (Exception e)
     {
+      e.printStackTrace ();
       return new FormatError (e);
     }
   }
@@ -168,7 +169,7 @@ public class FormattedAppleFileFactory
           length);
       case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, buffer, 0,
           length);
-      default -> new DataFileProdos ((FileProdos) appleFile, buffer);
+      default -> new DataFileProdos (appleFile, buffer);
     };
   }
 
@@ -251,7 +252,7 @@ public class FormattedAppleFileFactory
         break;
     }
 
-    return new DataFileProdos ((FileProdos) appleFile, buffer);
+    return new DataFileProdos (appleFile, buffer);
   }
 
   // Another notable exception is the Fotofile (FOT) format inherited by ProDOS
