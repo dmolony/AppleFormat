@@ -190,8 +190,9 @@ public class QuickDrawFont extends CharacterList
     int charsWide = (int) (Math.sqrt (totalCharacters + 1) + .5);
     int charsHigh = totalCharacters / charsWide + 1;
 
-    WritableImage image = new WritableImage (charsWide * (widMax + spacing) + inset * 2,
-        charsHigh * (fRectHeight + spacing) + inset * 2);
+    WritableImage image =
+        new WritableImage (charsWide * (widestCharacter + spacing) + inset * 2,
+            charsHigh * (fRectHeight + spacing) + inset * 2);
     PixelWriter pixelWriter = image.getPixelWriter ();
 
     int x = inset;
@@ -212,7 +213,7 @@ public class QuickDrawFont extends CharacterList
       if (character != null)
         character.draw (pixelWriter, x, y);
 
-      x += (widMax + spacing);
+      x += (widestCharacter + spacing);
       if (++count % charsWide == 0)
       {
         x = inset;
@@ -289,9 +290,10 @@ public class QuickDrawFont extends CharacterList
       int location = Utility.getShort (buffer, locTablePtr + i * 2);
       int nextLocation = Utility.getShort (buffer, locTablePtr + (i + 1) * 2);
       int pixelWidth = nextLocation - location;
+      String flag = pixelWidth == widestCharacter ? "*" : " ";
 
-      text.append (String.format (" %3d  %,5d (%2d)      %3d     %3d%n", i, location,
-          pixelWidth, offset, width));
+      text.append (String.format (" %3d  %,5d (%2d) %s    %3d     %3d%n", i, location,
+          pixelWidth, flag, offset, width));
     }
 
     int lastLoc =
