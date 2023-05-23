@@ -318,11 +318,32 @@ public class QuickDrawFont extends CharacterList
   {
     StringBuilder text = new StringBuilder ();
 
+    int row = 0;
+    char c = '#';
+    char b = '.';
+
     for (BitSet bitSet : strike)
     {
       for (int i = 0; i <= lastStrikeLocation; i++)
-        text.append (bitSet.get (i) ? "#" : ".");
+        text.append (bitSet.get (i) ? c : b);
       text.append ("\n");
+
+      if (++row >= ascent)
+        c = '*';
+    }
+
+    int pos = 0;
+
+    for (QuickDrawCharacter character : qdCharacters.values ())
+    {
+      while (pos < character.strikeOffset)
+      {
+        text.append (' ');
+        pos++;
+      }
+
+      text.append ('+');
+      pos++;
     }
 
     return Utility.rtrim (text);
