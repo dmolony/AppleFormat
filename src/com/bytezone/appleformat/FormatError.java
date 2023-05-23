@@ -1,11 +1,14 @@
 package com.bytezone.appleformat;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 
 //-----------------------------------------------------------------------------------//
 public class FormatError implements FormattedAppleFile
 //-----------------------------------------------------------------------------------//
 {
+  protected static final WritableImage emptyImage = new WritableImage (1, 1);
+
   Exception exception;
 
   // ---------------------------------------------------------------------------------//
@@ -28,7 +31,7 @@ public class FormatError implements FormattedAppleFile
   public String getExtras ()
   // ---------------------------------------------------------------------------------//
   {
-    return "";
+    return getText ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -36,7 +39,7 @@ public class FormatError implements FormattedAppleFile
   public Image getImage ()
   // ---------------------------------------------------------------------------------//
   {
-    return null;
+    return emptyImage;
   }
 
   // ---------------------------------------------------------------------------------//

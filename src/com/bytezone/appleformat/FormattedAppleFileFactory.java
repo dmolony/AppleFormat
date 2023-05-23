@@ -13,6 +13,7 @@ import java.io.File;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
+import com.bytezone.appleformat.fonts.FontValidationException;
 import com.bytezone.appleformat.fonts.QuickDrawFont;
 import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
@@ -77,7 +78,7 @@ public class FormattedAppleFileFactory
     }
     catch (Exception e)
     {
-      e.printStackTrace ();
+      //      e.printStackTrace ();
       return new FormatError (e);
     }
   }
@@ -137,6 +138,7 @@ public class FormattedAppleFileFactory
   // http://www.1000bit.it/support/manuali/apple/technotes/ftyp/ft.about.html
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile getFormattedProdosFile (AppleFile appleFile)
+      throws FontValidationException
   // ---------------------------------------------------------------------------------//
   {
     int length = 0;
