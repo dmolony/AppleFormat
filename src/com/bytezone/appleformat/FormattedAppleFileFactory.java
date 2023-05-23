@@ -1,6 +1,9 @@
 package com.bytezone.appleformat;
 
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ADB;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_BASIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ASP;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_AWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BINARY;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FONT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
@@ -26,6 +29,9 @@ import com.bytezone.appleformat.graphics.Pnt8005;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.Text;
+import com.bytezone.appleworks.AppleworksADBFile;
+import com.bytezone.appleworks.AppleworksSSFile;
+import com.bytezone.appleworks.AppleworksWPFile;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFileSystem;
@@ -171,6 +177,9 @@ public class FormattedAppleFileFactory
           length);
       case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, buffer, 0,
           length);
+      case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile, buffer);
+      case FILE_TYPE_AWP -> new AppleworksWPFile (appleFile, buffer);
+      case FILE_TYPE_ADB -> new AppleworksADBFile (appleFile, buffer);
       default -> new DataFileProdos (appleFile, buffer);
     };
   }
