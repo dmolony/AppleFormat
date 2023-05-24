@@ -1,4 +1,4 @@
-package com.bytezone.appleworks;
+package com.bytezone.appleformat.appleworks;
 
 // -----------------------------------------------------------------------------------//
 class CellFormat

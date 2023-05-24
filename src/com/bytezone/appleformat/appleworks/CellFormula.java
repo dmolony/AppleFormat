@@ -1,4 +1,4 @@
-package com.bytezone.appleworks;
+package com.bytezone.appleformat.appleworks;
 
 import com.bytezone.appleformat.Utility;
 

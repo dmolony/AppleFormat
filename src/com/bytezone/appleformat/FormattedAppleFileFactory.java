@@ -13,6 +13,9 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
 
 import java.io.File;
 
+import com.bytezone.appleformat.appleworks.AppleworksADBFile;
+import com.bytezone.appleformat.appleworks.AppleworksSSFile;
+import com.bytezone.appleformat.appleworks.AppleworksWPFile;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
@@ -30,9 +33,6 @@ import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.appleformat.visicalc.VisicalcFile;
-import com.bytezone.appleworks.AppleworksADBFile;
-import com.bytezone.appleworks.AppleworksSSFile;
-import com.bytezone.appleworks.AppleworksWPFile;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFileSystem;

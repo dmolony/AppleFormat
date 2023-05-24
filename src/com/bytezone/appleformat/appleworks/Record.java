@@ -1,4 +1,4 @@
-package com.bytezone.appleworks;
+package com.bytezone.appleformat.appleworks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
