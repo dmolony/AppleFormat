@@ -29,6 +29,7 @@ import com.bytezone.appleformat.graphics.Pnt8005;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.Text;
+import com.bytezone.appleformat.visicalc.VisicalcFile;
 import com.bytezone.appleworks.AppleworksADBFile;
 import com.bytezone.appleworks.AppleworksSSFile;
 import com.bytezone.appleworks.AppleworksWPFile;
@@ -105,7 +106,7 @@ public class FormattedAppleFileFactory
 
     return switch (fileType)
     {
-      case 0 -> new Text (appleFile, buffer, 0, buffer.length);
+      case 0 -> checkDosText (appleFile, fileType, buffer);
       case 1 -> new IntegerBasicProgram (appleFile, buffer, 2,
           Utility.getShort (buffer, 0));
       case 2 -> new ApplesoftBasicProgram (appleFile, buffer, 2,
@@ -113,6 +114,16 @@ public class FormattedAppleFileFactory
       case 4, 16 -> checkDosBinary (appleFile, fileType, buffer);
       default -> new DataFile (appleFile, fileType, buffer);
     };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkDosText (FileDos appleFile, int fileType, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    if (VisicalcFile.isVisicalcFile (buffer))
+      return new VisicalcFile (appleFile, buffer);
+
+    return new Text (appleFile, buffer, 0, buffer.length);
   }
 
   // ---------------------------------------------------------------------------------//
