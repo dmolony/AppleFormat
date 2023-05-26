@@ -1,10 +1,8 @@
 package com.bytezone.appleformat.basic;
 
 // -----------------------------------------------------------------------------------//
-public class BasicPreferences
-// -----------------------------------------------------------------------------------//
+public class ApplesoftBasicPreferences
 {
-  public boolean showHeader = true;
   public boolean userFormat = true;
   public boolean showAllXref = true;
 
@@ -14,7 +12,7 @@ public class BasicPreferences
   public boolean splitDim = false;
   public boolean alignAssign = true;
   public boolean showCaret = false;
-  public boolean showThen = true;
+  public boolean showThen = true;               // not used (hardcoded elsewhere)
   public boolean blankAfterReturn = false;
   public boolean formatRem = false;
   public boolean deleteExtraDataSpace = false;
@@ -39,7 +37,6 @@ public class BasicPreferences
 
     text.append (String.format ("Split REM ................ %s%n", splitRem));
     text.append (String.format ("Align assign ............. %s%n", alignAssign));
-    text.append (String.format ("Show header .............. %s%n", showHeader));
     text.append (String.format ("User format .............. %s%n", userFormat));
     text.append (String.format ("Show All Xref ............ %s%n", showAllXref));
     text.append (String.format ("Apple line wrap .......... %s%n", appleLineWrap));

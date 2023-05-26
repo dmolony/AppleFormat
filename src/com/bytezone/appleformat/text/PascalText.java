@@ -9,10 +9,10 @@ public class PascalText extends Text
   private final static int PAGE_SIZE = 1024;
 
   // ---------------------------------------------------------------------------------//
-  public PascalText (AppleFile file, byte[] buffer)
+  public PascalText (AppleFile file, byte[] buffer, TextPreferences textPreferences)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer, 0, buffer.length);
+    super (file, buffer, 0, buffer.length, textPreferences);
   }
 
   // ---------------------------------------------------------------------------------//

@@ -45,6 +45,8 @@ public class SubLine implements ApplesoftConstants
 
   String callTarget;
 
+  boolean showThen = true;        // used to be in BasicPreferences - fix later
+
   private final List<Integer> gotoLines = new ArrayList<> ();
   private final List<Integer> gosubLines = new ArrayList<> ();
 
@@ -703,7 +705,7 @@ public class SubLine implements ApplesoftConstants
     if (buffer[max] == 0)
       --max;
 
-    if (isImpliedGoto () && !BasicProgram.basicPreferences.showThen)
+    if (isImpliedGoto () && !showThen)
       line.append ("GOTO ");
 
     for (int p = startPtr; p <= max; p++)
@@ -714,7 +716,7 @@ public class SubLine implements ApplesoftConstants
         if (line.length () > 0 && line.charAt (line.length () - 1) != ' ')
           line.append (' ');
         int val = b & 0x7F;
-        if (b != TOKEN_THEN || BasicProgram.basicPreferences.showThen)
+        if (b != TOKEN_THEN || showThen)
           line.append (ApplesoftConstants.tokens[val] + " ");
       }
       //      else if (Utility.isControlCharacter (b))

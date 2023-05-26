@@ -3,30 +3,35 @@ package com.bytezone.appleformat.basic;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
-public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftConstants
+public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
+    implements ApplesoftConstants
 // -----------------------------------------------------------------------------------//
 {
   private final List<SourceLine> sourceLines = new ArrayList<> ();
+
+  private ApplesoftBasicPreferences basicPreferences;
 
   private final UserBasicFormatter userBasicFormatter;
   private final AppleBasicFormatter appleBasicFormatter;
   private final DebugBasicFormatter debugBasicFormatter;
   private final XrefFormatter xrefFormatter;
-  //  private final BasicHeaderFormatter headerFormatter;
 
   boolean showDebugText;
   private int endPtr;
 
   // ---------------------------------------------------------------------------------//
   public ApplesoftBasicProgram (AppleFile appleFile, byte[] buffer, int offset,
-      int length)
+      int length, ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
+
+    this.basicPreferences = basicPreferences;
 
     int ptr = offset;
     while (buffer[ptr + 1] != 0)    // msb of link field
@@ -42,7 +47,6 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
     appleBasicFormatter = new AppleBasicFormatter (this, basicPreferences);
     debugBasicFormatter = new DebugBasicFormatter (this, basicPreferences);
     xrefFormatter = new XrefFormatter (this, basicPreferences);
-    //    headerFormatter = new BasicHeaderFormatter (this, basicPreferences);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -51,9 +55,6 @@ public class ApplesoftBasicProgram extends BasicProgram implements ApplesoftCons
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-
-    //    if (basicPreferences.showHeader)
-    //      headerFormatter.append (text);
 
     if (sourceLines.size () == 0)
     {

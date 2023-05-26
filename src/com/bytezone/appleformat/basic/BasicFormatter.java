@@ -11,13 +11,13 @@ public abstract class BasicFormatter implements ApplesoftConstants
   static final String NEWLINE = "\n";
 
   ApplesoftBasicProgram program;
-  BasicPreferences basicPreferences;
+  ApplesoftBasicPreferences basicPreferences;
   byte[] buffer;
   int offset;
   List<SourceLine> sourceLines;
 
   // ---------------------------------------------------------------------------------//
-  public BasicFormatter (ApplesoftBasicProgram program, BasicPreferences basicPreferences)
+  public BasicFormatter (ApplesoftBasicProgram program, ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     this.program = program;

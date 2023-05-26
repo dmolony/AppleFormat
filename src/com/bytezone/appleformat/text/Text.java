@@ -7,21 +7,22 @@ import com.bytezone.filesystem.AppleFile;
 public class Text extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  static TextPreferences textPreferences;     // set by MenuHandler
+  //  static TextPreferences textPreferences;     // set by MenuHandler
 
   String output;
 
   private final TextFormatter textFormatter;
 
   // ---------------------------------------------------------------------------------//
-  public static void setTextPreferences (TextPreferences textPreferences)
-  // ---------------------------------------------------------------------------------//
-  {
-    Text.textPreferences = textPreferences;
-  }
+  //  public static void setTextPreferences (TextPreferences textPreferences)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    Text.textPreferences = textPreferences;
+  //  }
 
   // ---------------------------------------------------------------------------------//
-  public Text (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public Text (AppleFile appleFile, byte[] buffer, int offset, int length,
+      TextPreferences textPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);

@@ -18,7 +18,8 @@ import com.bytezone.filesystem.AppleFile;
 public class AssemblerProgram extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  static AssemblerPreferences assemblerPreferences;     // set by MenuHandler
+  //  static AssemblerPreferences assemblerPreferences;     // set by MenuHandler
+  private AssemblerPreferences assemblerPreferences;
 
   private static Map<Integer, String> equates;
 
@@ -36,20 +37,21 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   private List<StringLocation> stringLocations;
 
   // ---------------------------------------------------------------------------------//
-  public static void setAssemblerPreferences (AssemblerPreferences assemblerPreferences)
-  // ---------------------------------------------------------------------------------//
-  {
-    AssemblerProgram.assemblerPreferences = assemblerPreferences;
-  }
+  //  public static void setAssemblerPreferences (AssemblerPreferences assemblerPreferences)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    AssemblerProgram.assemblerPreferences = assemblerPreferences;
+  //  }
 
   // ---------------------------------------------------------------------------------//
   public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length,
-      int address)
+      int address, AssemblerPreferences assemblerPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
 
     this.loadAddress = address;
+    this.assemblerPreferences = assemblerPreferences;
 
     if (false)
       System.out.printf (
@@ -64,10 +66,10 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length,
-      int address, int executeOffset)
+      int address, int executeOffset, AssemblerPreferences assemblerPreferences)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, buffer, offset, length, address);
+    this (appleFile, buffer, offset, length, address, assemblerPreferences);
     this.executeOffset = executeOffset;
   }
 

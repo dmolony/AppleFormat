@@ -5,7 +5,7 @@ public class BasicHeaderFormatter extends BasicFormatter
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public BasicHeaderFormatter (ApplesoftBasicProgram program, BasicPreferences basicPreferences)
+  public BasicHeaderFormatter (ApplesoftBasicProgram program, ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (program, basicPreferences);

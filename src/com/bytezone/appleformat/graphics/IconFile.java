@@ -141,11 +141,8 @@ public class IconFile extends AbstractFormattedAppleFile
       buffer = new byte[iDataLen];
       System.arraycopy (fullBuffer, ptr, buffer, 0, buffer.length);
 
-      int len = buffer[2] & 0xFF;
-      pathName = new String (buffer, 3, len);
-
-      len = buffer[66] & 0xFF;
-      dataName = new String (buffer, 67, len);
+      pathName = Utility.getPascalString (buffer, 2);
+      dataName = Utility.getPascalString (buffer, 66);
 
       iDataType = Utility.getShort (buffer, 82);
       iDataAux = Utility.getShort (buffer, 84);
@@ -153,8 +150,8 @@ public class IconFile extends AbstractFormattedAppleFile
       if (debug)
       {
         System.out.printf ("Len    %,d%n", iDataLen);
-        System.out.printf ("Path   %,d     %s%n", len, pathName);
-        System.out.printf ("Data   %,d     %s%n", len, dataName);
+        System.out.printf ("Path   %s%n", pathName);
+        System.out.printf ("Data   %s%n", dataName);
         System.out.printf ("Type   %04X  %s%n", iDataType,
             ProdosConstants.fileTypes[iDataType]);
         System.out.printf ("Aux    %04X%n", iDataAux);

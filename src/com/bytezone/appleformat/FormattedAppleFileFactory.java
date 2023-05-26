@@ -17,7 +17,9 @@ import java.io.File;
 import com.bytezone.appleformat.appleworks.AppleworksADBFile;
 import com.bytezone.appleformat.appleworks.AppleworksSSFile;
 import com.bytezone.appleformat.appleworks.AppleworksWPFile;
+import com.bytezone.appleformat.assembler.AssemblerPreferences;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
+import com.bytezone.appleformat.basic.ApplesoftBasicPreferences;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.fonts.FontValidationException;
@@ -34,6 +36,7 @@ import com.bytezone.appleformat.graphics.Pnt8005;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.Text;
+import com.bytezone.appleformat.text.TextPreferences;
 import com.bytezone.appleformat.visicalc.VisicalcFile;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
@@ -52,6 +55,11 @@ import com.bytezone.filesystem.ForkedFile;
 public class FormattedAppleFileFactory
 // -----------------------------------------------------------------------------------//
 {
+  public static ApplesoftBasicPreferences basicPreferences =
+      new ApplesoftBasicPreferences ();
+  public static TextPreferences textPreferences = new TextPreferences ();
+  public static AssemblerPreferences assemblerPreferences = new AssemblerPreferences ();
+
   // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (File localFile)
   // ---------------------------------------------------------------------------------//
@@ -112,7 +120,7 @@ public class FormattedAppleFileFactory
       case 1 -> new IntegerBasicProgram (appleFile, buffer, 2,
           Utility.getShort (buffer, 0));
       case 2 -> new ApplesoftBasicProgram (appleFile, buffer, 2,
-          Utility.getShort (buffer, 0));
+          Utility.getShort (buffer, 0), basicPreferences);
       case 4, 16 -> checkDosBinary (appleFile, fileType, buffer);
       default -> new DataFile (appleFile, fileType, buffer);
     };
@@ -125,7 +133,7 @@ public class FormattedAppleFileFactory
     if (VisicalcFile.isVisicalcFile (buffer))
       return new VisicalcFile (appleFile, buffer);
 
-    return new Text (appleFile, buffer, 0, buffer.length);
+    return new Text (appleFile, buffer, 0, buffer.length, textPreferences);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -151,7 +159,8 @@ public class FormattedAppleFileFactory
       //          return new OriginalHiResImage (fileName, buffer, address, true);
     }
 
-    return new AssemblerProgram (appleFile, buffer, 4, length, address);
+    return new AssemblerProgram (appleFile, buffer, 4, length, address,
+        assemblerPreferences);
   }
 
   // http://www.1000bit.it/support/manuali/apple/technotes/ftyp/ft.about.html
@@ -181,13 +190,13 @@ public class FormattedAppleFileFactory
 
     return switch (fileType)
     {
-      case FILE_TYPE_TEXT -> new Text (appleFile, buffer, 0, length);
+      case FILE_TYPE_TEXT -> new Text (appleFile, buffer, 0, length, textPreferences);
       case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, buffer, length, aux);
       case FILE_TYPE_PNT -> checkGraphics (appleFile, fileType, aux, buffer);
       case FILE_TYPE_PIC -> checkGraphics (appleFile, fileType, aux, buffer);
       case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, buffer);
       case FILE_TYPE_APPLESOFT_BASIC -> new ApplesoftBasicProgram (appleFile, buffer, 0,
-          length);
+          length, basicPreferences);
       case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, buffer, 0,
           length);
       case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile, buffer);
@@ -315,7 +324,7 @@ public class FormattedAppleFileFactory
     if (name.endsWith (".3201") && aux == 0)
       return new AppleGraphics3201 (appleFile, buffer);
 
-    return new AssemblerProgram (appleFile, buffer, 0, length, aux);
+    return new AssemblerProgram (appleFile, buffer, 0, length, aux, assemblerPreferences);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -327,7 +336,7 @@ public class FormattedAppleFileFactory
 
     return switch (fileType)
     {
-      case 3 -> new PascalText (appleFile, buffer);
+      case 3 -> new PascalText (appleFile, buffer, textPreferences);
       default -> new DataFile (appleFile, fileType, buffer);
     };
   }
@@ -359,9 +368,10 @@ public class FormattedAppleFileFactory
       case 0:                                           // Prodos
         return switch (fileType)
         {
-          case 0x04 -> new Text (appleFile, buffer, 0, length);
+          case 0x04 -> new Text (appleFile, buffer, 0, length, textPreferences);
           case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
-          case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
+          case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length,
+              basicPreferences);
           case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
           default -> new DataFile (appleFile, fileType, buffer);
         };
@@ -412,9 +422,10 @@ public class FormattedAppleFileFactory
       case 1:                                     // Prodos/Sos
         return switch (fileType)
         {
-          case 0x04 -> new Text (appleFile, buffer, 0, length);
+          case 0x04 -> new Text (appleFile, buffer, 0, length, textPreferences);
           case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
-          case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
+          case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length,
+              basicPreferences);
           case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
           default -> new DataFile (appleFile, fileType, buffer, 0, length);
         };

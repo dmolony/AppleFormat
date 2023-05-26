@@ -5,11 +5,12 @@ import static com.bytezone.appleformat.Utility.isHighBitSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;;
 
 // -----------------------------------------------------------------------------------//
-public class BasicProgramGS extends BasicProgram
+public class BasicProgramGS extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   private static String[] //

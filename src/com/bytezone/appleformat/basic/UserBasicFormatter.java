@@ -23,7 +23,8 @@ public class UserBasicFormatter extends BasicFormatter
   private static boolean NO_FORCE = false;
 
   // ---------------------------------------------------------------------------------//
-  public UserBasicFormatter (ApplesoftBasicProgram program, BasicPreferences basicPreferences)
+  public UserBasicFormatter (ApplesoftBasicProgram program,
+      ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (program, basicPreferences);
@@ -58,8 +59,8 @@ public class UserBasicFormatter extends BasicFormatter
         if (subline.is (TOKEN_REM) && subline.containsToken ())
         {
           int address = getLoadAddress () + subline.startPtr + 1;  // skip the REM token
-          fullText.append (
-              text + String.format ("REM - Inline assembler @ $%02X (%d)%n", address, address));
+          fullText.append (text + String.format ("REM - Inline assembler @ $%02X (%d)%n",
+              address, address));
           String padding = "                         ".substring (0, text.length () + 2);
           for (String asm : getRemAssembler (subline))
             fullText.append (padding + asm + NEWLINE);
@@ -67,7 +68,8 @@ public class UserBasicFormatter extends BasicFormatter
         }
 
         // Beagle Bros often have multiline REM statements
-        if (subline.is (TOKEN_REM) && basicPreferences.formatRem && subline.containsControlChars ())
+        if (subline.is (TOKEN_REM) && basicPreferences.formatRem
+            && subline.containsControlChars ())
         {
           subline.addFormattedRem (text);
           fullText.append (text + NEWLINE);
@@ -110,17 +112,22 @@ public class UserBasicFormatter extends BasicFormatter
         int inset = Math.max (text.length (), getIndent (fullText)) + 1;
         if (subline.is (TOKEN_REM) && lineText.length () > basicPreferences.wrapRemAt)
         {
-          List<String> lines = splitLine (lineText, basicPreferences.wrapRemAt, ' ', FORCE);
+          List<String> lines =
+              splitLine (lineText, basicPreferences.wrapRemAt, ' ', FORCE);
           addSplitLines (lines, text, inset);
         }
-        else if (subline.is (TOKEN_DATA) && lineText.length () > basicPreferences.wrapDataAt)
+        else if (subline.is (TOKEN_DATA)
+            && lineText.length () > basicPreferences.wrapDataAt)
         {
-          List<String> lines = splitLine (lineText, basicPreferences.wrapDataAt, ',', FORCE);
+          List<String> lines =
+              splitLine (lineText, basicPreferences.wrapDataAt, ',', FORCE);
           addSplitLines (lines, text, inset);
         }
-        else if (subline.is (TOKEN_PRINT) && lineText.length () > basicPreferences.wrapPrintAt)
+        else if (subline.is (TOKEN_PRINT)
+            && lineText.length () > basicPreferences.wrapPrintAt)
         {
-          List<String> lines = splitLine (lineText, basicPreferences.wrapDataAt, ';', NO_FORCE);
+          List<String> lines =
+              splitLine (lineText, basicPreferences.wrapDataAt, ';', NO_FORCE);
           addSplitLines (lines, text, inset);
         }
         else if (subline.is (TOKEN_DIM) && basicPreferences.splitDim)
@@ -164,7 +171,8 @@ public class UserBasicFormatter extends BasicFormatter
   }
 
   // ---------------------------------------------------------------------------------//
-  private List<String> splitLine (String line, int wrapLength, char breakChar, boolean force)
+  private List<String> splitLine (String line, int wrapLength, char breakChar,
+      boolean force)
   // ---------------------------------------------------------------------------------//
   {
     int spaceAt = 0;
@@ -228,7 +236,8 @@ public class UserBasicFormatter extends BasicFormatter
         text.append (line);
       }
       else
-        text.append ("\n                                           ".substring (0, indent) + line);
+        text.append (
+            "\n                                           ".substring (0, indent) + line);
   }
 
   // Decide whether the current subline needs to be aligned on its equals sign. If so,

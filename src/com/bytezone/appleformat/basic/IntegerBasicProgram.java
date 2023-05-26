@@ -1,12 +1,12 @@
 package com.bytezone.appleformat.basic;
 
+import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
-import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
-public class IntegerBasicProgram extends BasicProgram
+public class IntegerBasicProgram extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   private static String[] tokens = { "?", "?", "?", " : ", "?", "?", "?", "?", "?", "?",
@@ -73,16 +73,15 @@ public class IntegerBasicProgram extends BasicProgram
       ptr += lineLength;
     }
 
-    if ((ptr + 4) < max)
-    {
-      int address = Utility.intValue (buffer[ptr + 2], buffer[ptr + 3]);
-      int remainingBytes = max - ptr - 5;
-      //      byte[] newBuffer = new byte[remainingBytes];
-      //      System.arraycopy (buffer, ptr + 4, newBuffer, 0, remainingBytes);
-      AssemblerProgram ap =
-          new AssemblerProgram (appleFile, buffer, ptr + 4, remainingBytes, address);
-      pgm.append ("\n" + ap.getText () + "\n");
-    }
+    // ***** need to pass AssemblerPreferences somehow
+    //    if ((ptr + 4) < max)
+    //    {
+    //      int address = Utility.intValue (buffer[ptr + 2], buffer[ptr + 3]);
+    //      int remainingBytes = max - ptr - 5;
+    //      AssemblerProgram ap =
+    //          new AssemblerProgram (appleFile, buffer, ptr + 4, remainingBytes, address);
+    //      pgm.append ("\n" + ap.getText () + "\n");
+    //    }
 
     pgm.deleteCharAt (pgm.length () - 1);
     return pgm.toString ();

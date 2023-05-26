@@ -14,7 +14,7 @@ public class DebugBasicFormatter extends BasicFormatter
   int endPtr;
 
   // ---------------------------------------------------------------------------------//
-  public DebugBasicFormatter (ApplesoftBasicProgram program, BasicPreferences basicPreferences)
+  public DebugBasicFormatter (ApplesoftBasicProgram program, ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (program, basicPreferences);

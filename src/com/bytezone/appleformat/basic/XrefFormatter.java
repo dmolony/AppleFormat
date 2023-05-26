@@ -39,7 +39,7 @@ public class XrefFormatter extends BasicFormatter
   private final int maxDigits;
 
   // ---------------------------------------------------------------------------------//
-  public XrefFormatter (ApplesoftBasicProgram program, BasicPreferences basicPreferences)
+  public XrefFormatter (ApplesoftBasicProgram program, ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (program, basicPreferences);

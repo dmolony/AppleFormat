@@ -16,7 +16,7 @@ public class AppleBasicFormatter extends BasicFormatter
 
   // ---------------------------------------------------------------------------------//
   public AppleBasicFormatter (ApplesoftBasicProgram program,
-      BasicPreferences basicPreferences)
+      ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (program, basicPreferences);
