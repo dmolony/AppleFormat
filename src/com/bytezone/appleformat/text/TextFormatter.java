@@ -1,19 +1,20 @@
 package com.bytezone.appleformat.text;
 
+import com.bytezone.appleformat.FormattedAppleFileFactory;
+
 // -----------------------------------------------------------------------------------//
 public class TextFormatter
 // -----------------------------------------------------------------------------------//
 {
   Text text;
-  TextPreferences textPreferences;
+  TextPreferences textPreferences = FormattedAppleFileFactory.textPreferences;
   byte[] buffer;
 
   // ---------------------------------------------------------------------------------//
-  public TextFormatter (Text text, TextPreferences textPreferences)
+  public TextFormatter (Text text)
   // ---------------------------------------------------------------------------------//
   {
     this.text = text;
-    this.textPreferences = textPreferences;
     this.buffer = text.getBuffer ();
   }
 

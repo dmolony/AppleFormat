@@ -1,5 +1,6 @@
 package com.bytezone.appleformat.text;
 
+import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
@@ -7,12 +8,13 @@ public class PascalText extends Text
 // -----------------------------------------------------------------------------------//
 {
   private final static int PAGE_SIZE = 1024;
+  private TextPreferences textPreferences = FormattedAppleFileFactory.textPreferences;
 
   // ---------------------------------------------------------------------------------//
-  public PascalText (AppleFile file, byte[] buffer, TextPreferences textPreferences)
+  public PascalText (AppleFile file, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer, 0, buffer.length, textPreferences);
+    super (file, buffer, 0, buffer.length);
   }
 
   // ---------------------------------------------------------------------------------//

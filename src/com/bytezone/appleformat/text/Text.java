@@ -14,20 +14,12 @@ public class Text extends AbstractFormattedAppleFile
   private final TextFormatter textFormatter;
 
   // ---------------------------------------------------------------------------------//
-  //  public static void setTextPreferences (TextPreferences textPreferences)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    Text.textPreferences = textPreferences;
-  //  }
-
-  // ---------------------------------------------------------------------------------//
-  public Text (AppleFile appleFile, byte[] buffer, int offset, int length,
-      TextPreferences textPreferences)
+  public Text (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
 
-    textFormatter = new TextFormatter (this, textPreferences);
+    textFormatter = new TextFormatter (this);
   }
 
   // ---------------------------------------------------------------------------------//

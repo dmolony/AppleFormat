@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 
@@ -14,7 +15,8 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
 {
   private final List<SourceLine> sourceLines = new ArrayList<> ();
 
-  private ApplesoftBasicPreferences basicPreferences;
+  private ApplesoftBasicPreferences basicPreferences =
+      FormattedAppleFileFactory.basicPreferences;
 
   private final UserBasicFormatter userBasicFormatter;
   private final AppleBasicFormatter appleBasicFormatter;
@@ -26,12 +28,10 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   public ApplesoftBasicProgram (AppleFile appleFile, byte[] buffer, int offset,
-      int length, ApplesoftBasicPreferences basicPreferences)
+      int length)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
-
-    this.basicPreferences = basicPreferences;
 
     int ptr = offset;
     while (buffer[ptr + 1] != 0)    // msb of link field

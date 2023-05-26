@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.basic.ApplesoftConstants;
 import com.bytezone.filesystem.AppleFile;
@@ -18,8 +19,8 @@ import com.bytezone.filesystem.AppleFile;
 public class AssemblerProgram extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  //  static AssemblerPreferences assemblerPreferences;     // set by MenuHandler
-  private AssemblerPreferences assemblerPreferences;
+  private AssemblerPreferences assemblerPreferences =
+      FormattedAppleFileFactory.assemblerPreferences;
 
   private static Map<Integer, String> equates;
 
@@ -37,21 +38,13 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   private List<StringLocation> stringLocations;
 
   // ---------------------------------------------------------------------------------//
-  //  public static void setAssemblerPreferences (AssemblerPreferences assemblerPreferences)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    AssemblerProgram.assemblerPreferences = assemblerPreferences;
-  //  }
-
-  // ---------------------------------------------------------------------------------//
   public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length,
-      int address, AssemblerPreferences assemblerPreferences)
+      int address)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
 
     this.loadAddress = address;
-    this.assemblerPreferences = assemblerPreferences;
 
     if (false)
       System.out.printf (
@@ -66,10 +59,10 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length,
-      int address, int executeOffset, AssemblerPreferences assemblerPreferences)
+      int address, int executeOffset)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, buffer, offset, length, address, assemblerPreferences);
+    this (appleFile, buffer, offset, length, address);
     this.executeOffset = executeOffset;
   }
 
