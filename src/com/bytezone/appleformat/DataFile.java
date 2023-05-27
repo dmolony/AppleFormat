@@ -11,19 +11,26 @@ public class DataFile extends AbstractFormattedAppleFile
   int fileType;
 
   // ---------------------------------------------------------------------------------//
-  public DataFile (AppleFile appleFile, int type, byte[] buffer)
+  public DataFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, type, buffer, 0, buffer.length);
+    this (appleFile, appleFile.read ());
   }
 
   // ---------------------------------------------------------------------------------//
-  public DataFile (AppleFile appleFile, int type, byte[] buffer, int offset, int length)
+  public DataFile (AppleFile appleFile, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    this (appleFile, buffer, 0, buffer.length);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public DataFile (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
 
-    this.fileType = type;
+    this.fileType = appleFile.getFileType ();
   }
 
   // ---------------------------------------------------------------------------------//

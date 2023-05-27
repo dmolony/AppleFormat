@@ -56,11 +56,13 @@ import com.bytezone.filesystem.ForkedFile;
 public class FormattedAppleFileFactory
 // -----------------------------------------------------------------------------------//
 {
-  public static ApplesoftBasicPreferences basicPreferences =
+  public static final ApplesoftBasicPreferences basicPreferences =
       new ApplesoftBasicPreferences ();
-  public static TextPreferences textPreferences = new TextPreferences ();
-  public static AssemblerPreferences assemblerPreferences = new AssemblerPreferences ();
-  public static GraphicsPreferences graphicsPreferences = new GraphicsPreferences ();
+  public static final TextPreferences textPreferences = new TextPreferences ();
+  public static final AssemblerPreferences assemblerPreferences =
+      new AssemblerPreferences ();
+  public static final GraphicsPreferences graphicsPreferences =
+      new GraphicsPreferences ();
 
   // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (File localFile)
@@ -78,7 +80,7 @@ public class FormattedAppleFileFactory
       if (appleFile instanceof AppleContainer container)
         return new Catalog (container);
 
-      if (appleFile.isEmbeddedFileSystem ())
+      if (appleFile.hasEmbeddedFileSystem ())
         return new Catalog (appleFile.getEmbeddedFileSystem ());
 
       if (appleFile.isForkedFile ())
@@ -92,7 +94,7 @@ public class FormattedAppleFileFactory
         case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
         case NUFX -> getFormattedNufxFile (appleFile);
         case BIN2 -> getFormattedBin2File ((FileBinary2) appleFile);
-        default -> new DataFile (appleFile, appleFile.getFileType (), appleFile.read ());
+        default -> new DataFile (appleFile);
       };
     }
     catch (Exception e)
@@ -124,7 +126,7 @@ public class FormattedAppleFileFactory
       case 2 -> new ApplesoftBasicProgram (appleFile, buffer, 2,
           Utility.getShort (buffer, 0));
       case 4, 16 -> checkDosBinary (appleFile, fileType, buffer);
-      default -> new DataFile (appleFile, fileType, buffer);
+      default -> new DataFile (appleFile, buffer);
     };
   }
 
@@ -144,7 +146,7 @@ public class FormattedAppleFileFactory
   // ---------------------------------------------------------------------------------//
   {
     if (buffer.length <= 4)
-      return new DataFile (appleFile, fileType, buffer);
+      return new DataFile (appleFile, buffer);
 
     int address = Utility.getShort (buffer, 0);
     int length = Utility.getShort (buffer, 2);
@@ -338,7 +340,7 @@ public class FormattedAppleFileFactory
     return switch (fileType)
     {
       case 3 -> new PascalText (appleFile, buffer);
-      default -> new DataFile (appleFile, fileType, buffer);
+      default -> new DataFile (appleFile, buffer);
     };
   }
 
@@ -351,7 +353,7 @@ public class FormattedAppleFileFactory
 
     return switch (fileType)
     {
-      default -> new DataFile (appleFile, fileType, buffer);
+      default -> new DataFile (appleFile, buffer);
     };
   }
 
@@ -373,18 +375,18 @@ public class FormattedAppleFileFactory
           case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
           case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
           case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
-          default -> new DataFile (appleFile, fileType, buffer);
+          default -> new DataFile (appleFile, buffer);
         };
 
       case 1:                                           // Dos 3.3
       case 2:                                           // Dos 3.2 or 3.1
-        return new DataFile (appleFile, fileType, buffer);
+        return new DataFile (appleFile, buffer);
 
       case 3:                                           // Pascal
-        return new DataFile (appleFile, fileType, buffer);
+        return new DataFile (appleFile, buffer);
     }
 
-    return new DataFile (appleFile, fileType, buffer);
+    return new DataFile (appleFile, buffer);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -415,7 +417,7 @@ public class FormattedAppleFileFactory
     int fileType = appleFile.getFileType ();
 
     if (buffer == null)
-      return new DataFile (appleFile, fileType, buffer, 0, 0);
+      return new DataFile (appleFile, buffer, 0, 0);
 
     switch (fileSystemId)
     {
@@ -426,17 +428,17 @@ public class FormattedAppleFileFactory
           case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
           case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
           case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
-          default -> new DataFile (appleFile, fileType, buffer, 0, length);
+          default -> new DataFile (appleFile, buffer);
         };
 
       case 2:                                     // Dos 3.3
       case 3:                                     // Dos 3.2
       case 4:                                     // Pascal
       case 8:                                     // CPM
-        return new DataFile (appleFile, fileType, buffer, 0, length);
+        return new DataFile (appleFile, buffer);
 
       default:
-        return new DataFile (appleFile, fileType, buffer, 0, length);
+        return new DataFile (appleFile, buffer);
     }
   }
 
