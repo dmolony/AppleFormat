@@ -13,10 +13,10 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
     implements ApplesoftConstants
 // -----------------------------------------------------------------------------------//
 {
-  private final List<SourceLine> sourceLines = new ArrayList<> ();
-
-  private ApplesoftBasicPreferences basicPreferences =
+  public static final ApplesoftBasicPreferences basicPreferences =
       FormattedAppleFileFactory.basicPreferences;
+
+  private final List<SourceLine> sourceLines = new ArrayList<> ();
 
   private final UserBasicFormatter userBasicFormatter;
   private final AppleBasicFormatter appleBasicFormatter;

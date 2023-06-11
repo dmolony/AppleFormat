@@ -2,6 +2,7 @@ package com.bytezone.appleformat.basic;
 
 // -----------------------------------------------------------------------------------//
 public class ApplesoftBasicPreferences
+// -----------------------------------------------------------------------------------//
 {
   public boolean userFormat = true;
   public boolean showAllXref = true;

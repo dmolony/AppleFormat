@@ -1,13 +1,15 @@
 package com.bytezone.appleformat.text;
 
 import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
 public class Text extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  //  static TextPreferences textPreferences;     // set by MenuHandler
+  public static TextPreferences textPreferences =
+      FormattedAppleFileFactory.textPreferences;
 
   String output;
 

@@ -213,6 +213,7 @@ public class FormattedAppleFileFactory
   // ---------------------------------------------------------------------------------//
   // 06 BIN
   // 0000  Pic0002                .3200 (C1 0002) (unpacked Brooks)
+  // 1300  Pic0002                .3200 (C1 0002) (unpacked Brooks)
   // 0000  AppleGraphics3201      .3201           (packed Brooks?)
   // 2000  AppleGraphics
   // 4000  AppleGraphics
@@ -380,12 +381,15 @@ public class FormattedAppleFileFactory
 
       case 1:                                           // Dos 3.3
       case 2:                                           // Dos 3.2 or 3.1
+        System.out.printf ("Bin2 file system: %d not written%n", appleFile.getOsType ());
         return new DataFile (appleFile, buffer);
 
       case 3:                                           // Pascal
+        System.out.printf ("Bin2 file system: %d not written%n", appleFile.getOsType ());
         return new DataFile (appleFile, buffer);
     }
 
+    System.out.printf ("Bin2 unknown file system: %d%n", appleFile.getOsType ());
     return new DataFile (appleFile, buffer);
   }
 
@@ -435,9 +439,11 @@ public class FormattedAppleFileFactory
       case 3:                                     // Dos 3.2
       case 4:                                     // Pascal
       case 8:                                     // CPM
+        System.out.printf ("NuFX file system: %d not written%n", fileSystemId);
         return new DataFile (appleFile, buffer);
 
       default:
+        System.out.printf ("NuFX unknown file system: %d%n", fileSystemId);
         return new DataFile (appleFile, buffer);
     }
   }

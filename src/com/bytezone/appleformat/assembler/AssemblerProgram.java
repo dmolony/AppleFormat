@@ -19,7 +19,7 @@ import com.bytezone.filesystem.AppleFile;
 public class AssemblerProgram extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  private AssemblerPreferences assemblerPreferences =
+  public static AssemblerPreferences assemblerPreferences =
       FormattedAppleFileFactory.assemblerPreferences;
 
   private static Map<Integer, String> equates;
