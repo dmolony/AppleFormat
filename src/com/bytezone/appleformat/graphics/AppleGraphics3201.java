@@ -1,6 +1,5 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.FileProdos;
@@ -12,12 +11,11 @@ import javafx.scene.paint.Color;
 
 // 06 (BIN) 
 // -----------------------------------------------------------------------------------//
-public class AppleGraphics3201 extends AbstractFormattedAppleFile
+public class AppleGraphics3201 extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   static final int COLOR_TABLE_SIZE = 32;
 
-  //  private Image image;
   private final ColorTable[] colorTables = new ColorTable[200];
   private byte[] unpackedBuffer;
 

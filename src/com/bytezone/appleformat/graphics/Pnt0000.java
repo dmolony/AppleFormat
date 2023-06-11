@@ -1,6 +1,5 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
@@ -13,7 +12,7 @@ import javafx.scene.paint.Color;
 // C0 (PNT) aux 0000 Paintworks SHR (packed pixel data)
 // C0 (PNT) aux 8000 Paintworks Gold (packed pixel data)
 // -----------------------------------------------------------------------------------//
-public class Pnt0000 extends AbstractFormattedAppleFile
+public class Pnt0000 extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   private ColorTable colorTable;

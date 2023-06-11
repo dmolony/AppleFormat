@@ -1,6 +1,5 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;
@@ -12,7 +11,7 @@ import javafx.scene.paint.Color;
 // C0 (PNT) aux 1000 IIGS Super Hi-Res Graphics Screen Image (unpacked)
 // C1 (PIC) aux 0000 IIGS Super Hi-Res Graphics Screen Image (unpacked)
 // -----------------------------------------------------------------------------------//
-public class Pic0000 extends AbstractFormattedAppleFile
+public class Pic0000 extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   static final int COLOR_TABLE_OFFSET_AUX_0 = 32_256;

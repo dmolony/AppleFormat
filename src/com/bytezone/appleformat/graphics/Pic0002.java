@@ -1,6 +1,5 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.FileProdos;
 
@@ -11,7 +10,7 @@ import javafx.scene.paint.Color;
 
 // $C1 (PIC) aux $0002 - Super Hi-res 3200 color screen image (Brooks)
 // -----------------------------------------------------------------------------------//
-public class Pic0002 extends AbstractFormattedAppleFile
+public class Pic0002 extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   static final int COLOR_TABLE_SIZE = 32;

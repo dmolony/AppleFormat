@@ -3,7 +3,6 @@ package com.bytezone.appleformat.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
@@ -15,7 +14,7 @@ import javafx.scene.paint.Color;
 
 // $C0 (PNT) aux $0002 - Apple IIGS Super Hi-res Picture File (Apple Preferred Format) 
 // -----------------------------------------------------------------------------------//
-public class Pnt0002 extends AbstractFormattedAppleFile
+public class Pnt0002 extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   //  private static final String BLANKS =

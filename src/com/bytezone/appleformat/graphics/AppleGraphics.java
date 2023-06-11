@@ -1,6 +1,5 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;
@@ -10,7 +9,7 @@ import javafx.scene.paint.Color;
 
 // $06 (BIN) aux $2000 or $4000
 // -----------------------------------------------------------------------------------//
-public class AppleGraphics extends AbstractFormattedAppleFile
+public class AppleGraphics extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   static PaletteFactory paletteFactory = new PaletteFactory ();

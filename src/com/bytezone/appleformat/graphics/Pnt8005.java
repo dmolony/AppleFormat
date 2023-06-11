@@ -1,6 +1,5 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 
@@ -10,7 +9,7 @@ import javafx.scene.image.WritableImage;
 
 //C0 (PNT) aux 8005 Dreamworld (packed pixel data)
 //-----------------------------------------------------------------------------------//
-public class Pnt8005 extends AbstractFormattedAppleFile
+public class Pnt8005 extends Graphics
 //-----------------------------------------------------------------------------------//
 {
   static final int COLOR_TABLE_SIZE = 32;
