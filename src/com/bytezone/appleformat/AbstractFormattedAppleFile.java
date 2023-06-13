@@ -29,6 +29,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   private String text;
   private String extra;
 
+  protected Preferences preferences;
+
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (File localFile)
   // ---------------------------------------------------------------------------------//
@@ -204,5 +206,13 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return length;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public Preferences getPreferences ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return preferences;
   }
 }

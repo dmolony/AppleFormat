@@ -1,11 +1,21 @@
 package com.bytezone.appleformat.text;
 
+import com.bytezone.appleformat.Preferences;
+
 // -----------------------------------------------------------------------------------//
-public class TextPreferences
+public class TextPreferences extends Preferences
 //-----------------------------------------------------------------------------------//
 {
   public boolean showTextOffsets;
   public boolean merlinFormat = true;
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String getName ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return "Text Preferences";
+  }
 
   // ---------------------------------------------------------------------------------//
   @Override

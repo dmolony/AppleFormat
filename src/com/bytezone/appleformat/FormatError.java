@@ -65,4 +65,12 @@ public class FormatError implements FormattedAppleFile
   {
     return 0;
   }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public Preferences getPreferences ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return null;
+  }
 }

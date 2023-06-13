@@ -1,7 +1,9 @@
 package com.bytezone.appleformat.basic;
 
+import com.bytezone.appleformat.Preferences;
+
 // -----------------------------------------------------------------------------------//
-public class ApplesoftBasicPreferences
+public class ApplesoftBasicPreferences extends Preferences
 // -----------------------------------------------------------------------------------//
 {
   public boolean userFormat = true;
@@ -31,6 +33,14 @@ public class ApplesoftBasicPreferences
 
   // ---------------------------------------------------------------------------------//
   @Override
+  public String getName ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return "Applesoft Basic Preferences";
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
   public String toString ()
   // ---------------------------------------------------------------------------------//
   {
@@ -55,7 +65,7 @@ public class ApplesoftBasicPreferences
     text.append (String.format ("Wrap PRINT at ............ %d%n", wrapPrintAt));
     text.append (String.format ("Wrap REM at .............. %d%n", wrapRemAt));
     text.append (String.format ("Wrap DATA at ............. %d%n", wrapDataAt));
-    text.append (String.format ("Split DIM ................ %d", splitDim));
+    text.append (String.format ("Split DIM ................ %s", splitDim));
 
     return text.toString ();
   }

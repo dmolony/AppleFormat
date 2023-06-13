@@ -1,13 +1,23 @@
 package com.bytezone.appleformat.assembler;
 
+import com.bytezone.appleformat.Preferences;
+
 // -----------------------------------------------------------------------------------//
-public class AssemblerPreferences
+public class AssemblerPreferences extends Preferences
 // -----------------------------------------------------------------------------------//
 {
   public boolean showTargets = true;
   public boolean showStrings = true;
   public boolean offsetFromZero = false;
   public boolean showHeader = true;
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String getName ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return "Assembler Preferences";
+  }
 
   // ---------------------------------------------------------------------------------//
   @Override

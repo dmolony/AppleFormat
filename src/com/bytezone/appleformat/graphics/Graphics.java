@@ -8,14 +8,16 @@ import com.bytezone.filesystem.AppleFile;
 public abstract class Graphics extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  public static GraphicsPreferences graphicsPreferences =
-      FormattedAppleFileFactory.graphicsPreferences;
+  //  public static GraphicsPreferences graphicsPreferences =
+  //      FormattedAppleFileFactory.graphicsPreferences;
 
   // ---------------------------------------------------------------------------------//
   public Graphics (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer);
+
+    preferences = FormattedAppleFileFactory.graphicsPreferences;
   }
 
   // ---------------------------------------------------------------------------------//

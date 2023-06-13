@@ -13,9 +13,6 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
     implements ApplesoftConstants
 // -----------------------------------------------------------------------------------//
 {
-  public static final ApplesoftBasicPreferences basicPreferences =
-      FormattedAppleFileFactory.basicPreferences;
-
   private final List<SourceLine> sourceLines = new ArrayList<> ();
 
   private final UserBasicFormatter userBasicFormatter;
@@ -32,6 +29,10 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
+
+    ApplesoftBasicPreferences basicPreferences =
+        FormattedAppleFileFactory.basicPreferences;
+    preferences = basicPreferences;
 
     int ptr = offset;
     while (buffer[ptr + 1] != 0)    // msb of link field
@@ -62,7 +63,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
       return text.toString ();
     }
 
-    if (basicPreferences.userFormat)
+    if (((ApplesoftBasicPreferences) preferences).userFormat)
       userBasicFormatter.append (text);
     else
       appleBasicFormatter.append (text);
@@ -89,7 +90,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
       return Utility.rtrim (text);
     }
 
-    if (basicPreferences.showAllXref)
+    if (((ApplesoftBasicPreferences) preferences).showAllXref)
       xrefFormatter.append (text);
 
     return Utility.rtrim (text);

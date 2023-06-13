@@ -1,9 +1,19 @@
 package com.bytezone.appleformat.graphics;
 
+import com.bytezone.appleformat.Preferences;
+
 // -----------------------------------------------------------------------------------//
-public class GraphicsPreferences
+public class GraphicsPreferences extends Preferences
 // -----------------------------------------------------------------------------------//
 {
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String getName ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return "Graphics Preferences";
+  }
 
   // ---------------------------------------------------------------------------------//
   @Override

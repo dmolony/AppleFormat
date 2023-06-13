@@ -19,8 +19,8 @@ import com.bytezone.filesystem.AppleFile;
 public class AssemblerProgram extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  public static AssemblerPreferences assemblerPreferences =
-      FormattedAppleFileFactory.assemblerPreferences;
+  //  public static AssemblerPreferences assemblerPreferences =
+  //      FormattedAppleFileFactory.assemblerPreferences;
 
   private static Map<Integer, String> equates;
 
@@ -43,6 +43,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
+
+    preferences = FormattedAppleFileFactory.assemblerPreferences;
 
     this.loadAddress = address;
 
@@ -140,7 +142,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
 
     pgm.append (getListing ());
 
-    if (assemblerPreferences.showStrings)
+    if (((AssemblerPreferences) preferences).showStrings)
       pgm.append (getStringsText ());
 
     return pgm.toString ();
@@ -166,7 +168,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     {
       StringBuilder line = new StringBuilder ();
 
-      String arrowText = assemblerPreferences.showTargets ? getArrow (cmd) : "";
+      String arrowText =
+          ((AssemblerPreferences) preferences).showTargets ? getArrow (cmd) : "";
       line.append (
           String.format ("%3.3s %04X: %02X ", arrowText, cmd.address, cmd.value));
 

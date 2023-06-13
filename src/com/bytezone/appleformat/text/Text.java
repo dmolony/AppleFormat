@@ -8,9 +8,6 @@ import com.bytezone.filesystem.AppleFile;
 public class Text extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  public static TextPreferences textPreferences =
-      FormattedAppleFileFactory.textPreferences;
-
   String output;
 
   private final TextFormatter textFormatter;
@@ -22,6 +19,7 @@ public class Text extends AbstractFormattedAppleFile
     super (appleFile, buffer, offset, length);
 
     textFormatter = new TextFormatter (this);
+    preferences = FormattedAppleFileFactory.textPreferences;
   }
 
   // ---------------------------------------------------------------------------------//

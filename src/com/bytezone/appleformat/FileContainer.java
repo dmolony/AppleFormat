@@ -62,4 +62,12 @@ public class FileContainer implements FormattedAppleFile
   {
     return formattedAppleFile.getLength ();
   }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public Preferences getPreferences ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return null;
+  }
 }

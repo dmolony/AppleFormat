@@ -17,4 +17,6 @@ public interface FormattedAppleFile
   public int getOffset ();
 
   public int getLength ();
+
+  public Preferences getPreferences ();
 }
