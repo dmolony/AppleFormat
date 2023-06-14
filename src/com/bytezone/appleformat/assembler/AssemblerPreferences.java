@@ -12,11 +12,10 @@ public class AssemblerPreferences extends Preferences
   public boolean showHeader = true;
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  public String getName ()
+  public AssemblerPreferences ()
   // ---------------------------------------------------------------------------------//
   {
-    return "Assembler Preferences";
+    super ("Assembler Preferences");
   }
 
   // ---------------------------------------------------------------------------------//
@@ -24,7 +23,7 @@ public class AssemblerPreferences extends Preferences
   public String toString ()
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder ();
+    StringBuilder text = new StringBuilder (super.toString ());
 
     text.append (String.format ("Show targets .......... %s%n", showTargets));
     text.append (String.format ("Show strings .......... %s%n", showStrings));

@@ -6,13 +6,11 @@ import com.bytezone.appleformat.Preferences;
 public class GraphicsPreferences extends Preferences
 // -----------------------------------------------------------------------------------//
 {
-
   // ---------------------------------------------------------------------------------//
-  @Override
-  public String getName ()
+  public GraphicsPreferences ()
   // ---------------------------------------------------------------------------------//
   {
-    return "Graphics Preferences";
+    super ("Graphics Preferences");
   }
 
   // ---------------------------------------------------------------------------------//
@@ -20,7 +18,8 @@ public class GraphicsPreferences extends Preferences
   public String toString ()
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder ();
+    StringBuilder text = new StringBuilder (super.toString ());
+
     return text.toString ();
   }
 }

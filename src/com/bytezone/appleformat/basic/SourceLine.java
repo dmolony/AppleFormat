@@ -36,7 +36,7 @@ public class SourceLine implements ApplesoftConstants
 
     while (ptr < buffer.length && (b = buffer[ptr++]) != 0)
     {
-      if (inRemark)                       // cannot terminate a REM
+      if (inRemark)                               // cannot terminate a REM
         continue;
 
       if (inString)
@@ -50,7 +50,8 @@ public class SourceLine implements ApplesoftConstants
       {
         // break IF statements into two sublines (allows for easier line indenting)
         case TOKEN_IF:
-          while (buffer[ptr] != TOKEN_THEN && buffer[ptr] != TOKEN_GOTO && buffer[ptr] != 0)
+          while (buffer[ptr] != TOKEN_THEN && buffer[ptr] != TOKEN_GOTO
+              && buffer[ptr] != 0)
             ptr++;
 
           if (buffer[ptr] == TOKEN_THEN)          // keep THEN with the IF
@@ -68,7 +69,8 @@ public class SourceLine implements ApplesoftConstants
             inRemark = true;
           else                                    //  mid-line - should be illegal
           {
-            System.out.printf ("%s : %5d mid-line REM token%n", program.getName (), lineNumber);
+            System.out.printf ("%s : %5d mid-line REM token%n", program.getName (),
+                lineNumber);
             startPtr = addSubLine (startPtr, --ptr);    // point back to the REM
           }
           break;

@@ -15,9 +15,9 @@ public class ApplesoftBasicPreferences extends Preferences
   public boolean splitDim = false;
   public boolean alignAssign = true;
   public boolean showCaret = false;
-  public boolean showThen = true;               // not used (hardcoded elsewhere)
+  //  public boolean showThen = true;               // not used (hardcoded elsewhere)
   public boolean blankAfterReturn = false;
-  public boolean formatRem = false;
+  public boolean formatRem = true;
   public boolean deleteExtraDataSpace = false;
 
   public boolean showGosubGoto = false;
@@ -32,11 +32,10 @@ public class ApplesoftBasicPreferences extends Preferences
   public int wrapDataAt = 80;
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  public String getName ()
+  public ApplesoftBasicPreferences ()
   // ---------------------------------------------------------------------------------//
   {
-    return "Applesoft Basic Preferences";
+    super ("Applesoft Basic Preferences");
   }
 
   // ---------------------------------------------------------------------------------//
@@ -44,7 +43,7 @@ public class ApplesoftBasicPreferences extends Preferences
   public String toString ()
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder ();
+    StringBuilder text = new StringBuilder (super.toString ());
 
     text.append (String.format ("Split REM ................ %s%n", splitRem));
     text.append (String.format ("Align assign ............. %s%n", alignAssign));
@@ -52,7 +51,7 @@ public class ApplesoftBasicPreferences extends Preferences
     text.append (String.format ("Show All Xref ............ %s%n", showAllXref));
     text.append (String.format ("Apple line wrap .......... %s%n", appleLineWrap));
     text.append (String.format ("Show caret ............... %s%n", showCaret));
-    text.append (String.format ("Show THEN ................ %s%n", showThen));
+    //    text.append (String.format ("Show THEN ................ %s%n", showThen));
     text.append (String.format ("Show GOTO/GOSUB .......... %s%n", showGosubGoto));
     text.append (String.format ("Show CALL ................ %s%n", showCalls));
     text.append (String.format ("Show symbols ............. %s%n", showSymbols));

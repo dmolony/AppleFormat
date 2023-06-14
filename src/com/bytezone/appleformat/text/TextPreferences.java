@@ -10,11 +10,10 @@ public class TextPreferences extends Preferences
   public boolean merlinFormat = true;
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  public String getName ()
+  public TextPreferences ()
   // ---------------------------------------------------------------------------------//
   {
-    return "Text Preferences";
+    super ("Text Preferences");
   }
 
   // ---------------------------------------------------------------------------------//
@@ -22,7 +21,7 @@ public class TextPreferences extends Preferences
   public String toString ()
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder ();
+    StringBuilder text = new StringBuilder (super.toString ());
 
     text.append (String.format ("Show offsets .......... %s%n", showTextOffsets));
     text.append (String.format ("Show .S as Merlin ..... %s", merlinFormat));
