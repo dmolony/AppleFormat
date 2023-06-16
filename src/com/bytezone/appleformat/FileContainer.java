@@ -70,4 +70,12 @@ public class FileContainer implements FormattedAppleFile
   {
     return null;
   }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public OptionsType getOptionsType ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return null;
+  }
 }

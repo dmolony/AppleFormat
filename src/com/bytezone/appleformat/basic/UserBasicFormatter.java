@@ -341,7 +341,8 @@ public class UserBasicFormatter extends BasicFormatter
   private String[] getRemAssembler (SubLine subline)
   // ---------------------------------------------------------------------------------//
   {
-    //    AssemblerProgram program = new AssemblerProgram ("REM assembler", subline.getBuffer (),
+    //    AssemblerProgram program = new AssemblerProgram 
+    //       ("REM assembler", subline.getBuffer (),
     //        getLoadAddress () + subline.startPtr + 1);
     //
     //    return program.getAssembler ().split (NEWLINE);

@@ -18,6 +18,7 @@ public abstract class Graphics extends AbstractFormattedAppleFile
     super (appleFile, buffer);
 
     preferences = FormattedAppleFileFactory.graphicsPreferences;
+    optionsType = OptionsType.GRAPHICS;
   }
 
   // ---------------------------------------------------------------------------------//

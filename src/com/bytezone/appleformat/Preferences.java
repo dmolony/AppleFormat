@@ -25,6 +25,6 @@ public abstract class Preferences
   public String toString ()
   // ---------------------------------------------------------------------------------//
   {
-    return String.format ("Name .................. %s%n", name);
+    return String.format ("Name ..................... %s%n", name);
   }
 }

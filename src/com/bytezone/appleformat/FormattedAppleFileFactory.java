@@ -58,11 +58,11 @@ public class FormattedAppleFileFactory
 {
   public static final ApplesoftBasicPreferences basicPreferences =
       new ApplesoftBasicPreferences ();
-  public static final TextPreferences textPreferences = new TextPreferences ();
   public static final AssemblerPreferences assemblerPreferences =
       new AssemblerPreferences ();
   public static final GraphicsPreferences graphicsPreferences =
       new GraphicsPreferences ();
+  public static final TextPreferences textPreferences = new TextPreferences ();
 
   // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (File localFile)

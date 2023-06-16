@@ -17,7 +17,8 @@ public abstract class BasicFormatter implements ApplesoftConstants
   List<SourceLine> sourceLines;
 
   // ---------------------------------------------------------------------------------//
-  public BasicFormatter (ApplesoftBasicProgram program, ApplesoftBasicPreferences basicPreferences)
+  public BasicFormatter (ApplesoftBasicProgram program,
+      ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     this.program = program;

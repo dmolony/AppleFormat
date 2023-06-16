@@ -30,6 +30,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   private String extra;
 
   protected Preferences preferences;
+  protected OptionsType optionsType;
 
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (File localFile)
@@ -106,10 +107,10 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   {
     try
     {
-      if (text == null)
-        text = buildText ();
+      //      if (text == null)
+      text = buildText ();
 
-      return buildText ();
+      return text;
     }
     catch (Exception e)
     {
@@ -132,8 +133,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   {
     try
     {
-      if (extra == null)
-        extra = buildExtras ();
+      //      if (extra == null)
+      extra = buildExtras ();
 
       return extra;
     }
@@ -214,5 +215,13 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return preferences;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public OptionsType getOptionsType ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return optionsType;
   }
 }

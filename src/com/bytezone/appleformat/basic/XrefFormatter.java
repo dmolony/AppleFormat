@@ -11,8 +11,9 @@ import com.bytezone.appleformat.Utility;
 public class XrefFormatter extends BasicFormatter
 // -----------------------------------------------------------------------------------//
 {
-  private static final String underline = "----------------------------------------------------"
-      + "----------------------------------------------";
+  private static final String underline =
+      "----------------------------------------------------"
+          + "----------------------------------------------";
 
   private final Map<Integer, List<Integer>> gotoLines = new TreeMap<> ();
   private final Map<Integer, List<Integer>> gosubLines = new TreeMap<> ();
@@ -39,7 +40,8 @@ public class XrefFormatter extends BasicFormatter
   private final int maxDigits;
 
   // ---------------------------------------------------------------------------------//
-  public XrefFormatter (ApplesoftBasicProgram program, ApplesoftBasicPreferences basicPreferences)
+  public XrefFormatter (ApplesoftBasicProgram program,
+      ApplesoftBasicPreferences basicPreferences)
   // ---------------------------------------------------------------------------------//
   {
     super (program, basicPreferences);
@@ -51,8 +53,8 @@ public class XrefFormatter extends BasicFormatter
     maxDigits = getMaxDigits ();
 
     // build format strings based on existing line numbers and variable names
-    formatLeft =
-        longestVarName > 7 ? "%-" + longestVarName + "." + longestVarName + "s  " : "%-7.7s  ";
+    formatLeft = longestVarName > 7 ? "%-" + longestVarName + "." + longestVarName + "s  "
+        : "%-7.7s  ";
     formatRight = formatLeft.replace ("-", "");
     formatLineNumber = "%" + maxDigits + "d ";
   }
@@ -125,8 +127,8 @@ public class XrefFormatter extends BasicFormatter
       {
         heading (fullText, formatRight, "Line", "String");
         for (int i = 0; i < stringsLine.size (); i++)
-          fullText.append (
-              String.format (formatRight + "%s%n", stringsLine.get (i), stringsText.get (i)));
+          fullText.append (String.format (formatRight + "%s%n", stringsLine.get (i),
+              stringsText.get (i)));
       }
     }
 
@@ -233,15 +235,16 @@ public class XrefFormatter extends BasicFormatter
     for (String symbol : map.keySet ())                   // left-justify strings
     {
       if (symbol.length () <= 7)
-        appendLineNumbers (fullText, String.format (formatLeft, symbol), map.get (symbol));
+        appendLineNumbers (fullText, String.format (formatLeft, symbol),
+            map.get (symbol));
       else
         appendLineNumbers (fullText, symbol + "  ", map.get (symbol));
     }
   }
 
   // ---------------------------------------------------------------------------------//
-  private void showSymbolsLeftRight (StringBuilder fullText, Map<String, List<Integer>> map,
-      String heading)
+  private void showSymbolsLeftRight (StringBuilder fullText,
+      Map<String, List<Integer>> map, String heading)
   // ---------------------------------------------------------------------------------//
   {
     heading (fullText, formatLeft, heading);
@@ -249,9 +252,11 @@ public class XrefFormatter extends BasicFormatter
     for (String symbol : map.keySet ())                   // left-justify strings
     {
       if (isNumeric (symbol))
-        appendLineNumbers (fullText, String.format (formatRight, symbol), map.get (symbol));
+        appendLineNumbers (fullText, String.format (formatRight, symbol),
+            map.get (symbol));
       else if (symbol.length () <= 7)
-        appendLineNumbers (fullText, String.format (formatLeft, symbol), map.get (symbol));
+        appendLineNumbers (fullText, String.format (formatLeft, symbol),
+            map.get (symbol));
       else
         appendLineNumbers (fullText, symbol + " ", map.get (symbol));
     }
@@ -269,8 +274,8 @@ public class XrefFormatter extends BasicFormatter
   }
 
   // ---------------------------------------------------------------------------------//
-  private void showSymbolsRightInt (StringBuilder fullText, Map<Integer, List<Integer>> map,
-      String heading)
+  private void showSymbolsRightInt (StringBuilder fullText,
+      Map<Integer, List<Integer>> map, String heading)
   // ---------------------------------------------------------------------------------//
   {
     heading (fullText, formatRight, heading);
@@ -280,8 +285,8 @@ public class XrefFormatter extends BasicFormatter
   }
 
   // ---------------------------------------------------------------------------------//
-  private void showSymbolsRightFloat (StringBuilder fullText, Map<Float, List<Integer>> map,
-      String heading)
+  private void showSymbolsRightFloat (StringBuilder fullText,
+      Map<Float, List<Integer>> map, String heading)
   // ---------------------------------------------------------------------------------//
   {
     heading (fullText, formatRight, heading);
@@ -303,7 +308,8 @@ public class XrefFormatter extends BasicFormatter
   }
 
   // ---------------------------------------------------------------------------------//
-  private void appendLineNumbers (StringBuilder fullText, String symbol, List<Integer> lineNumbers)
+  private void appendLineNumbers (StringBuilder fullText, String symbol,
+      List<Integer> lineNumbers)
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
@@ -446,6 +452,7 @@ public class XrefFormatter extends BasicFormatter
         || symbolName.charAt (ptr) == Utility.ASCII_PERCENT)        // integer
       ptr--;
 
-    return (ptr <= 1) ? symbolName : symbolName.substring (0, 2) + symbolName.substring (ptr + 1);
+    return (ptr <= 1) ? symbolName
+        : symbolName.substring (0, 2) + symbolName.substring (ptr + 1);
   }
 }

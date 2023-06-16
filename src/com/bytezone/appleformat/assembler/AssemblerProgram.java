@@ -19,15 +19,7 @@ import com.bytezone.filesystem.AppleFile;
 public class AssemblerProgram extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  //  public static AssemblerPreferences assemblerPreferences =
-  //      FormattedAppleFileFactory.assemblerPreferences;
-
   private static Map<Integer, String> equates;
-
-  //  String name;
-  //  byte[] buffer;
-  //  int offset;
-  //  int length;
 
   private final int loadAddress;
   private int executeOffset;
@@ -45,6 +37,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     super (appleFile, buffer, offset, length);
 
     preferences = FormattedAppleFileFactory.assemblerPreferences;
+    optionsType = OptionsType.ASSEMBLER;
 
     this.loadAddress = address;
 

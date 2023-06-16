@@ -20,12 +20,12 @@ public class ApplesoftBasicPreferences extends Preferences
   public boolean formatRem = true;
   public boolean deleteExtraDataSpace = false;
 
-  public boolean showGosubGoto = false;
-  public boolean showCalls = false;
-  public boolean showSymbols = false;
-  public boolean showFunctions = false;
-  public boolean showConstants = false;
-  public boolean showDuplicateSymbols = false;
+  public boolean showGosubGoto = true;
+  public boolean showCalls = true;
+  public boolean showSymbols = true;
+  public boolean showFunctions = true;
+  public boolean showConstants = true;
+  public boolean showDuplicateSymbols = true;
 
   public int wrapPrintAt = 80;
   public int wrapRemAt = 80;

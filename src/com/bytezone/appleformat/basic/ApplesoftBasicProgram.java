@@ -32,7 +32,9 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
 
     ApplesoftBasicPreferences basicPreferences =
         FormattedAppleFileFactory.basicPreferences;
+
     preferences = basicPreferences;
+    optionsType = OptionsType.APPLESOFT;
 
     int ptr = offset;
     while (buffer[ptr + 1] != 0)    // msb of link field
@@ -90,8 +92,8 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
       return Utility.rtrim (text);
     }
 
-    if (((ApplesoftBasicPreferences) preferences).showAllXref)
-      xrefFormatter.append (text);
+    //    if (((ApplesoftBasicPreferences) preferences).showAllXref)
+    xrefFormatter.append (text);
 
     return Utility.rtrim (text);
   }
