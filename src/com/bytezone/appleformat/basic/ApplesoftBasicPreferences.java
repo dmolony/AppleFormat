@@ -15,7 +15,7 @@ public class ApplesoftBasicPreferences extends Preferences
   public boolean splitDim = false;
   public boolean alignAssign = true;
   public boolean showCaret = false;
-  //  public boolean showThen = true;               // not used (hardcoded elsewhere)
+  public boolean showThen = true;
   public boolean blankAfterReturn = false;
   public boolean formatRem = true;
   public boolean deleteExtraDataSpace = false;

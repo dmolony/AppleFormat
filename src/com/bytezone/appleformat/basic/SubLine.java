@@ -22,6 +22,7 @@ import static com.bytezone.appleformat.Utility.isPossibleVariable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.HexFormatter;
 
 // -----------------------------------------------------------------------------------//
@@ -44,8 +45,6 @@ public class SubLine implements ApplesoftConstants
   String functionName;
 
   String callTarget;
-
-  boolean showThen = true;        // used to be in BasicPreferences - fix later
 
   private final List<Integer> gotoLines = new ArrayList<> ();
   private final List<Integer> gosubLines = new ArrayList<> ();
@@ -699,6 +698,10 @@ public class SubLine implements ApplesoftConstants
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder line = new StringBuilder ();
+
+    ApplesoftBasicPreferences basicPreferences =
+        FormattedAppleFileFactory.basicPreferences;
+    boolean showThen = basicPreferences.showThen && basicPreferences.userFormat;
 
     // All sublines end with 0 or : except IF lines that are split into two
     int max = startPtr + length - 1;

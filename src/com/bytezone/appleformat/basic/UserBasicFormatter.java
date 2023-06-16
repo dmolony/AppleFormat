@@ -157,8 +157,8 @@ public class UserBasicFormatter extends BasicFormatter
             ++indentLevel;
           }
         }
-        else if (basicPreferences.blankAfterReturn && subline.is (TOKEN_RETURN)
-            && subline.isFirst ())
+        else if (basicPreferences.blankAfterReturn && subline.is (TOKEN_RETURN))
+          //            && subline.isFirst ())
           insertBlankLine = true;
       }
 
