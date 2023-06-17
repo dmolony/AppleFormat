@@ -47,15 +47,11 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public int wrapRemAt = 80;
   public int wrapDataAt = 80;
 
-  private Preferences prefs;
-
   // ---------------------------------------------------------------------------------//
   public ApplesoftBasicPreferences (Preferences prefs)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Applesoft Basic Preferences");
-
-    this.prefs = prefs;
+    super ("Applesoft Basic Preferences", prefs);
 
     boolean defaultValue = false;
 

@@ -488,5 +488,8 @@ public class FormattedAppleFileFactory
   // ---------------------------------------------------------------------------------//
   {
     basicPreferences.save ();
+    assemblerPreferences.save ();
+    textPreferences.save ();
+    graphicsPreferences.save ();
   }
 }

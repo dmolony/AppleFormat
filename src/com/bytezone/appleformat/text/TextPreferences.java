@@ -8,14 +8,28 @@ import com.bytezone.appleformat.ApplePreferences;
 public class TextPreferences extends ApplePreferences
 //-----------------------------------------------------------------------------------//
 {
+  private static String PREFS_SHOW_OFFSETS = "ShowOffsets";
+  private static String PREFS_MERLIN_FORMAT = "MerlinFormat";
+
   public boolean showTextOffsets;
-  public boolean merlinFormat = true;
+  public boolean merlinFormat;
 
   // ---------------------------------------------------------------------------------//
   public TextPreferences (Preferences prefs)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Text Preferences");
+    super ("Text Preferences", prefs);
+
+    showTextOffsets = prefs.getBoolean (PREFS_SHOW_OFFSETS, false);
+    merlinFormat = prefs.getBoolean (PREFS_MERLIN_FORMAT, false);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public void save ()
+  // ---------------------------------------------------------------------------------//
+  {
+    prefs.putBoolean (PREFS_SHOW_OFFSETS, showTextOffsets);
+    prefs.putBoolean (PREFS_MERLIN_FORMAT, merlinFormat);
   }
 
   // ---------------------------------------------------------------------------------//
