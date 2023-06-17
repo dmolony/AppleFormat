@@ -13,6 +13,7 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
 
 import java.io.File;
+import java.util.prefs.Preferences;
 
 import com.bytezone.appleformat.appleworks.AppleworksADBFile;
 import com.bytezone.appleformat.appleworks.AppleworksSSFile;
@@ -56,13 +57,20 @@ import com.bytezone.filesystem.ForkedFile;
 public class FormattedAppleFileFactory
 // -----------------------------------------------------------------------------------//
 {
-  public static final ApplesoftBasicPreferences basicPreferences =
-      new ApplesoftBasicPreferences ();
-  public static final AssemblerPreferences assemblerPreferences =
-      new AssemblerPreferences ();
-  public static final GraphicsPreferences graphicsPreferences =
-      new GraphicsPreferences ();
-  public static final TextPreferences textPreferences = new TextPreferences ();
+  public static ApplesoftBasicPreferences basicPreferences;
+  public static AssemblerPreferences assemblerPreferences;
+  public static GraphicsPreferences graphicsPreferences;
+  public static TextPreferences textPreferences;
+
+  // ---------------------------------------------------------------------------------//
+  public FormattedAppleFileFactory (Preferences prefs)
+  // ---------------------------------------------------------------------------------//
+  {
+    basicPreferences = new ApplesoftBasicPreferences (prefs);
+    assemblerPreferences = new AssemblerPreferences (prefs);
+    graphicsPreferences = new GraphicsPreferences (prefs);
+    textPreferences = new TextPreferences (prefs);
+  }
 
   // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (File localFile)
@@ -75,6 +83,8 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
+    assert basicPreferences != null;
+
     try
     {
       if (appleFile instanceof AppleContainer container)
@@ -471,5 +481,12 @@ public class FormattedAppleFileFactory
       return true;
 
     return false;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public void save ()
+  // ---------------------------------------------------------------------------------//
+  {
+    basicPreferences.save ();
   }
 }

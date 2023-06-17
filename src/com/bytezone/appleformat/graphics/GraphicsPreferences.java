@@ -1,13 +1,15 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.Preferences;
+import java.util.prefs.Preferences;
+
+import com.bytezone.appleformat.ApplePreferences;
 
 // -----------------------------------------------------------------------------------//
-public class GraphicsPreferences extends Preferences
+public class GraphicsPreferences extends ApplePreferences
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public GraphicsPreferences ()
+  public GraphicsPreferences (Preferences prefs)
   // ---------------------------------------------------------------------------------//
   {
     super ("Graphics Preferences");

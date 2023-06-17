@@ -65,7 +65,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
       return text.toString ();
     }
 
-    if (((ApplesoftBasicPreferences) preferences).userFormat)
+    if (((ApplesoftBasicPreferences) preferences).displayFormat == 1)
       userBasicFormatter.append (text);
     else
       appleBasicFormatter.append (text);

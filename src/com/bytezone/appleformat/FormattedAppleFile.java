@@ -18,7 +18,7 @@ public interface FormattedAppleFile
 
   public int getLength ();
 
-  public Preferences getPreferences ();
+  public ApplePreferences getPreferences ();
 
   public OptionsType getOptionsType ();
 

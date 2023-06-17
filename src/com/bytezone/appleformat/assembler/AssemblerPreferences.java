@@ -1,9 +1,11 @@
 package com.bytezone.appleformat.assembler;
 
-import com.bytezone.appleformat.Preferences;
+import java.util.prefs.Preferences;
+
+import com.bytezone.appleformat.ApplePreferences;
 
 // -----------------------------------------------------------------------------------//
-public class AssemblerPreferences extends Preferences
+public class AssemblerPreferences extends ApplePreferences
 // -----------------------------------------------------------------------------------//
 {
   public boolean showTargets = true;
@@ -12,7 +14,7 @@ public class AssemblerPreferences extends Preferences
   public boolean showHeader = true;
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerPreferences ()
+  public AssemblerPreferences (Preferences prefs)
   // ---------------------------------------------------------------------------------//
   {
     super ("Assembler Preferences");

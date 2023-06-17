@@ -1,16 +1,18 @@
 package com.bytezone.appleformat.text;
 
-import com.bytezone.appleformat.Preferences;
+import java.util.prefs.Preferences;
+
+import com.bytezone.appleformat.ApplePreferences;
 
 // -----------------------------------------------------------------------------------//
-public class TextPreferences extends Preferences
+public class TextPreferences extends ApplePreferences
 //-----------------------------------------------------------------------------------//
 {
   public boolean showTextOffsets;
   public boolean merlinFormat = true;
 
   // ---------------------------------------------------------------------------------//
-  public TextPreferences ()
+  public TextPreferences (Preferences prefs)
   // ---------------------------------------------------------------------------------//
   {
     super ("Text Preferences");

@@ -65,7 +65,7 @@ public class FileContainer implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Preferences getPreferences ()
+  public ApplePreferences getPreferences ()
   // ---------------------------------------------------------------------------------//
   {
     return null;

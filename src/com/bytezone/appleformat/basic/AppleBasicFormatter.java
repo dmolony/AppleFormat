@@ -28,12 +28,12 @@ public class AppleBasicFormatter extends BasicFormatter
   // ---------------------------------------------------------------------------------//
   {
     int loadAddress = getLoadAddress ();
-    int ptr = 0;
+    int ptr = offset;
     int linkField;
 
     StringBuilder currentLine = new StringBuilder ();
     LineFormatter formatter =
-        basicPreferences.appleLineWrap ? wrapFormatter : flatFormatter;
+        basicPreferences.displayFormat == 2 ? wrapFormatter : flatFormatter;
 
     while ((linkField = getShort (buffer, ptr)) != 0)
     {

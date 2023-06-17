@@ -1,13 +1,12 @@
 package com.bytezone.appleformat;
 
 // -----------------------------------------------------------------------------------//
-public abstract class Preferences
-// -----------------------------------------------------------------------------------//
+public abstract class ApplePreferences
 {
   protected String name;
 
   // ---------------------------------------------------------------------------------//
-  public Preferences (String name)
+  public ApplePreferences (String name)
   // ---------------------------------------------------------------------------------//
   {
     this.name = name;

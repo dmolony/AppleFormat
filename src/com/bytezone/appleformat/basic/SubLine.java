@@ -701,7 +701,7 @@ public class SubLine implements ApplesoftConstants
 
     ApplesoftBasicPreferences basicPreferences =
         FormattedAppleFileFactory.basicPreferences;
-    boolean showThen = basicPreferences.showThen && basicPreferences.userFormat;
+    boolean showThen = basicPreferences.showThen && basicPreferences.displayFormat == 1;
 
     // All sublines end with 0 or : except IF lines that are split into two
     int max = startPtr + length - 1;
