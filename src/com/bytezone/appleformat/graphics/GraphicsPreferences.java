@@ -9,10 +9,10 @@ public class GraphicsPreferences extends ApplePreferences
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public GraphicsPreferences (Preferences prefs)
+  public GraphicsPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Graphics Preferences", prefs);
+    super ("Graphics Preferences", preferences);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -20,7 +20,6 @@ public class GraphicsPreferences extends ApplePreferences
   public void save ()
   // ---------------------------------------------------------------------------------//
   {
-    //    prefs.putBoolean (PREFS_SHOW_OFFSETS, showTextOffsets); 
   }
 
   // ---------------------------------------------------------------------------------//

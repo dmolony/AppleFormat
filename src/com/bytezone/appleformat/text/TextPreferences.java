@@ -15,13 +15,13 @@ public class TextPreferences extends ApplePreferences
   public boolean merlinFormat;
 
   // ---------------------------------------------------------------------------------//
-  public TextPreferences (Preferences prefs)
+  public TextPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Text Preferences", prefs);
+    super ("Text Preferences", preferences);
 
-    showTextOffsets = prefs.getBoolean (PREFS_SHOW_OFFSETS, false);
-    merlinFormat = prefs.getBoolean (PREFS_MERLIN_FORMAT, false);
+    showTextOffsets = preferences.getBoolean (PREFS_SHOW_OFFSETS, false);
+    merlinFormat = preferences.getBoolean (PREFS_MERLIN_FORMAT, false);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -29,8 +29,8 @@ public class TextPreferences extends ApplePreferences
   public void save ()
   // ---------------------------------------------------------------------------------//
   {
-    prefs.putBoolean (PREFS_SHOW_OFFSETS, showTextOffsets);
-    prefs.putBoolean (PREFS_MERLIN_FORMAT, merlinFormat);
+    preferences.putBoolean (PREFS_SHOW_OFFSETS, showTextOffsets);
+    preferences.putBoolean (PREFS_MERLIN_FORMAT, merlinFormat);
   }
 
   // ---------------------------------------------------------------------------------//

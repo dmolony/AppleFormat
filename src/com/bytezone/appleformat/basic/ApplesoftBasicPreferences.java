@@ -48,30 +48,31 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public int wrapDataAt = 80;
 
   // ---------------------------------------------------------------------------------//
-  public ApplesoftBasicPreferences (Preferences prefs)
+  public ApplesoftBasicPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Applesoft Basic Preferences", prefs);
+    super ("Applesoft Basic Preferences", preferences);
 
     boolean defaultValue = false;
 
-    displayFormat = prefs.getInt (PREFS_DISPLAY_FORMAT, 1);
-    splitRem = prefs.getBoolean (PREFS_SPLIT_REM, defaultValue);
-    splitDim = prefs.getBoolean (PREFS_SPLIT_DIM, defaultValue);
-    alignAssign = prefs.getBoolean (PREFS_ALIGN_ASSIGN, defaultValue);
+    displayFormat = preferences.getInt (PREFS_DISPLAY_FORMAT, 1);
+    splitRem = preferences.getBoolean (PREFS_SPLIT_REM, defaultValue);
+    splitDim = preferences.getBoolean (PREFS_SPLIT_DIM, defaultValue);
+    alignAssign = preferences.getBoolean (PREFS_ALIGN_ASSIGN, defaultValue);
 
-    showCaret = prefs.getBoolean (PREFS_SHOW_CARET, defaultValue);
-    showThen = prefs.getBoolean (PREFS_SHOW_THEN, defaultValue);
-    blankAfterReturn = prefs.getBoolean (PREFS_BLANK_AFTER_RETURN, defaultValue);
-    formatRem = prefs.getBoolean (PREFS_FORMAT_REM, defaultValue);
-    deleteExtraDataSpace = prefs.getBoolean (PREFS_DELETE_EXTRA_SPACE, defaultValue);
+    showCaret = preferences.getBoolean (PREFS_SHOW_CARET, defaultValue);
+    showThen = preferences.getBoolean (PREFS_SHOW_THEN, defaultValue);
+    blankAfterReturn = preferences.getBoolean (PREFS_BLANK_AFTER_RETURN, defaultValue);
+    formatRem = preferences.getBoolean (PREFS_FORMAT_REM, defaultValue);
+    deleteExtraDataSpace =
+        preferences.getBoolean (PREFS_DELETE_EXTRA_SPACE, defaultValue);
 
-    showSymbols = prefs.getBoolean (PREFS_SHOW_SYMBOLS, defaultValue);
-    showDuplicateSymbols = prefs.getBoolean (PREFS_SHOW_DUPLICATES, defaultValue);
-    showFunctions = prefs.getBoolean (PREFS_SHOW_FUNCTIONS, defaultValue);
-    showConstants = prefs.getBoolean (PREFS_SHOW_CONSTANTS, defaultValue);
-    showGosubGoto = prefs.getBoolean (PREFS_SHOW_GOSUB, defaultValue);
-    showCalls = prefs.getBoolean (PREFS_SHOW_CALLS, defaultValue);
+    showSymbols = preferences.getBoolean (PREFS_SHOW_SYMBOLS, defaultValue);
+    showDuplicateSymbols = preferences.getBoolean (PREFS_SHOW_DUPLICATES, defaultValue);
+    showFunctions = preferences.getBoolean (PREFS_SHOW_FUNCTIONS, defaultValue);
+    showConstants = preferences.getBoolean (PREFS_SHOW_CONSTANTS, defaultValue);
+    showGosubGoto = preferences.getBoolean (PREFS_SHOW_GOSUB, defaultValue);
+    showCalls = preferences.getBoolean (PREFS_SHOW_CALLS, defaultValue);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -79,23 +80,23 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public void save ()
   // ---------------------------------------------------------------------------------//
   {
-    prefs.putInt (PREFS_DISPLAY_FORMAT, displayFormat);
-    prefs.putBoolean (PREFS_SPLIT_REM, splitRem);
-    prefs.putBoolean (PREFS_SPLIT_DIM, splitDim);
-    prefs.putBoolean (PREFS_ALIGN_ASSIGN, alignAssign);
+    preferences.putInt (PREFS_DISPLAY_FORMAT, displayFormat);
+    preferences.putBoolean (PREFS_SPLIT_REM, splitRem);
+    preferences.putBoolean (PREFS_SPLIT_DIM, splitDim);
+    preferences.putBoolean (PREFS_ALIGN_ASSIGN, alignAssign);
 
-    prefs.putBoolean (PREFS_SHOW_CARET, showCaret);
-    prefs.putBoolean (PREFS_SHOW_THEN, showThen);
-    prefs.putBoolean (PREFS_BLANK_AFTER_RETURN, blankAfterReturn);
-    prefs.putBoolean (PREFS_FORMAT_REM, formatRem);
-    prefs.putBoolean (PREFS_DELETE_EXTRA_SPACE, deleteExtraDataSpace);
+    preferences.putBoolean (PREFS_SHOW_CARET, showCaret);
+    preferences.putBoolean (PREFS_SHOW_THEN, showThen);
+    preferences.putBoolean (PREFS_BLANK_AFTER_RETURN, blankAfterReturn);
+    preferences.putBoolean (PREFS_FORMAT_REM, formatRem);
+    preferences.putBoolean (PREFS_DELETE_EXTRA_SPACE, deleteExtraDataSpace);
 
-    prefs.putBoolean (PREFS_SHOW_SYMBOLS, showSymbols);
-    prefs.putBoolean (PREFS_SHOW_DUPLICATES, showDuplicateSymbols);
-    prefs.putBoolean (PREFS_SHOW_FUNCTIONS, showFunctions);
-    prefs.putBoolean (PREFS_SHOW_CONSTANTS, showConstants);
-    prefs.putBoolean (PREFS_SHOW_GOSUB, showGosubGoto);
-    prefs.putBoolean (PREFS_SHOW_CALLS, showCalls);
+    preferences.putBoolean (PREFS_SHOW_SYMBOLS, showSymbols);
+    preferences.putBoolean (PREFS_SHOW_DUPLICATES, showDuplicateSymbols);
+    preferences.putBoolean (PREFS_SHOW_FUNCTIONS, showFunctions);
+    preferences.putBoolean (PREFS_SHOW_CONSTANTS, showConstants);
+    preferences.putBoolean (PREFS_SHOW_GOSUB, showGosubGoto);
+    preferences.putBoolean (PREFS_SHOW_CALLS, showCalls);
   }
 
   // ---------------------------------------------------------------------------------//

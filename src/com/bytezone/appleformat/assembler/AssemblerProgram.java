@@ -14,6 +14,7 @@ import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.basic.ApplesoftConstants;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
 public class AssemblerProgram extends AbstractFormattedAppleFile
@@ -288,10 +289,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
           address + stringLocation.length, stringLocation));
     }
 
-    if (text.length () > 0)
-      text.deleteCharAt (text.length () - 1);
-
-    return text.toString ();
+    return Utility.rtrim (text);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -301,7 +299,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     entryPoints = new ArrayList<> ();
     stringLocations = new ArrayList<> ();
 
-    int start = 0;
+    int start = offset;
     int max = offset + length;
     for (int ptr = offset; ptr < max; ptr++)
     {
@@ -320,9 +318,9 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     if (buffer.length - start > 3)
       stringLocations.add (new StringLocation (start, buffer.length - 1));
 
-    max = offset + length - 2;
+    max = offset + length;
     for (StringLocation stringLocation : stringLocations)
-      for (int ptr = 0; ptr < max; ptr++)
+      for (int ptr = offset; ptr < max; ptr++)
         if (stringLocation.matches (buffer, ptr))
         {
           entryPoints.add (stringLocation.offset);

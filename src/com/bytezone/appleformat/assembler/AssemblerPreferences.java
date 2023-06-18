@@ -18,14 +18,14 @@ public class AssemblerPreferences extends ApplePreferences
   public boolean offsetFromZero;
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerPreferences (Preferences prefs)
+  public AssemblerPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Assembler Preferences", prefs);
+    super ("Assembler Preferences", preferences);
 
-    showTargets = prefs.getBoolean (PREFS_SHOW_TARGETS, false);
-    showStrings = prefs.getBoolean (PREFS_SHOW_STRINGS, false);
-    offsetFromZero = prefs.getBoolean (PREFS_ZERO_OFFSET, false);
+    showTargets = preferences.getBoolean (PREFS_SHOW_TARGETS, false);
+    showStrings = preferences.getBoolean (PREFS_SHOW_STRINGS, false);
+    offsetFromZero = preferences.getBoolean (PREFS_ZERO_OFFSET, false);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -33,9 +33,9 @@ public class AssemblerPreferences extends ApplePreferences
   public void save ()
   // ---------------------------------------------------------------------------------//
   {
-    prefs.putBoolean (PREFS_SHOW_TARGETS, showTargets);
-    prefs.putBoolean (PREFS_SHOW_STRINGS, showStrings);
-    prefs.putBoolean (PREFS_ZERO_OFFSET, offsetFromZero);
+    preferences.putBoolean (PREFS_SHOW_TARGETS, showTargets);
+    preferences.putBoolean (PREFS_SHOW_STRINGS, showStrings);
+    preferences.putBoolean (PREFS_ZERO_OFFSET, offsetFromZero);
   }
 
   // ---------------------------------------------------------------------------------//

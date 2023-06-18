@@ -4,16 +4,17 @@ import java.util.prefs.Preferences;
 
 // -----------------------------------------------------------------------------------//
 public abstract class ApplePreferences
+// -----------------------------------------------------------------------------------//
 {
   protected String name;
-  protected Preferences prefs;
+  protected Preferences preferences;
 
   // ---------------------------------------------------------------------------------//
-  public ApplePreferences (String name, Preferences prefs)
+  public ApplePreferences (String name, Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
     this.name = name;
-    this.prefs = prefs;
+    this.preferences = preferences;
   }
 
   // ---------------------------------------------------------------------------------//
