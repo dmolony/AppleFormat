@@ -97,6 +97,7 @@ public final class Utility
   {
     while (text.length () > 0 && text.charAt (text.length () - 1) == '\n')
       text.deleteCharAt (text.length () - 1);
+
     return text.toString ();
   }
 

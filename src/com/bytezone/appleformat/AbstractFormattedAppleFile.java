@@ -159,8 +159,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   {
     try
     {
-      if (image == null)
-        image = buildImage ();
+      //      if (image == null)
+      image = buildImage ();
 
       return image == null ? emptyImage : image;
     }
