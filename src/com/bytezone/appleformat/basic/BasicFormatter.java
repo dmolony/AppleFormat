@@ -36,7 +36,9 @@ public abstract class BasicFormatter implements ApplesoftConstants
   int getLoadAddress ()
   // ---------------------------------------------------------------------------------//
   {
-    return (buffer.length > 3) ? Utility.getShort (buffer, 0) - getFirstLineLength () : 0;
+    return (buffer.length > 3) ?                                          //
+        Utility.getShort (buffer, offset) - getFirstLineLength () :       //
+        0;
   }
 
   // ---------------------------------------------------------------------------------//
