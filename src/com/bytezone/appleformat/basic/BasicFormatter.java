@@ -12,8 +12,10 @@ public abstract class BasicFormatter implements ApplesoftConstants
 
   ApplesoftBasicProgram program;
   ApplesoftBasicPreferences basicPreferences;
+
   byte[] buffer;
   int offset;
+
   List<SourceLine> sourceLines;
 
   // ---------------------------------------------------------------------------------//
@@ -54,6 +56,6 @@ public abstract class BasicFormatter implements ApplesoftConstants
     while (ptr < buffer.length && buffer[ptr++] != 0)
       ;
 
-    return ptr;
+    return ptr - offset;
   }
 }
