@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.ForkedFile;
+import com.bytezone.filesystem.AppleForkedFile;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -18,7 +18,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final File localFile;
   protected final AppleFile appleFile;
   protected final AppleContainer container;
-  protected final ForkedFile forkedFile;
+  protected final AppleForkedFile forkedFile;
 
   protected final String name;
   protected final byte[] buffer;
@@ -71,7 +71,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (ForkedFile forkedFile)
+  public AbstractFormattedAppleFile (AppleForkedFile forkedFile)
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;

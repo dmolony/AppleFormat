@@ -43,6 +43,7 @@ import com.bytezone.appleformat.visicalc.VisicalcFile;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFileSystem;
+import com.bytezone.filesystem.AppleForkedFile;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileDos;
@@ -51,7 +52,6 @@ import com.bytezone.filesystem.FilePascal;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.ForkNuFX;
 import com.bytezone.filesystem.ForkProdos;
-import com.bytezone.filesystem.ForkedFile;
 
 // -----------------------------------------------------------------------------------//
 public class FormattedAppleFileFactory
@@ -94,7 +94,7 @@ public class FormattedAppleFileFactory
         return new Catalog (appleFile.getEmbeddedFileSystem ());
 
       if (appleFile.isForkedFile ())
-        return new Catalog ((ForkedFile) appleFile);
+        return new Catalog ((AppleForkedFile) appleFile);
 
       return switch (appleFile.getFileSystemType ())
       {

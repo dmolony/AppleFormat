@@ -1,7 +1,7 @@
 package com.bytezone.appleformat;
 
 import com.bytezone.filesystem.AppleContainer;
-import com.bytezone.filesystem.ForkedFile;
+import com.bytezone.filesystem.AppleForkedFile;
 
 import javafx.scene.image.Image;
 
@@ -17,7 +17,7 @@ public class Catalog extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public Catalog (ForkedFile appleFile)
+  public Catalog (AppleForkedFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
