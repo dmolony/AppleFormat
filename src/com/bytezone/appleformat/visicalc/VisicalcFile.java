@@ -26,7 +26,7 @@ public class VisicalcFile extends AbstractFormattedAppleFile
 
     StringBuilder text = new StringBuilder ();
 
-    text.append ("Visicalc : " + name + "\n\n");
+    //    text.append ("Visicalc : " + name + "\n\n");
     text.append (sheet.getTextDisplay (false));
 
     return text.toString ();
