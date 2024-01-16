@@ -1,26 +1,19 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.file;
 
-import com.bytezone.filesystem.AppleContainer;
-import com.bytezone.filesystem.AppleForkedFile;
+import java.io.File;
+import java.util.Arrays;
 
 import javafx.scene.image.Image;
 
 // -----------------------------------------------------------------------------------//
-public class Catalog extends AbstractFormattedAppleFile
+public class LocalFolder extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public Catalog (AppleContainer appleFile)
+  public LocalFolder (File localFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile);
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public Catalog (AppleForkedFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    super (appleFile);
+    super (localFile);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -36,6 +29,20 @@ public class Catalog extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    return forkedFile != null ? forkedFile.getCatalog () : container.getCatalog ();
+    StringBuilder text = new StringBuilder ("  File size    File name\n");
+
+    text.append ("------------  ---------------------------------"
+        + "------------------------------------------\n");
+
+    File[] files = localFile.listFiles ();
+    Arrays.sort (files);
+
+    for (File file : files)
+      if (file.isDirectory ())
+        text.append (String.format ("              %s %n", file.getName ()));
+      else if (!file.isHidden ())
+        text.append (String.format ("%,12d  %s %n", file.length (), file.getName ()));
+
+    return text.toString ();
   }
 }

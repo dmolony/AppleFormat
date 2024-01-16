@@ -1,7 +1,8 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.file;
 
 import java.io.File;
 
+import com.bytezone.appleformat.ApplePreferences;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleForkedFile;

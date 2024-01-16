@@ -1,6 +1,6 @@
 package com.bytezone.appleformat.appleworks;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//

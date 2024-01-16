@@ -1,19 +1,26 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.file;
 
-import java.io.File;
-import java.util.Arrays;
+import com.bytezone.filesystem.AppleContainer;
+import com.bytezone.filesystem.AppleForkedFile;
 
 import javafx.scene.image.Image;
 
 // -----------------------------------------------------------------------------------//
-public class LocalFolder extends AbstractFormattedAppleFile
+public class Catalog extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public LocalFolder (File localFile)
+  public Catalog (AppleContainer appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (localFile);
+    super (appleFile);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public Catalog (AppleForkedFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -29,20 +36,6 @@ public class LocalFolder extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder ("  File size    File name\n");
-
-    text.append ("------------  ---------------------------------"
-        + "------------------------------------------\n");
-
-    File[] files = localFile.listFiles ();
-    Arrays.sort (files);
-
-    for (File file : files)
-      if (file.isDirectory ())
-        text.append (String.format ("              %s %n", file.getName ()));
-      else if (!file.isHidden ())
-        text.append (String.format ("%,12d  %s %n", file.length (), file.getName ()));
-
-    return text.toString ();
+    return forkedFile != null ? forkedFile.getCatalog () : container.getCatalog ();
   }
 }

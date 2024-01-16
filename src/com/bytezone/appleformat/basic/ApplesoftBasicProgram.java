@@ -3,9 +3,9 @@ package com.bytezone.appleformat.basic;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.Utility;
+import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//

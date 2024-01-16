@@ -1,5 +1,7 @@
 package com.bytezone.appleformat;
 
+import com.bytezone.appleformat.file.FormattedAppleFile;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 

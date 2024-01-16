@@ -3,9 +3,9 @@ package com.bytezone.appleformat.appleworks;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
+import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//

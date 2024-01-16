@@ -1,4 +1,4 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.file;
 
 import com.bytezone.filesystem.AppleFile;
 

@@ -1,6 +1,5 @@
 package com.bytezone.appleformat.block;
 
-import com.bytezone.appleformat.AbstractFormattedAppleBlock;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
 import com.bytezone.filesystem.FsDos;

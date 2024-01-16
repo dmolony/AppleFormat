@@ -3,7 +3,7 @@ package com.bytezone.appleformat.fonts;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
+import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;

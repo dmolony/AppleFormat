@@ -7,6 +7,7 @@ import com.bytezone.appleformat.block.CatalogProdos;
 import com.bytezone.appleformat.block.DataBlock;
 import com.bytezone.appleformat.block.DosBlock;
 import com.bytezone.appleformat.block.EmptyBlock;
+import com.bytezone.appleformat.block.FormattedAppleBlock;
 import com.bytezone.appleformat.block.OrphanBlock;
 import com.bytezone.appleformat.block.TsList;
 import com.bytezone.appleformat.block.Vtoc;

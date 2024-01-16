@@ -1,4 +1,6 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.file;
+
+import com.bytezone.appleformat.ApplePreferences;
 
 import javafx.scene.image.Image;
 

@@ -3,10 +3,10 @@ package com.bytezone.appleformat.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
+import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;

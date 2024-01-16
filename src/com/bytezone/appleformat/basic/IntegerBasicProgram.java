@@ -1,9 +1,9 @@
 package com.bytezone.appleformat.basic;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
+import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//

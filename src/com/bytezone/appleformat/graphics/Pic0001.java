@@ -1,7 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.AbstractFormattedAppleFile;
 import com.bytezone.appleformat.Utility;
+import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;

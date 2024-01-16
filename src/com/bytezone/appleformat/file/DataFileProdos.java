@@ -1,5 +1,6 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.file;
 
+import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.ForkProdos;
