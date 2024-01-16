@@ -6,13 +6,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.CRC32;
@@ -53,7 +51,7 @@ public final class Utility
   {
   };
 
-  static List<ColorRecord> colorRecords = getColorRecords ();
+  //  static List<ColorRecord> colorRecords = getColorRecords ();
 
   // ---------------------------------------------------------------------------------//
   private Utility ()
@@ -765,44 +763,44 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
-  public static List<ColorRecord> getColorRecords ()
+  //  public static List<ColorRecord> getColorRecords ()
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    List<ColorRecord> colorRecords = new ArrayList<> ();
+  //
+  //    final Field[] fields = Color.class.getFields ();      // only want public
+  //    for (final Field field : fields)
+  //    {
+  //      if (field.getType () == Color.class)
+  //      {
+  //        try
+  //        {
+  //          final Color color = (Color) field.get (null);
+  //          final String colorName = field.getName ();
+  //          //          System.out.printf ("%-15s  %s%n", colorName, color);
+  //          colorRecords.add (new ColorRecord (color, colorName));
+  //        }
+  //        catch (IllegalAccessException illegalAccessEx)
+  //        {
+  //          System.out.println ("Security Manager does not allow access of field '"
+  //              + field.getName () + "'.");
+  //        }
+  //      }
+  //    }
+  //
+  //    return colorRecords;
+  //  }
+
   // ---------------------------------------------------------------------------------//
-  {
-    List<ColorRecord> colorRecords = new ArrayList<> ();
-
-    final Field[] fields = Color.class.getFields (); // only want public
-    for (final Field field : fields)
-    {
-      if (field.getType () == Color.class)
-      {
-        try
-        {
-          final Color color = (Color) field.get (null);
-          final String colorName = field.getName ();
-          //          System.out.printf ("%-15s  %s%n", colorName, color);
-          colorRecords.add (new ColorRecord (color, colorName));
-        }
-        catch (IllegalAccessException illegalAccessEx)
-        {
-          System.out.println ("Securty Manager does not allow access of field '"
-              + field.getName () + "'.");
-        }
-      }
-    }
-
-    return colorRecords;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public static String getColorName (Color color)
-  // ---------------------------------------------------------------------------------//
-  {
-    for (ColorRecord colorRecord : colorRecords)
-      if (colorRecord.color.equals (color))
-        return colorRecord.name;
-
-    return "<not found>";
-  }
+  //  public static String getColorName (Color color)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    for (ColorRecord colorRecord : colorRecords)
+  //      if (colorRecord.color.equals (color))
+  //        return colorRecord.name;
+  //
+  //    return "<not found>";
+  //  }
 
   // ---------------------------------------------------------------------------------//
   public static long getChecksumValue (File file)

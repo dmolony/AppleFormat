@@ -318,7 +318,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     if (buffer.length - start > 3)
       stringLocations.add (new StringLocation (start, buffer.length - 1));
 
-    max = offset + length;
+    max = offset + length - 1;
     for (StringLocation stringLocation : stringLocations)
       for (int ptr = offset; ptr < max; ptr++)
         if (stringLocation.matches (buffer, ptr))

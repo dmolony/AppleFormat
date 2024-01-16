@@ -107,7 +107,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   {
     try
     {
-      //      if (text == null)
       text = buildText ();
 
       return text;
@@ -133,7 +132,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   {
     try
     {
-      //      if (extra == null)
       extra = buildExtras ();
 
       return extra;
@@ -159,7 +157,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   {
     try
     {
-      //      if (image == null)
       image = buildImage ();
 
       return image == null ? emptyImage : image;
