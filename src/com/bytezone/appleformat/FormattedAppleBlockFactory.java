@@ -5,6 +5,8 @@ import java.util.prefs.Preferences;
 import com.bytezone.appleformat.block.CatalogDos;
 import com.bytezone.appleformat.block.CatalogProdos;
 import com.bytezone.appleformat.block.DataBlock;
+import com.bytezone.appleformat.block.EmptyBlock;
+import com.bytezone.appleformat.block.OrphanBlock;
 import com.bytezone.appleformat.block.TsList;
 import com.bytezone.appleformat.block.Vtoc;
 import com.bytezone.filesystem.AppleBlock;
@@ -26,9 +28,19 @@ public class FormattedAppleBlockFactory
   public FormattedAppleBlock getFormattedAppleBlock (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
-    if (appleBlock.getBlockType () == BlockType.FILE_DATA)
-      return new DataBlock (appleBlock);
+    return switch (appleBlock.getBlockType ())
+    {
+      case BlockType.FILE_DATA -> new DataBlock (appleBlock);
+      case BlockType.ORPHAN -> new OrphanBlock (appleBlock);
+      case BlockType.EMPTY -> new EmptyBlock (appleBlock);
+      case BlockType.FS_DATA -> getFormattedFsDataBlock (appleBlock);
+    };
+  }
 
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleBlock getFormattedFsDataBlock (AppleBlock appleBlock)
+  // ---------------------------------------------------------------------------------//
+  {
     AppleFileSystem fs = appleBlock.getFileSystem ();
 
     return switch (fs.getFileSystemType ())
@@ -46,6 +58,7 @@ public class FormattedAppleBlockFactory
   {
     return switch (appleBlock.getBlockSubType ())
     {
+      case "DOS" -> new DosBlock (appleBlock);
       case "VTOC" -> new Vtoc (appleBlock);
       case "CATALOG" -> new CatalogDos (appleBlock);
       case "TSLIST" -> new TsList (appleBlock);
