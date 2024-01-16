@@ -1,13 +1,16 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.block;
 
+import com.bytezone.appleformat.AbstractFormattedAppleBlock;
+import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
+import com.bytezone.filesystem.FsProdos;
 
 // -----------------------------------------------------------------------------------//
-public class DataBlock extends AbstractFormattedAppleBlock
+public class CatalogProdos extends AbstractFormattedAppleBlock
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public DataBlock (AppleBlock appleBlock)
+  public CatalogProdos (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
     super (appleBlock);
@@ -18,6 +21,11 @@ public class DataBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    return "Data Block : " + appleBlock.getFileOwner ().getFileName ();
+    byte[] buffer = appleBlock.read ();
+    FsProdos fs = (FsProdos) appleBlock.getFileSystem ();
+
+    StringBuilder text = getHeader ("Prodos Catalog Sector");
+
+    return Utility.rtrim (text);
   }
 }

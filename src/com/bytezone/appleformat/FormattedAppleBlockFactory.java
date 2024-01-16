@@ -2,6 +2,11 @@ package com.bytezone.appleformat;
 
 import java.util.prefs.Preferences;
 
+import com.bytezone.appleformat.block.CatalogDos;
+import com.bytezone.appleformat.block.CatalogProdos;
+import com.bytezone.appleformat.block.DataBlock;
+import com.bytezone.appleformat.block.TsList;
+import com.bytezone.appleformat.block.Vtoc;
 import com.bytezone.filesystem.AppleBlock;
 import com.bytezone.filesystem.AppleBlock.BlockType;
 import com.bytezone.filesystem.AppleFileSystem;

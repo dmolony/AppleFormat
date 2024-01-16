@@ -1,5 +1,7 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.block;
 
+import com.bytezone.appleformat.AbstractFormattedAppleBlock;
+import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
 
 // -----------------------------------------------------------------------------------//
@@ -19,7 +21,6 @@ public class TsList extends AbstractFormattedAppleBlock
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = appleBlock.read ();
-    //    FsDos fs = (FsDos) appleBlock.getFileSystem ();
 
     StringBuilder text = getHeader (
         "DOS Track/Sector List : " + appleBlock.getFileOwner ().getFileName ());

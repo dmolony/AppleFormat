@@ -6,7 +6,7 @@ import com.bytezone.filesystem.AppleBlock;
 public abstract class AbstractFormattedAppleBlock implements FormattedAppleBlock
 // -----------------------------------------------------------------------------------//
 {
-  AppleBlock appleBlock;
+  protected final AppleBlock appleBlock;
 
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleBlock (AppleBlock appleBlock)
