@@ -1,4 +1,4 @@
-package com.bytezone.appleformat;
+package com.bytezone.appleformat.file;
 
 // -----------------------------------------------------------------------------------//
 public interface ProdosConstants
@@ -59,7 +59,7 @@ public interface ProdosConstants
       "Pascal on Profile", "GSOS Extended", "", "", "", "", "", "", "", "Subdirectory",
       "Subdirectory Header", "Volume Directory Header" };
 
-  static String[] fileTypes = { //
+  static final String[] fileTypes = { //
       "NON", "BAD", "PCD", "PTX", "TXT", "PDA", "BIN", "FNT", //
       "FOT", "BA3", "DA3", "WPF", "SOS", "$0D", "$0E", "DIR", //
       "RPD", "RPI", "AFD", "AFM", "AFR", "SCL", "PFS", "$17", //
@@ -99,13 +99,13 @@ public interface ProdosConstants
   static int BLOCK_ENTRY_SIZE = ENTRY_SIZE * ENTRIES_PER_BLOCK;
 }
 
-//LBR file aux
-//0x0001 -> "AppleSingle file";
-//0x0005 -> "DiskCopy file";
-//0x0130 -> "2IMG file";
-//0x8000 -> "Binary II file";
-//0x8002 -> "Shrinkit (NuFX) file";
-//0x8004 -> "Davex file";
+// LBR file aux
+// 0x0001 -> "AppleSingle file";
+// 0x0005 -> "DiskCopy file";
+// 0x0130 -> "2IMG file";
+// 0x8000 -> "Binary II file";
+// 0x8002 -> "Shrinkit (NuFX) file";
+// 0x8004 -> "Davex file";
 
 /* http://www.kreativekorp.com/miscpages/a2info/filetypes.shtml
  *
