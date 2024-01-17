@@ -1,15 +1,15 @@
 package com.bytezone.appleformat.block;
 
-import static com.bytezone.appleformat.file.ProdosConstants.ENTRY_SIZE;
-import static com.bytezone.appleformat.file.ProdosConstants.FREE;
-import static com.bytezone.appleformat.file.ProdosConstants.GSOS_EXTENDED_FILE;
-import static com.bytezone.appleformat.file.ProdosConstants.PASCAL_ON_PROFILE;
-import static com.bytezone.appleformat.file.ProdosConstants.SAPLING;
-import static com.bytezone.appleformat.file.ProdosConstants.SEEDLING;
-import static com.bytezone.appleformat.file.ProdosConstants.SUBDIRECTORY;
-import static com.bytezone.appleformat.file.ProdosConstants.SUBDIRECTORY_HEADER;
-import static com.bytezone.appleformat.file.ProdosConstants.TREE;
-import static com.bytezone.appleformat.file.ProdosConstants.VOLUME_HEADER;
+import static com.bytezone.appleformat.ProdosConstants.ENTRY_SIZE;
+import static com.bytezone.appleformat.ProdosConstants.FREE;
+import static com.bytezone.appleformat.ProdosConstants.GSOS_EXTENDED_FILE;
+import static com.bytezone.appleformat.ProdosConstants.PASCAL_ON_PROFILE;
+import static com.bytezone.appleformat.ProdosConstants.SAPLING;
+import static com.bytezone.appleformat.ProdosConstants.SEEDLING;
+import static com.bytezone.appleformat.ProdosConstants.SUBDIRECTORY;
+import static com.bytezone.appleformat.ProdosConstants.SUBDIRECTORY_HEADER;
+import static com.bytezone.appleformat.ProdosConstants.TREE;
+import static com.bytezone.appleformat.ProdosConstants.VOLUME_HEADER;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -149,7 +149,9 @@ public class CatalogProdos extends AbstractFormattedAppleBlock
 
     addText (text, buffer, offset + 16, 1, "Hex $75");
     addText (text, buffer, offset + 17, 3, "Not used");
+
     text.append (getCommonHeader (buffer, offset));
+
     addTextAndDecimal (text, buffer, offset + 35, 2, "Parent block");
     addTextAndDecimal (text, buffer, offset + 37, 1, "Parent entry number");
     addTextAndDecimal (text, buffer, offset + 38, 1, "Parent entry length");
