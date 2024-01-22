@@ -81,6 +81,7 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (File localFile)
   // ---------------------------------------------------------------------------------//
   {
+    assert localFile.isDirectory ();
     return new LocalFolder (localFile);
   }
 
@@ -114,7 +115,6 @@ public class FormattedAppleFileFactory
     }
     catch (Exception e)
     {
-      //      e.printStackTrace ();
       return new FormatError (e);
     }
   }

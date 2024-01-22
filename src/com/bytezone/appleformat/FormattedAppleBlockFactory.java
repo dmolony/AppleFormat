@@ -2,7 +2,9 @@ package com.bytezone.appleformat;
 
 import java.util.prefs.Preferences;
 
+import com.bytezone.appleformat.block.CatalogCpm;
 import com.bytezone.appleformat.block.CatalogDos;
+import com.bytezone.appleformat.block.CatalogPascal;
 import com.bytezone.appleformat.block.CatalogProdos;
 import com.bytezone.appleformat.block.DataBlock;
 import com.bytezone.appleformat.block.DosBlock;
@@ -52,6 +54,8 @@ public class FormattedAppleBlockFactory
     {
       case DOS -> getFormattedAppleBlockDos (appleBlock);
       case PRODOS -> getFormattedAppleBlockProdos (appleBlock);
+      case PASCAL -> getFormattedAppleBlockPascal (appleBlock);
+      case CPM -> getFormattedAppleBlockCpm (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + fs.getFileSystemType ());
     };
@@ -79,9 +83,34 @@ public class FormattedAppleBlockFactory
     return switch (appleBlock.getBlockSubType ())
     {
       case "CATALOG" -> new CatalogProdos (appleBlock);
+      case "FOLDER" -> new CatalogProdos (appleBlock);
       case "INDEX" -> new IndexProdos (appleBlock);
       case "M-INDEX" -> new MasterIndexProdos (appleBlock);
       case "V-BITMAP" -> new VolumeBitmap (appleBlock);
+      default -> throw new IllegalArgumentException (
+          "Unexpected value: " + appleBlock.getBlockSubType ());
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleBlock getFormattedAppleBlockPascal (AppleBlock appleBlock)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleBlock.getBlockSubType ())
+    {
+      case "CATALOG" -> new CatalogPascal (appleBlock);
+      default -> throw new IllegalArgumentException (
+          "Unexpected value: " + appleBlock.getBlockSubType ());
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleBlock getFormattedAppleBlockCpm (AppleBlock appleBlock)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleBlock.getBlockSubType ())
+    {
+      case "CATALOG" -> new CatalogCpm (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + appleBlock.getBlockSubType ());
     };
