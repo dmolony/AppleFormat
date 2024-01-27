@@ -5,6 +5,7 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_BASIC
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ASP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_AWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BINARY;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FONT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ICN;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
@@ -28,6 +29,7 @@ import com.bytezone.appleformat.file.DataFile;
 import com.bytezone.appleformat.file.DataFileProdos;
 import com.bytezone.appleformat.file.FormattedAppleFile;
 import com.bytezone.appleformat.file.LocalFolder;
+import com.bytezone.appleformat.fonts.FontFile;
 import com.bytezone.appleformat.fonts.FontValidationException;
 import com.bytezone.appleformat.fonts.QuickDrawFont;
 import com.bytezone.appleformat.graphics.AppleGraphics;
@@ -212,6 +214,7 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, buffer, length, aux);
       case FILE_TYPE_PNT -> checkGraphics (appleFile, fileType, aux, buffer);
       case FILE_TYPE_PIC -> checkGraphics (appleFile, fileType, aux, buffer);
+      case FILE_TYPE_FNT -> new FontFile (appleFile, buffer, aux);
       case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, buffer);
       case FILE_TYPE_APPLESOFT_BASIC -> new ApplesoftBasicProgram (appleFile, buffer, 0,
           length);

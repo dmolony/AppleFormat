@@ -81,10 +81,12 @@ abstract class CharacterList extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ("Name : " + name + "\n\n");
+    int count = 0;
 
     for (Character character : characters)
     {
-      text.append (character);
+      text.append (String.format ("Character: %d%n%n", count++));
+      text.append (character.toString ());
       text.append ("\n");
     }
 
@@ -110,7 +112,7 @@ abstract class CharacterList extends AbstractFormattedAppleFile
     void draw (PixelWriter pixelWriter, int x, int y)
     // -------------------------------------------------------------------------------//
     {
-
+      // override
     }
   }
 }

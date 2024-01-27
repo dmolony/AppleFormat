@@ -63,9 +63,10 @@ public class FontFile extends CharacterList
     void draw (PixelWriter pixelWriter, int x, int y)
     // -------------------------------------------------------------------------------//
     {
+      int ptr2 = ptr;
       for (int i = 0; i < sizeY; i++)
       {
-        int value = buffer[ptr++] & 0xFF;
+        int value = buffer[ptr2++] & 0xFF;
         for (int j = 0; j < sizeX; j++)
         {
           pixelWriter.setColor (x + j, y + i,
@@ -73,6 +74,26 @@ public class FontFile extends CharacterList
           value >>>= 1;
         }
       }
+    }
+
+    // -------------------------------------------------------------------------------//
+    @Override
+    public String toString ()
+    // -------------------------------------------------------------------------------//
+    {
+      StringBuilder text = new StringBuilder ();
+      int ptr2 = ptr;
+      for (int i = 0; i < sizeY; i++)
+      {
+        int value = buffer[ptr2++] & 0xFF;
+        for (int j = 0; j < sizeX; j++)
+        {
+          text.append (String.format ((value & 0x01) == 0 ? "." : "O"));
+          value >>>= 1;
+        }
+        text.append ("\n");
+      }
+      return text.toString ();
     }
   }
 }
