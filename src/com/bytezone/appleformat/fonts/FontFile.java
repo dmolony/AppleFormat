@@ -70,7 +70,7 @@ public class FontFile extends CharacterList
         for (int j = 0; j < sizeX; j++)
         {
           pixelWriter.setColor (x + j, y + i,
-              (value & 0x01) == 0 ? Color.WHITE : Color.BLACK);
+              (value & 0x01) == 0 ? Color.BLACK : Color.WHITE);
           value >>>= 1;
         }
       }

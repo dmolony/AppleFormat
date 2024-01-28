@@ -11,7 +11,6 @@ import com.bytezone.appleformat.block.DosBlock;
 import com.bytezone.appleformat.block.EmptyBlock;
 import com.bytezone.appleformat.block.FormattedAppleBlock;
 import com.bytezone.appleformat.block.IndexProdos;
-import com.bytezone.appleformat.block.MasterIndexProdos;
 import com.bytezone.appleformat.block.OrphanBlock;
 import com.bytezone.appleformat.block.TsList;
 import com.bytezone.appleformat.block.VolumeBitmap;
@@ -85,7 +84,7 @@ public class FormattedAppleBlockFactory
       case "CATALOG" -> new CatalogProdos (appleBlock);
       case "FOLDER" -> new CatalogProdos (appleBlock);
       case "INDEX" -> new IndexProdos (appleBlock);
-      case "M-INDEX" -> new MasterIndexProdos (appleBlock);
+      case "M-INDEX" -> new IndexProdos (appleBlock);
       case "V-BITMAP" -> new VolumeBitmap (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + appleBlock.getBlockSubType ());
