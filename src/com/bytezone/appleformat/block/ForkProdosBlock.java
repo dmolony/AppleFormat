@@ -1,5 +1,6 @@
 package com.bytezone.appleformat.block;
 
+import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
 
@@ -19,24 +20,47 @@ public class ForkProdosBlock extends AbstractFormattedAppleBlock
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = appleBlock.read ();
+    StringBuilder text = getHeader ("Prodos Extended Key Block");
 
-    StringBuilder text =
-        getHeader ("Prodos Fork : " + appleBlock.getFileOwner ().getFileName ());
+    for (int i = 0; i < 512; i += 256)
+    {
+      String type = i == 0 ? "Data" : "Resource";
+      addText (text, buffer, i, 1,
+          type + " fork storage type (" + getType (buffer[i]) + ")");
+      addTextAndDecimal (text, buffer, i + 1, 2, "Key block");
+      addTextAndDecimal (text, buffer, i + 3, 2, "Blocks used");
+      addTextAndDecimal (text, buffer, i + 5, 3, "EOF");
+      text.append ("\n");
 
-    //    for (int i = 0; i < 256; i++)
-    //    {
-    //      text.append (
-    //          String.format ("%02X        %02X %02X", i, buffer[i], buffer[i + 256]));
-    //      if (buffer[i] != 0 || buffer[i + 256] != 0)
-    //      {
-    //        int blockNo = Utility.intValue (buffer[i], buffer[i + 256]);
-    //        //        String valid = disk.isValidAddress (blockNo) ? "" : " *** invalid ***";
-    //        text.append (String.format ("         block %,6d%n", blockNo));
-    //      }
-    //      else
-    //        text.append ("\n");
-    //    }
+      // check for Finder Info records
+      if (i == 0 && buffer[8] != 0)
+      {
+        for (int j = 0; j <= 18; j += 18)
+        {
+          addTextAndDecimal (text, buffer, j + 8, 1, "Size");
+          addTextAndDecimal (text, buffer, j + 9, 1, "Type");
+          addTextAndDecimal (text, buffer, j + 10, 16, "Finder info");
+        }
+      }
+    }
 
     return Utility.rtrim (text);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private String getType (byte flag)
+  // ---------------------------------------------------------------------------------//
+  {
+    switch ((flag & 0x0F))
+    {
+      case ProdosConstants.SEEDLING:
+        return "Seedling";
+      case ProdosConstants.SAPLING:
+        return "Sapling";
+      case ProdosConstants.TREE:
+        return "Tree";
+      default:
+        return "???";
+    }
   }
 }

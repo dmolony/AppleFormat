@@ -235,6 +235,24 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
+  public static int unsignedTriple (byte[] buffer, int ptr)
+  // ---------------------------------------------------------------------------------//
+  {
+    try
+    {
+      return (buffer[ptr] & 0xFF)             //
+          | (buffer[ptr + 1] & 0xFF) << 8     //
+          | (buffer[ptr + 2] & 0xFF) << 16;
+    }
+    catch (ArrayIndexOutOfBoundsException e)
+    {
+      System.out.printf ("Index out of range (unsignedTriple): %d > %d%n", ptr,
+          buffer.length);
+      return 0;
+    }
+  }
+
+  // ---------------------------------------------------------------------------------//
   public static LocalDateTime getAppleDate (byte[] buffer, int offset)
   // ---------------------------------------------------------------------------------//
   {
