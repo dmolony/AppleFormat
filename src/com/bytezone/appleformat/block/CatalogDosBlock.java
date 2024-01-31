@@ -6,7 +6,7 @@ import com.bytezone.filesystem.AppleBlock;
 import com.bytezone.filesystem.FsDos;
 
 // -----------------------------------------------------------------------------------//
-public class CatalogDos extends AbstractFormattedAppleBlock
+public class CatalogDosBlock extends AbstractFormattedAppleBlock
 // -----------------------------------------------------------------------------------//
 {
   private static int CATALOG_ENTRY_SIZE = 35;
@@ -15,7 +15,7 @@ public class CatalogDos extends AbstractFormattedAppleBlock
           "SS file", "Relocatable file", "AA file", "Lisa file" };
 
   // ---------------------------------------------------------------------------------//
-  public CatalogDos (AppleBlock appleBlock)
+  public CatalogDosBlock (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
     super (appleBlock);

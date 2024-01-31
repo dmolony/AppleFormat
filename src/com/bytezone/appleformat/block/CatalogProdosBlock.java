@@ -21,14 +21,14 @@ import com.bytezone.filesystem.AppleBlock;
 import com.bytezone.filesystem.FsProdos;
 
 // -----------------------------------------------------------------------------------//
-public class CatalogProdos extends AbstractFormattedAppleBlock
+public class CatalogProdosBlock extends AbstractFormattedAppleBlock
 // -----------------------------------------------------------------------------------//
 {
   static final DateTimeFormatter df = DateTimeFormatter.ofPattern ("d-LLL-yy");
   static final DateTimeFormatter tf = DateTimeFormatter.ofPattern ("H:mm");
 
   // ---------------------------------------------------------------------------------//
-  public CatalogProdos (AppleBlock appleBlock)
+  public CatalogProdosBlock (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
     super (appleBlock);

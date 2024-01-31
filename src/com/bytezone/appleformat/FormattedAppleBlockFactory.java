@@ -3,18 +3,19 @@ package com.bytezone.appleformat;
 import java.util.prefs.Preferences;
 
 import com.bytezone.appleformat.block.CatalogCpm;
-import com.bytezone.appleformat.block.CatalogDos;
+import com.bytezone.appleformat.block.CatalogDosBlock;
 import com.bytezone.appleformat.block.CatalogPascal;
-import com.bytezone.appleformat.block.CatalogProdos;
+import com.bytezone.appleformat.block.CatalogProdosBlock;
 import com.bytezone.appleformat.block.DataBlock;
 import com.bytezone.appleformat.block.DosBlock;
 import com.bytezone.appleformat.block.EmptyBlock;
+import com.bytezone.appleformat.block.ForkProdosBlock;
 import com.bytezone.appleformat.block.FormattedAppleBlock;
-import com.bytezone.appleformat.block.IndexProdos;
+import com.bytezone.appleformat.block.IndexProdosBlock;
 import com.bytezone.appleformat.block.OrphanBlock;
-import com.bytezone.appleformat.block.TsList;
-import com.bytezone.appleformat.block.VolumeBitmap;
-import com.bytezone.appleformat.block.Vtoc;
+import com.bytezone.appleformat.block.TsListBlock;
+import com.bytezone.appleformat.block.VolumeBitmapBlock;
+import com.bytezone.appleformat.block.VtocBlock;
 import com.bytezone.filesystem.AppleBlock;
 import com.bytezone.filesystem.AppleBlock.BlockType;
 import com.bytezone.filesystem.AppleFileSystem;
@@ -67,9 +68,9 @@ public class FormattedAppleBlockFactory
     return switch (appleBlock.getBlockSubType ())
     {
       case "DOS" -> new DosBlock (appleBlock);
-      case "VTOC" -> new Vtoc (appleBlock);
-      case "CATALOG" -> new CatalogDos (appleBlock);
-      case "TSLIST" -> new TsList (appleBlock);
+      case "VTOC" -> new VtocBlock (appleBlock);
+      case "CATALOG" -> new CatalogDosBlock (appleBlock);
+      case "TSLIST" -> new TsListBlock (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + appleBlock.getBlockSubType ());
     };
@@ -81,11 +82,10 @@ public class FormattedAppleBlockFactory
   {
     return switch (appleBlock.getBlockSubType ())
     {
-      case "CATALOG" -> new CatalogProdos (appleBlock);
-      case "FOLDER" -> new CatalogProdos (appleBlock);
-      case "INDEX" -> new IndexProdos (appleBlock);
-      case "M-INDEX" -> new IndexProdos (appleBlock);
-      case "V-BITMAP" -> new VolumeBitmap (appleBlock);
+      case "CATALOG", "FOLDER" -> new CatalogProdosBlock (appleBlock);
+      case "INDEX", "M-INDEX" -> new IndexProdosBlock (appleBlock);
+      case "V-BITMAP" -> new VolumeBitmapBlock (appleBlock);
+      case "FORK" -> new ForkProdosBlock (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + appleBlock.getBlockSubType ());
     };

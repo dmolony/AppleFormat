@@ -58,6 +58,9 @@ public class IconFile extends AbstractFormattedAppleFile
   public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
+    if (icons.size () == 0)
+      return emptyImage;
+
     // calculate maximum width and height for every icon
     int maxHeight = 0;
     int maxWidth = 0;
@@ -72,6 +75,7 @@ public class IconFile extends AbstractFormattedAppleFile
     int x = base;
     int y = base;
     int gap = 5;
+
     int columns = Math.min (icons.size (), 4);
     int rows = (icons.size () - 1) / columns + 1;
 

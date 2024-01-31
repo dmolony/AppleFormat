@@ -29,6 +29,7 @@ import com.bytezone.appleformat.file.DataFile;
 import com.bytezone.appleformat.file.DataFileProdos;
 import com.bytezone.appleformat.file.FormattedAppleFile;
 import com.bytezone.appleformat.file.LocalFolder;
+import com.bytezone.appleformat.file.ResourceFile;
 import com.bytezone.appleformat.fonts.FontFile;
 import com.bytezone.appleformat.fonts.FontValidationException;
 import com.bytezone.appleformat.fonts.QuickDrawFont;
@@ -57,6 +58,7 @@ import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FilePascal;
 import com.bytezone.filesystem.FileProdos;
+import com.bytezone.filesystem.FileProdos.ForkType;
 import com.bytezone.filesystem.ForkNuFX;
 import com.bytezone.filesystem.ForkProdos;
 
@@ -198,6 +200,8 @@ public class FormattedAppleFileFactory
       length = fork.getFileLength ();
       buffer = fork.read ();
       aux = fork.getParentFile ().getAuxType ();
+      if (fork.getForkType () == ForkType.RESOURCE)
+        return new ResourceFile (appleFile, buffer);
     }
     else
     {

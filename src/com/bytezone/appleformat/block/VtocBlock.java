@@ -6,11 +6,11 @@ import com.bytezone.filesystem.AppleBlock.BlockType;
 import com.bytezone.filesystem.FsDos;
 
 // -----------------------------------------------------------------------------------//
-public class Vtoc extends AbstractFormattedAppleBlock
+public class VtocBlock extends AbstractFormattedAppleBlock
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public Vtoc (AppleBlock appleBlock)
+  public VtocBlock (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
     super (appleBlock);

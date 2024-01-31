@@ -2,13 +2,14 @@ package com.bytezone.appleformat.block;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
+import com.bytezone.filesystem.FsProdos;
 
 // -----------------------------------------------------------------------------------//
-public class IndexProdos extends AbstractFormattedAppleBlock
+public class VolumeBitmapBlock extends AbstractFormattedAppleBlock
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public IndexProdos (AppleBlock appleBlock)
+  public VolumeBitmapBlock (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
     super (appleBlock);
@@ -20,22 +21,27 @@ public class IndexProdos extends AbstractFormattedAppleBlock
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = appleBlock.read ();
+    FsProdos fs = (FsProdos) appleBlock.getFileSystem ();
 
-    StringBuilder text =
-        getHeader ("Prodos Index : " + appleBlock.getFileOwner ().getFileName ());
+    StringBuilder text = getHeader ("Volume Bitmap");
 
-    for (int i = 0; i < 256; i++)
+    int ptr = 0;
+    int address = (appleBlock.getBlockNo () - fs.getBitmapBlockNo ()) * 0x1000;
+
+    while (ptr < 512)
     {
-      text.append (
-          String.format ("%02X        %02X %02X", i, buffer[i], buffer[i + 256]));
-      if (buffer[i] != 0 || buffer[i + 256] != 0)
+      int val = buffer[ptr] & 0xFF;
+      text.append (String.format ("  %5d   %02X            %04X : ", ptr, val, address));
+      ptr++;
+      address += 8;
+
+      for (int i = 0; i < 8; i++)
       {
-        int blockNo = Utility.intValue (buffer[i], buffer[i + 256]);
-        //        String valid = disk.isValidAddress (blockNo) ? "" : " *** invalid ***";
-        text.append (String.format ("         block %,6d%n", blockNo));
+        text.append ((val & 0x80) == 0 ? "X " : ". ");
+        val <<= 1;
       }
-      else
-        text.append ("\n");
+
+      text.append ("\n");
     }
 
     return Utility.rtrim (text);

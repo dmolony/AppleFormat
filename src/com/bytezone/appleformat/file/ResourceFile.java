@@ -1,34 +1,25 @@
 package com.bytezone.appleformat.file;
 
-import com.bytezone.filesystem.AppleContainer;
-import com.bytezone.filesystem.AppleForkedFile;
-
-import javafx.scene.image.Image;
+import com.bytezone.appleformat.Utility;
+import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
-public class Catalog extends AbstractFormattedAppleFile
+public class ResourceFile extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
+
   // ---------------------------------------------------------------------------------//
-  public Catalog (AppleContainer appleFile)
+  public ResourceFile (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile);
+    this (appleFile, buffer, 0, buffer.length);
   }
 
   // ---------------------------------------------------------------------------------//
-  public Catalog (AppleForkedFile appleFile)
+  public ResourceFile (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile);
-  }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  protected Image buildImage ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return emptyImage;
+    super (appleFile, buffer, offset, length);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -36,6 +27,13 @@ public class Catalog extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    return forkedFile != null ? forkedFile.getCatalog () : container.getCatalogText ();
+    if (buffer == null)
+      return "This file has no data\n\n" + appleFile.getErrorMessage ();
+
+    StringBuilder text = new StringBuilder ();
+
+    text.append (String.format ("Name .............. %-15s%n", appleFile.getFileName ()));
+
+    return Utility.rtrim (text);
   }
 }

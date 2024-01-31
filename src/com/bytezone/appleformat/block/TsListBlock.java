@@ -4,11 +4,11 @@ import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
 
 // -----------------------------------------------------------------------------------//
-public class TsList extends AbstractFormattedAppleBlock
+public class TsListBlock extends AbstractFormattedAppleBlock
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public TsList (AppleBlock appleBlock)
+  public TsListBlock (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
     super (appleBlock);
