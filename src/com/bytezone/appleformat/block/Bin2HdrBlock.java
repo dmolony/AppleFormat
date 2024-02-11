@@ -3,11 +3,11 @@ package com.bytezone.appleformat.block;
 import com.bytezone.filesystem.AppleBlock;
 
 // -----------------------------------------------------------------------------------//
-public class DosBlock extends AbstractFormattedAppleBlock
+public class Bin2HdrBlock extends AbstractFormattedAppleBlock
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public DosBlock (AppleBlock appleBlock)
+  public Bin2HdrBlock (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
     super (appleBlock);
@@ -18,6 +18,6 @@ public class DosBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    return "DOS Block";
+    return "Binary2 Header Block";
   }
 }

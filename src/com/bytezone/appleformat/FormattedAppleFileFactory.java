@@ -373,9 +373,11 @@ public class FormattedAppleFileFactory
   {
     byte[] buffer = appleFile.read ();
     int fileType = appleFile.getFileType ();
+    String fileTypeText = appleFile.getFileTypeText ();
 
-    return switch (fileType)
+    return switch (fileTypeText)
     {
+      case "ASM" -> new Text (appleFile, buffer, 0, buffer.length);
       default -> new DataFile (appleFile, buffer);
     };
   }

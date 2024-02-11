@@ -506,15 +506,15 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
-  public static int getWizLong (byte[] buffer, int offset)
-  // ---------------------------------------------------------------------------------//
-  {
-    int low = Utility.getShort (buffer, offset);
-    int mid = Utility.getShort (buffer, offset + 2);
-    int high = Utility.getShort (buffer, offset + 4);
-
-    return high * 100000000 + mid * 10000 + low;
-  }
+  //  public static int getWizLong (byte[] buffer, int offset)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    int low = Utility.getShort (buffer, offset);
+  //    int mid = Utility.getShort (buffer, offset + 2);
+  //    int high = Utility.getShort (buffer, offset + 4);
+  //
+  //    return high * 100000000 + mid * 10000 + low;
+  //  }
 
   // ---------------------------------------------------------------------------------//
   public static int dimension (int chars, int border, int size, int gap)

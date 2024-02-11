@@ -26,9 +26,15 @@ public class VolumeBitmapBlock extends AbstractFormattedAppleBlock
     StringBuilder text = getHeader ("Volume Bitmap");
 
     int ptr = 0;
-    int address = (appleBlock.getBlockNo () - fs.getBitmapBlockNo ()) * 0x1000;
+    int bitmapBlockNo = appleBlock.getBlockNo () - fs.getBitmapBlockNo ();
+    int address = bitmapBlockNo * 0x1000;
 
-    while (ptr < 512)
+    int maxBytes = (fs.getTotalBlocks () - 1) / 8 + 1;
+    int max = Math.min (maxBytes - bitmapBlockNo * 512, 512);
+    //    System.out.printf ("Max: %d%n", max);
+
+    //    while (ptr < 512)
+    while (ptr < max)
     {
       int val = buffer[ptr] & 0xFF;
       text.append (String.format ("  %5d   %02X            %04X : ", ptr, val, address));
