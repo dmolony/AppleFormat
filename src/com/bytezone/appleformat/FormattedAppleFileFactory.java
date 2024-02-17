@@ -44,6 +44,7 @@ import com.bytezone.appleformat.graphics.Pnt0000;
 import com.bytezone.appleformat.graphics.Pnt0002;
 import com.bytezone.appleformat.graphics.Pnt8005;
 import com.bytezone.appleformat.graphics.ShapeTable;
+import com.bytezone.appleformat.text.CpmText;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.appleformat.text.TextPreferences;
@@ -372,12 +373,13 @@ public class FormattedAppleFileFactory
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = appleFile.read ();
-    int fileType = appleFile.getFileType ();
-    String fileTypeText = appleFile.getFileTypeText ();
 
-    return switch (fileTypeText)
+    return switch (appleFile.getFileTypeText ())
     {
-      case "ASM" -> new Text (appleFile, buffer, 0, buffer.length);
+      case "DOC" -> new CpmText (appleFile, buffer);
+      case "HLP" -> new CpmText (appleFile, buffer);
+      case "TXT" -> new CpmText (appleFile, buffer);
+      case "ASM" -> new CpmText (appleFile, buffer);
       default -> new DataFile (appleFile, buffer);
     };
   }

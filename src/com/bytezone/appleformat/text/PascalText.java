@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.text;
 
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
 public class PascalText extends Text
@@ -50,9 +51,6 @@ public class PascalText extends Text
       ptr++;
     }
 
-    if (text.length () > 0)
-      text.deleteCharAt (text.length () - 1);
-
-    return text.toString ();
+    return Utility.rtrim (text);
   }
 }

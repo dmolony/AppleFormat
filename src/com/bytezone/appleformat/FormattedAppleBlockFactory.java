@@ -5,6 +5,7 @@ import java.util.prefs.Preferences;
 import com.bytezone.appleformat.block.Bin2HdrBlock;
 import com.bytezone.appleformat.block.CatalogCpm;
 import com.bytezone.appleformat.block.CatalogDosBlock;
+import com.bytezone.appleformat.block.CatalogLbr;
 import com.bytezone.appleformat.block.CatalogPascal;
 import com.bytezone.appleformat.block.CatalogProdosBlock;
 import com.bytezone.appleformat.block.DataBlock;
@@ -58,6 +59,7 @@ public class FormattedAppleBlockFactory
       case PASCAL -> getFormattedAppleBlockPascal (appleBlock);
       case CPM -> getFormattedAppleBlockCpm (appleBlock);
       case BIN2 -> getFormattedAppleBlockBin2 (appleBlock);
+      case LBR -> getFormattedAppleBlockLbr (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + fs.getFileSystemType ());
     };
@@ -125,6 +127,18 @@ public class FormattedAppleBlockFactory
     return switch (appleBlock.getBlockSubType ())
     {
       case "BIN2 HDR" -> new Bin2HdrBlock (appleBlock);
+      default -> throw new IllegalArgumentException (
+          "Unexpected value: " + appleBlock.getBlockSubType ());
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleBlock getFormattedAppleBlockLbr (AppleBlock appleBlock)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleBlock.getBlockSubType ())
+    {
+      case "CATALOG" -> new CatalogLbr (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + appleBlock.getBlockSubType ());
     };

@@ -3,7 +3,9 @@ package com.bytezone.appleformat.block;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
 
+// -----------------------------------------------------------------------------------//
 public class CatalogCpm extends AbstractFormattedAppleBlock
+// -----------------------------------------------------------------------------------//
 {
   private static int CATALOG_ENTRY_SIZE = 32;
   private static final byte EMPTY = (byte) 0xE5;
