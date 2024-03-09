@@ -23,7 +23,6 @@ public class CatalogCpm extends AbstractFormattedAppleBlock
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = appleBlock.read ();
-    //    FsCpm fs = (FsCpm) appleBlock.getFileSystem ();
 
     StringBuilder text = getHeader ("CPM Catalog Sector");
 

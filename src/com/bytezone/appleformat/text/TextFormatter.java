@@ -23,7 +23,9 @@ public class TextFormatter
   // ---------------------------------------------------------------------------------//
   {
     int ptr = 0;
-    while (ptr < buffer.length)
+    int length = this.text.getLength ();
+
+    while (ptr < length)
     {
       if (buffer[ptr] == 0x00)
         break;
@@ -41,8 +43,9 @@ public class TextFormatter
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder line = new StringBuilder ();
+    int length = this.text.getLength ();
 
-    while (ptr < buffer.length)
+    while (ptr < length)
     {
       int c = buffer[ptr++] & 0x7F;
       if (c == 0x0D || c == 0x00)

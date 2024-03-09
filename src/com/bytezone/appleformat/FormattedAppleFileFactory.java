@@ -35,6 +35,7 @@ import com.bytezone.appleformat.fonts.FontValidationException;
 import com.bytezone.appleformat.fonts.QuickDrawFont;
 import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
+import com.bytezone.appleformat.graphics.AppleGraphicsA2FC;
 import com.bytezone.appleformat.graphics.GraphicsPreferences;
 import com.bytezone.appleformat.graphics.IconFile;
 import com.bytezone.appleformat.graphics.Pic0000;
@@ -94,8 +95,6 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    assert basicPreferences != null;
-
     try
     {
       if (appleFile instanceof AppleContainer container)
@@ -239,6 +238,7 @@ public class FormattedAppleFileFactory
   // 1300  Pic0002                .3200 (C1 0002) (unpacked Brooks)
   // 0000  AppleGraphics3201      .3201           (packed Brooks?)
   // 2000  AppleGraphics
+  // 2000  AppleGraphicsA2FC      .A2FC           (double hires)
   // 4000  AppleGraphics
 
   // 08 FOT
@@ -332,13 +332,17 @@ public class FormattedAppleFileFactory
     if (isAPP (buffer))
       return new AppleGraphics3201 (appleFile, buffer);
 
+    String name = appleFile.getFileName ();
+
     if (aux == 0x2000 || aux == 0x4000)
     {
+      if (name.endsWith (".A2FC") || name.endsWith (".PAC"))
+        return new AppleGraphicsA2FC (appleFile, buffer);
+
       if (length > 0x1F00 && length <= 0x4000)
         return new AppleGraphics (appleFile, buffer, 0, length, aux);
     }
 
-    String name = appleFile.getFileName ();
     if (name.endsWith (".3200") && length != 38400 && isAPP (buffer))
     {
       name = name.replace (".3200", ".3201");

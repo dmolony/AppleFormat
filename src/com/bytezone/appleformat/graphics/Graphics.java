@@ -8,17 +8,13 @@ import com.bytezone.filesystem.AppleFile;
 public abstract class Graphics extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  //  public static GraphicsPreferences graphicsPreferences =
-  //      FormattedAppleFileFactory.graphicsPreferences;
+  protected static PaletteFactory paletteFactory = new PaletteFactory ();
 
   // ---------------------------------------------------------------------------------//
   public Graphics (AppleFile appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
-
-    preferences = FormattedAppleFileFactory.graphicsPreferences;
-    optionsType = OptionsType.GRAPHICS;
+    this (appleFile, buffer, 0, buffer.length);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -26,5 +22,8 @@ public abstract class Graphics extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
+
+    preferences = FormattedAppleFileFactory.graphicsPreferences;
+    optionsType = OptionsType.GRAPHICS;
   }
 }

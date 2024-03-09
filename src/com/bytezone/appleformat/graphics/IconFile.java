@@ -6,7 +6,6 @@ import java.util.List;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
-import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;
@@ -15,7 +14,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 // -----------------------------------------------------------------------------------//
-public class IconFile extends AbstractFormattedAppleFile
+public class IconFile extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   static PaletteFactory paletteFactory = new PaletteFactory ();

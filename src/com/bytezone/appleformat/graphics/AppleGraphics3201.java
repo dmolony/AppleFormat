@@ -9,7 +9,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-// 06 (BIN) 
+// 06 (BIN) aux ?     .3201
 // -----------------------------------------------------------------------------------//
 public class AppleGraphics3201 extends Graphics
 // -----------------------------------------------------------------------------------//
@@ -66,7 +66,7 @@ public class AppleGraphics3201 extends Graphics
   }
 
   // ---------------------------------------------------------------------------------//
-  void mode320Line (PixelWriter pixelWriter, int row)
+  private void mode320Line (PixelWriter pixelWriter, int row)
   // ---------------------------------------------------------------------------------//
   {
     ColorTable colorTable = colorTables[row];

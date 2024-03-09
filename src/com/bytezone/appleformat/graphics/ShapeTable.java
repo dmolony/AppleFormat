@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bytezone.appleformat.Utility;
-import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;
@@ -23,7 +22,7 @@ import javafx.scene.image.WritableImage;
  */
 
 // -----------------------------------------------------------------------------------//
-public class ShapeTable extends AbstractFormattedAppleFile
+public class ShapeTable extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   private final List<Integer> index;

@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.file;
 
 import java.io.File;
+import java.util.Objects;
 
 import com.bytezone.appleformat.ApplePreferences;
 import com.bytezone.filesystem.AppleContainer;
@@ -37,7 +38,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public AbstractFormattedAppleFile (File localFile)
   // ---------------------------------------------------------------------------------//
   {
-    this.localFile = localFile;
+    this.localFile = Objects.requireNonNull (localFile);
+
     appleFile = null;
     forkedFile = null;
     container = null;
@@ -61,12 +63,12 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;
-    this.appleFile = appleFile;
+    this.appleFile = Objects.requireNonNull (appleFile);
     forkedFile = null;
     container = null;
 
     name = appleFile.getFileName ();
-    this.buffer = buffer;
+    this.buffer = Objects.requireNonNull (buffer);
     this.offset = offset;
     this.length = length;
   }
@@ -77,7 +79,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   {
     localFile = null;
     appleFile = null;
-    this.forkedFile = forkedFile;
+    this.forkedFile = Objects.requireNonNull (forkedFile);
     container = null;
 
     name = "";
@@ -93,7 +95,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     localFile = null;
     appleFile = null;
     forkedFile = null;
-    this.container = container;
+    this.container = Objects.requireNonNull (container);
 
     name = "";
     buffer = null;

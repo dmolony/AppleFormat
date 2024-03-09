@@ -1,7 +1,6 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.appleformat.Utility;
-import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 
 import javafx.scene.image.Image;
@@ -11,7 +10,7 @@ import javafx.scene.image.WritableImage;
 // C0 (PNT) aux 0003 (packed)
 // C1 (PIC) aux 0001 (unpacked)
 // -----------------------------------------------------------------------------------//
-public class Pic0001 extends AbstractFormattedAppleFile
+public class Pic0001 extends Graphics
 // -----------------------------------------------------------------------------------//
 {
   //  private Image image;

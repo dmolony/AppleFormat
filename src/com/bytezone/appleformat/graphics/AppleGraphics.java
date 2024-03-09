@@ -46,7 +46,7 @@ public class AppleGraphics extends Graphics
     int pages = rows / 192;
 
     WritableImage image = new WritableImage (280, rows);
-    PixelWriter pw = image.getPixelWriter ();
+    PixelWriter pixelWriter = image.getPixelWriter ();
 
     for (int page = 0; page < pages; page++)
       for (int i = 0; i < 3; i++)
@@ -69,7 +69,7 @@ public class AppleGraphics extends Graphics
               for (int px = 0; px < 7; px++)
               {
                 int val = (value >> px) & 0x01;
-                pw.setColor (col, row, val == 0 ? Color.BLACK : Color.WHITE);
+                pixelWriter.setColor (col, row, val == 0 ? Color.BLACK : Color.WHITE);
                 ++col;
               }
             }
@@ -85,7 +85,7 @@ public class AppleGraphics extends Graphics
     int rows = length <= 8192 ? 192 : 384;
 
     WritableImage image = new WritableImage (280, rows);
-    PixelWriter pw = image.getPixelWriter ();
+    PixelWriter pixelWriter = image.getPixelWriter ();
 
     for (int page = 0; page < rows / 192; page++)
       for (int i = 0; i < 3; i++)
@@ -98,7 +98,7 @@ public class AppleGraphics extends Graphics
             int y = page * 192 + i * 64 + j * 8 + k;
 
             for (Color pixel : line)
-              pw.setColor (x++, y, pixel);
+              pixelWriter.setColor (x++, y, pixel);
           }
 
     return image;
