@@ -17,16 +17,12 @@ import javafx.scene.paint.Color;
 public class Pnt0002 extends Graphics
 // -----------------------------------------------------------------------------------//
 {
-  //  private static final String BLANKS =
-  //      "                                                                       ";
-
   private final List<Block> blocks = new ArrayList<> ();
   private Main mainBlock;
   private Multipal multipalBlock;
 
   private ColorTable defaultColorTable320 = new ColorTable (0, 0x00);
   private ColorTable defaultColorTable640 = new ColorTable (0, 0x80);
-  //  private Image image;
 
   // ---------------------------------------------------------------------------------//
   public Pnt0002 (AppleFile appleFile, byte[] buffer)
@@ -35,18 +31,20 @@ public class Pnt0002 extends Graphics
     super (appleFile, buffer);
 
     int ptr = 0;
-    while (ptr < buffer.length)
+    int maxLen = appleFile.getFileLength ();
+
+    while (ptr < maxLen)
     {
       int len = Utility.getLong (buffer, ptr);
 
-      if (len == 0 || len > buffer.length)
+      if (len == 0 || len > ptr + maxLen)
       {
         System.out.printf ("Block length: %d%n", len);
         break;
       }
 
       String kind = HexFormatter.getPascalString (buffer, ptr + 4);
-      byte[] data = new byte[Math.min (len, buffer.length - ptr)];
+      byte[] data = new byte[Math.min (len, maxLen - ptr)];
       System.arraycopy (buffer, ptr, data, 0, data.length);
 
       switch (kind)
@@ -86,7 +84,7 @@ public class Pnt0002 extends Graphics
 
         default:
           blocks.add (new Block (kind, data));
-          System.out.println ("Unknown block type: " + kind + " in " + name);
+          System.out.printf ("Pnt0002 Unknown block type: %s in %s%n", kind, name);
           break;
       }
 
@@ -234,6 +232,7 @@ public class Pnt0002 extends Graphics
     if (left.equals (right))
       return left;
 
+    // this is complete bollocks
     int red = (int) ((left.getRed () + right.getRed ()) / 2 * 255);
     int green = (int) ((left.getGreen () + right.getGreen ()) / 2 * 255);
     int blue = (int) ((left.getBlue () + right.getBlue ()) / 2 * 255);

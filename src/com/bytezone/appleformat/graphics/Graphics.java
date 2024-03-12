@@ -9,6 +9,7 @@ public abstract class Graphics extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   protected static PaletteFactory paletteFactory = new PaletteFactory ();
+  protected String failureReason = "";
 
   // ---------------------------------------------------------------------------------//
   public Graphics (AppleFile appleFile, byte[] buffer)

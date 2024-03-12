@@ -23,9 +23,8 @@ public class AppleGraphicsA2FC extends Graphics
   private final byte[] primaryBuffer;
   private final byte[] auxBuffer;
 
-  private DoubleScrunch doubleScrunch;
-  byte[] packedBuffer;
-  int paletteIndex;
+  private int primaryBufferOffset;
+  private int auxBufferOffset;
 
   // ---------------------------------------------------------------------------------//
   public AppleGraphicsA2FC (AppleFile appleFile, byte[] buffer, byte[] auxBuffer)
@@ -47,21 +46,18 @@ public class AppleGraphicsA2FC extends Graphics
 
     if (name.endsWith (".PAC"))
     {
-      packedBuffer = buffer;
-      doubleScrunch = new DoubleScrunch (buffer);
+      DoubleScrunch doubleScrunch = new DoubleScrunch (buffer);
       auxBuffer = doubleScrunch.memory[0];
       primaryBuffer = doubleScrunch.memory[1];
     }
     else if (name.endsWith (".A2FC"))
     {
-      auxBuffer = new byte[0x2000];
-      primaryBuffer = new byte[0x2000];
-
-      System.arraycopy (buffer, 0, auxBuffer, 0, 0x2000);
-      System.arraycopy (buffer, 0x2000, this.buffer, 0, 0x2000);
+      auxBuffer = buffer;
+      primaryBuffer = buffer;
+      primaryBufferOffset = 0x2000;
     }
     else
-      throw new UnsupportedOperationException ("Filename not .PAC or .A2FC : " + name);
+      throw new IllegalArgumentException ("Filename not .PAC or .A2FC : " + name);
 
     buildImage ();
   }
@@ -79,50 +75,9 @@ public class AppleGraphicsA2FC extends Graphics
   }
 
   // ---------------------------------------------------------------------------------//
-  private Image createMonochromeImage ()
-  // ---------------------------------------------------------------------------------//
-  {
-    // image will be doubled vertically
-    int WIDTH = 280 * 2;
-    int HEIGHT = 192 * 2;
-
-    //    image = new BufferedImage (WIDTH, HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
-    //    DataBuffer dataBuffer = image.getRaster ().getDataBuffer ();
-    WritableImage image = new WritableImage (WIDTH, HEIGHT);
-    PixelWriter pw = image.getPixelWriter ();
-    int ndx = 0;
-
-    for (int i = 0; i < 3; i++)
-      for (int j = 0; j < 8; j++)
-        for (int k = 0; k < 8; k++)
-        {
-          int base = i * 0x28 + j * 0x80 + k * 0x400;
-          int max = Math.min (base + 40, buffer.length);
-
-          for (int ptr = base; ptr < max; ptr += 2)
-          {
-            int value = auxBuffer[ptr] & 0x7F | ((buffer[ptr] & 0x7F) << 7)
-                | ((auxBuffer[ptr + 1] & 0x7F) << 14) | ((buffer[ptr + 1] & 0x7F) << 21);
-            for (int px = 0; px < 28; px++)
-            {
-              int val = (value >> px) & 0x01;
-              int pixel = val == 0 ? 0 : 255;
-              //  dataBuffer.setElem (ndx, pixel);
-              //  dataBuffer.setElem (ndx + WIDTH, pixel);  // repeat pixel one line on
-              ++ndx;
-            }
-          }
-          ndx += WIDTH;                                 // skip past repeated line
-        }
-
-    return image;
-  }
-
-  // ---------------------------------------------------------------------------------//
   private Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
-    paletteIndex = paletteFactory.getCurrentPaletteIndex ();
     Palette palette = paletteFactory.getCurrentPalette ();
     Color[] colours = palette.getColours ();
 
@@ -137,28 +92,31 @@ public class AppleGraphicsA2FC extends Graphics
         for (int k = 0; k < 8; k++)
         {
           int base = i * 0x28 + j * 0x80 + k * 0x400;
-          int max = Math.min (base + 40, buffer.length);
+
+          int primaryPtr = primaryBufferOffset + base;
+          int auxPtr = auxBufferOffset + base;
 
           int x = 0;
 
-          for (int ptr = base; ptr < max; ptr += 2)       // 20 times
+          for (int count = 0; count < 20; count++)
           {
             // remove high bit from 4 bytes
-            int v1 = auxBuffer[ptr] & 0x7F;
-            int v2 = buffer[ptr] & 0x7F;
-            int v3 = auxBuffer[ptr + 1] & 0x7F;
-            int v4 = buffer[ptr + 1] & 0x7F;
+            int v1 = auxBuffer[auxPtr++] & 0x7F;
+            int v2 = primaryBuffer[primaryPtr++] & 0x7F;
+            int v3 = auxBuffer[auxPtr++] & 0x7F;
+            int v4 = primaryBuffer[primaryPtr++] & 0x7F;
 
-            // smoosh them together
-            int v5 = v1 | (v2 << 7) | (v3 << 14) | (v4 << 21);
+            // create 28 consecutive bits
+            int v5 = v1 | v2 << 7 | v3 << 14 | v4 << 21;
 
             // loop through 4 bits at a time
-            for (int px = 0; px < 28; px += 4)            // 7 times
+            for (int px = 0; px < 7; px++)
             {
-              int val = (v5 >>> px) & 0x0F;
-              int val2 = swap[val];
-              pixelWriter.setColor (x++, y, colours[val2]);
-              pixelWriter.setColor (x++, y, colours[val2]);
+              int val = swap[v5 & 0x0F];
+              v5 >>>= 4;
+
+              pixelWriter.setColor (x++, y, colours[val]);
+              pixelWriter.setColor (x++, y, colours[val]);
             }
           }
           y++;
@@ -174,11 +132,11 @@ public class AppleGraphicsA2FC extends Graphics
   {
     StringBuilder text = new StringBuilder ();
 
-    if (packedBuffer != null)
-    {
-      text.append ("Packed buffer:\n\n");
-      text.append (HexFormatter.format (packedBuffer));
-    }
+    //    if (packedBuffer != null)
+    //    {
+    //      text.append ("Packed buffer:\n\n");
+    //      text.append (HexFormatter.format (packedBuffer));
+    //    }
 
     text.append ("\n\nAuxilliary buffer:\n\n");
     text.append (HexFormatter.format (auxBuffer));

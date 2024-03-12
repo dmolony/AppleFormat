@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -148,5 +149,33 @@ public class Pic0000 extends Graphics
     int blue = (int) ((left.getBlue () + right.getBlue ()) / 2 * 255);
 
     return Color.rgb (red, green, blue);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String buildText ()
+  // ---------------------------------------------------------------------------------//
+  {
+    FileProdos file = (FileProdos) appleFile;
+    int aux = file.getAuxType ();
+    String auxText = "";
+    StringBuilder text = new StringBuilder ();
+
+    text.append (String.format ("Image File : %s%n", name));
+    text.append (String.format ("File type  : $%02X    %s%n", file.getFileType (),
+        file.getFileTypeText ()));
+
+    auxText = "Super Hi-Res color image";
+
+    if (!auxText.isEmpty ())
+      text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
+
+    text.append (String.format ("File size  : %,d%n", buffer.length));
+    text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
+    if (!failureReason.isEmpty ())
+      text.append (String.format ("Failure    : %s%n", failureReason));
+
+    text.deleteCharAt (text.length () - 1);
+    return text.toString ();
   }
 }

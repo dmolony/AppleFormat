@@ -19,7 +19,6 @@ public class Pic0002 extends Graphics
 
   final ColorTable[] colorTables = new ColorTable[NUM_COLOR_TABLES];
 
-  String failureReason = "";
   //  private Image image;
 
   // ---------------------------------------------------------------------------------//

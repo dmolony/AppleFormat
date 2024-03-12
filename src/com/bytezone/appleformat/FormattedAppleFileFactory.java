@@ -1,6 +1,7 @@
 package com.bytezone.appleformat;
 
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ADB;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ANI;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_BASIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ASP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_AWP;
@@ -9,6 +10,7 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FONT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ICN;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_NON;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
@@ -33,9 +35,11 @@ import com.bytezone.appleformat.file.ResourceFile;
 import com.bytezone.appleformat.fonts.FontFile;
 import com.bytezone.appleformat.fonts.FontValidationException;
 import com.bytezone.appleformat.fonts.QuickDrawFont;
+import com.bytezone.appleformat.graphics.Animation;
 import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
 import com.bytezone.appleformat.graphics.AppleGraphicsA2FC;
+import com.bytezone.appleformat.graphics.AppleImage;
 import com.bytezone.appleformat.graphics.GraphicsPreferences;
 import com.bytezone.appleformat.graphics.IconFile;
 import com.bytezone.appleformat.graphics.Pic0000;
@@ -215,9 +219,10 @@ public class FormattedAppleFileFactory
     return switch (fileType)
     {
       case FILE_TYPE_TEXT -> new Text (appleFile, buffer, 0, length);
-      case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, buffer, length, aux);
+      case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, aux, buffer, length);
       case FILE_TYPE_PNT -> checkGraphics (appleFile, fileType, aux, buffer);
       case FILE_TYPE_PIC -> checkGraphics (appleFile, fileType, aux, buffer);
+      case FILE_TYPE_ANI -> checkGraphics (appleFile, fileType, aux, buffer);
       case FILE_TYPE_FNT -> new FontFile (appleFile, buffer, aux);
       case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, buffer);
       case FILE_TYPE_APPLESOFT_BASIC -> new ApplesoftBasicProgram (appleFile, buffer, 0,
@@ -228,18 +233,25 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_AWP -> new AppleworksWPFile (appleFile, buffer);
       case FILE_TYPE_ADB -> new AppleworksADBFile (appleFile, buffer);
       case FILE_TYPE_ICN -> new IconFile (appleFile, buffer);
+      case FILE_TYPE_NON -> checkNon (appleFile, aux, buffer, length);
       default -> new DataFileProdos (appleFile, buffer);
     };
   }
 
   // ---------------------------------------------------------------------------------//
+  // 00 NON
+  //       AppleData              .TIFF && isTiff()  not supported by JavaFX
+
   // 06 BIN
   // 0000  Pic0002                .3200 (C1 0002) (unpacked Brooks)
   // 1300  Pic0002                .3200 (C1 0002) (unpacked Brooks)
   // 0000  AppleGraphics3201      .3201           (packed Brooks?)
   // 2000  AppleGraphics
   // 2000  AppleGraphicsA2FC      .A2FC           (double hires)
+  // 2000  AppleGraphicsA2FC      .PAC            (double hires)
   // 4000  AppleGraphics
+  //       AppleImage             isPng()
+  //       AppleImage             isGif()
 
   // 08 FOT
   // ....                         see File Type Note 8
@@ -260,6 +272,10 @@ public class FormattedAppleFileFactory
   // 0000  Pic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
   // 0001  Pic0001   IIGS QuickDraw II Picture File (unpacked)
   // 0002  Pic0002   Super HiRes 3200 color screen image (unpacked) (Brooks)
+
+  // C2 ANI
+  // 0000  Animation (Pic0000)
+
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkGraphics (AppleFile appleFile, int fileType, int aux,
       byte[] buffer)
@@ -311,6 +327,9 @@ public class FormattedAppleFileFactory
             return new Pic0002 (appleFile, buffer);
         }
         break;
+
+      case FILE_TYPE_ANI:
+        return new Animation (appleFile, buffer);
     }
 
     return new DataFileProdos (appleFile, buffer);
@@ -322,8 +341,8 @@ public class FormattedAppleFileFactory
   // or converted to other graphics formats.
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkProdosBinary (AppleFile appleFile, byte[] buffer,
-      int length, int aux)
+  private FormattedAppleFile checkProdosBinary (AppleFile appleFile, int aux,
+      byte[] buffer, int length)
   // ---------------------------------------------------------------------------------//
   {
     if (ShapeTable.isShapeTable (buffer, 0, length))
@@ -333,6 +352,9 @@ public class FormattedAppleFileFactory
       return new AppleGraphics3201 (appleFile, buffer);
 
     String name = appleFile.getFileName ();
+
+    if (AppleImage.isGif (buffer) || AppleImage.isPng (buffer))
+      return new AppleImage (appleFile, buffer);
 
     if (aux == 0x2000 || aux == 0x4000)
     {
@@ -356,6 +378,21 @@ public class FormattedAppleFileFactory
       return new AppleGraphics3201 (appleFile, buffer);
 
     return new AssemblerProgram (appleFile, buffer, 0, length, aux);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkNon (AppleFile appleFile, int aux, byte[] buffer,
+      int length)
+  // ---------------------------------------------------------------------------------//
+  {
+    String name = appleFile.getFileName ();
+    if (name.endsWith (".TIFF") && AppleImage.isTiff (buffer))
+    {
+      return new DataFile (appleFile, buffer);      // JavaFX doesn't support TIFF
+      //      return new AppleImage (appleFile, buffer);
+    }
+
+    return new DataFile (appleFile, buffer);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -403,7 +440,7 @@ public class FormattedAppleFileFactory
         return switch (fileType)
         {
           case 0x04 -> new Text (appleFile, buffer, 0, length);
-          case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
+          case 0x06 -> checkProdosBinary (appleFile, auxType, buffer, length);
           case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
           case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
           default -> new DataFile (appleFile, buffer);
@@ -459,7 +496,7 @@ public class FormattedAppleFileFactory
         return switch (fileType)
         {
           case 0x04 -> new Text (appleFile, buffer, 0, length);
-          case 0x06 -> checkProdosBinary (appleFile, buffer, length, auxType);
+          case 0x06 -> checkProdosBinary (appleFile, auxType, buffer, length);
           case 0xFC -> new ApplesoftBasicProgram (appleFile, buffer, 0, length);
           case 0xFA -> new IntegerBasicProgram (appleFile, buffer, 0, length);
           default -> new DataFile (appleFile, buffer);

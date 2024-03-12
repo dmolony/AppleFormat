@@ -19,8 +19,8 @@ public class PaletteFactory
   public PaletteFactory ()
   // ---------------------------------------------------------------------------------//
   {
-    palettes.add (//
-        new Palette ("Virtual II", new int[] {//
+    palettes.add ( //
+        new Palette ("Virtual II", new int[] {  //
             0x000000, // 0 black
             0xDD0033, // 1 magenta
             0x885500, // 2 brown         (8)
@@ -39,24 +39,24 @@ public class PaletteFactory
             0xFFFFFF  // F white
         }));
 
-    palettes.add (//
+    palettes.add ( //
         new Palette ("Applewin (old)", new int[] {//
-            rgb (0, 0, 0),        // black    
-            rgb (208, 0, 48),     // red      
-            rgb (128, 80, 0),     // brown    
-            rgb (255, 128, 0),    // orange   
-            rgb (0, 128, 0),      // dk green 
-            rgb (128, 128, 128),  // gray     
-            rgb (0, 255, 0),      // lt green 
-            rgb (255, 255, 0),    // yellow   
-            rgb (0, 0, 128),      // dk blue  
-            rgb (255, 0, 255),    // purple   
-            rgb (192, 192, 192),  // grey     
-            rgb (255, 144, 128),  // pink     
-            rgb (0, 0, 255),      // med blue 
-            rgb (96, 160, 255),   // lt blue  
-            rgb (64, 255, 144),   // aqua     
-            rgb (255, 255, 255)   // white
+            rgb (0, 0, 0),        // 0 black    
+            rgb (208, 0, 48),     // 1 red      
+            rgb (128, 80, 0),     // 2 brown    
+            rgb (255, 128, 0),    // 3 orange   
+            rgb (0, 128, 0),      // 4 dk green 
+            rgb (128, 128, 128),  // 5 gray     
+            rgb (0, 255, 0),      // 6 lt green 
+            rgb (255, 255, 0),    // 7 yellow   
+            rgb (0, 0, 128),      // 8 dk blue  
+            rgb (255, 0, 255),    // 9 purple   
+            rgb (192, 192, 192),  // A grey     
+            rgb (255, 144, 128),  // B pink     
+            rgb (0, 0, 255),      // C med blue 
+            rgb (96, 160, 255),   // D lt blue  
+            rgb (64, 255, 144),   // E aqua     
+            rgb (255, 255, 255)   // F white
         }));
 
     palettes.add //
@@ -160,7 +160,7 @@ public class PaletteFactory
         }));
 
     palettes.add (//
-        new Palette ("Wikipedia", new int[] {//
+        new Palette ("Wikipedia", new int[] { //
             rgb (0, 0, 0),        // black 
             rgb (114, 38, 64),    // red 
             rgb (64, 76, 0),      // brown 
@@ -177,6 +177,26 @@ public class PaletteFactory
             rgb (191, 179, 255),  // lt blue 
             rgb (141, 217, 191),  // aqua 
             rgb (255, 255, 255)   // white 
+        }));
+
+    palettes.add (//
+        new Palette ("Monochrome", new int[] { //
+            rgb (0, 0, 0),        // 0 black 
+            rgb (0, 0, 0),        // 1 black 
+            rgb (0, 0, 0),        // 2 black 
+            rgb (0, 0, 0),        // 3 black 
+            rgb (0, 0, 0),        // 4 black 
+            rgb (0, 0, 0),        // 5 black 
+            rgb (0, 0, 0),        // 6 black 
+            rgb (0, 0, 0),        // 7 black 
+            rgb (0, 0, 0),        // 8 black 
+            rgb (0, 0, 0),        // 9 black 
+            rgb (0, 0, 0),        // A black 
+            rgb (0, 0, 0),        // B black 
+            rgb (0, 0, 0),        // C black 
+            rgb (0, 0, 0),        // D black 
+            rgb (0, 0, 0),        // E black 
+            rgb (255, 255, 255)   // F white 
         }));
   }
 
