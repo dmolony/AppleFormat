@@ -53,9 +53,10 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   {
     super ("Applesoft Basic Preferences", preferences);
 
-    boolean defaultValue = false;
+    boolean defaultValue = true;
 
     displayFormat = preferences.getInt (PREFS_DISPLAY_FORMAT, 1);
+
     splitRem = preferences.getBoolean (PREFS_SPLIT_REM, defaultValue);
     splitDim = preferences.getBoolean (PREFS_SPLIT_DIM, defaultValue);
     alignAssign = preferences.getBoolean (PREFS_ALIGN_ASSIGN, defaultValue);

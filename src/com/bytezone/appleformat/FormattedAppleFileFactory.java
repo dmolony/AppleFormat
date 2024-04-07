@@ -272,6 +272,7 @@ public class FormattedAppleFileFactory
   // 0000  Pic0000   IIGS Super Hi-Res Graphics Screen Image (unpacked)
   // 0001  Pic0001   IIGS QuickDraw II Picture File (unpacked)
   // 0002  Pic0002   Super HiRes 3200 color screen image (unpacked) (Brooks)
+  // 4100  Pic0000
 
   // C2 ANI
   // 0000  Animation (Pic0000)
@@ -317,6 +318,7 @@ public class FormattedAppleFileFactory
         switch (aux)
         {
           case 0x0000:
+          case 0x4100:
             return new Pic0000 (appleFile, buffer);
 
           case 0x0001:
