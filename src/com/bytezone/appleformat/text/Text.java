@@ -20,7 +20,6 @@ public class Text extends AbstractFormattedAppleFile
 
     textFormatter = new TextFormatter (this);
     preferences = FormattedAppleFileFactory.textPreferences;
-    optionsType = OptionsType.TEXT;
   }
 
   // ---------------------------------------------------------------------------------//

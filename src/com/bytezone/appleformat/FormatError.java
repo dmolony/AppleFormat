@@ -75,12 +75,4 @@ public class FormatError implements FormattedAppleFile
   {
     return null;
   }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  public OptionsType getOptionsType ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return null;
-  }
 }

@@ -21,11 +21,4 @@ public interface FormattedAppleFile
   public int getLength ();
 
   public ApplePreferences getPreferences ();
-
-  public OptionsType getOptionsType ();
-
-  public enum OptionsType
-  {
-    APPLESOFT, ASSEMBLER, GRAPHICS, TEXT
-  }
 }

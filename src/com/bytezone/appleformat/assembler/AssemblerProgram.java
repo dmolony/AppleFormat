@@ -38,7 +38,6 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     super (appleFile, buffer, offset, length);
 
     preferences = FormattedAppleFileFactory.assemblerPreferences;
-    optionsType = OptionsType.ASSEMBLER;
 
     this.loadAddress = address;
 

@@ -34,7 +34,6 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
         FormattedAppleFileFactory.basicPreferences;
 
     preferences = basicPreferences;
-    optionsType = OptionsType.APPLESOFT;
 
     int ptr = offset;
     while (buffer[ptr + 1] != 0)    // msb of link field

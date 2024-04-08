@@ -32,7 +32,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   private String extra;
 
   protected ApplePreferences preferences;
-  protected OptionsType optionsType;
 
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (File localFile)
@@ -215,13 +214,5 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return preferences;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  public OptionsType getOptionsType ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return optionsType;
   }
 }

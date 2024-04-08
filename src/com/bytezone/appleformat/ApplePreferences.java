@@ -8,13 +8,20 @@ public abstract class ApplePreferences
 {
   protected String name;
   protected Preferences preferences;
+  protected OptionsType optionsType;
+
+  public enum OptionsType
+  {
+    APPLESOFT, ASSEMBLER, GRAPHICS, TEXT
+  }
 
   // ---------------------------------------------------------------------------------//
-  public ApplePreferences (String name, Preferences preferences)
+  public ApplePreferences (String name, Preferences preferences, OptionsType optionsType)
   // ---------------------------------------------------------------------------------//
   {
     this.name = name;
     this.preferences = preferences;
+    this.optionsType = optionsType;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -22,6 +29,13 @@ public abstract class ApplePreferences
   // ---------------------------------------------------------------------------------//
   {
     return name;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public OptionsType getOptionsType ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return optionsType;
   }
 
   // ---------------------------------------------------------------------------------//

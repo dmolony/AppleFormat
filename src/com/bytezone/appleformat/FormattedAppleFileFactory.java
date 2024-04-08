@@ -88,6 +88,80 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
+  public ApplePreferences getPreferences (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleFile.getFileSystemType ())
+    {
+      case DOS -> getDosPreferences (appleFile);
+      case PRODOS -> getProdosPreferences (appleFile);
+      case PASCAL -> getPascalPreferences (appleFile);
+      case CPM -> getCpmPreferences (appleFile);
+      default -> null;
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private ApplePreferences getDosPreferences (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleFile.getFileType ())
+    {
+      case 0 -> textPreferences;
+      case 1 -> null;
+      case 2 -> basicPreferences;
+      case 4, 16 -> assemblerPreferences;     // or graphics??
+      default -> null;
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private ApplePreferences getProdosPreferences (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleFile.getFileType ())
+    {
+      case FILE_TYPE_TEXT -> textPreferences;
+      case FILE_TYPE_BINARY -> assemblerPreferences;
+      case FILE_TYPE_PNT -> graphicsPreferences;
+      case FILE_TYPE_PIC -> graphicsPreferences;
+      case FILE_TYPE_ANI -> graphicsPreferences;
+      case FILE_TYPE_FNT -> graphicsPreferences;
+      case FILE_TYPE_FONT -> graphicsPreferences;
+      case FILE_TYPE_APPLESOFT_BASIC -> basicPreferences;
+      case FILE_TYPE_INTEGER_BASIC -> null;
+      case FILE_TYPE_ASP -> null;
+      case FILE_TYPE_AWP -> textPreferences;
+      case FILE_TYPE_ADB -> null;
+      case FILE_TYPE_ICN -> graphicsPreferences;
+      case FILE_TYPE_NON -> null;
+      default -> null;
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private ApplePreferences getPascalPreferences (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleFile.getFileType ())
+    {
+      case 0 -> null;
+      default -> null;
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private ApplePreferences getCpmPreferences (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleFile.getFileType ())
+    {
+      case 0 -> null;
+      default -> null;
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (File localFile)
   // ---------------------------------------------------------------------------------//
   {

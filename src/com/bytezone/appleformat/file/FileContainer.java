@@ -1,7 +1,6 @@
 package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.ApplePreferences;
-import com.bytezone.appleformat.file.FormattedAppleFile.OptionsType;
 
 import javafx.scene.image.Image;
 
@@ -69,14 +68,6 @@ public class FileContainer implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   @Override
   public ApplePreferences getPreferences ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return null;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  @Override
-  public OptionsType getOptionsType ()
   // ---------------------------------------------------------------------------------//
   {
     return null;

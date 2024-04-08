@@ -18,7 +18,7 @@ public class TextPreferences extends ApplePreferences
   public TextPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Text Preferences", preferences);
+    super ("Text Preferences", preferences, OptionsType.TEXT);
 
     showTextOffsets = preferences.getBoolean (PREFS_SHOW_OFFSETS, false);
     merlinFormat = preferences.getBoolean (PREFS_MERLIN_FORMAT, false);

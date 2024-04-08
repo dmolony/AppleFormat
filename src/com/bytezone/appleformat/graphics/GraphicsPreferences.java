@@ -12,7 +12,7 @@ public class GraphicsPreferences extends ApplePreferences
   public GraphicsPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Graphics Preferences", preferences);
+    super ("Graphics Preferences", preferences, OptionsType.GRAPHICS);
   }
 
   // ---------------------------------------------------------------------------------//

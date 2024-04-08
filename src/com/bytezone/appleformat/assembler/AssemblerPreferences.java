@@ -21,7 +21,7 @@ public class AssemblerPreferences extends ApplePreferences
   public AssemblerPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Assembler Preferences", preferences);
+    super ("Assembler Preferences", preferences, OptionsType.ASSEMBLER);
 
     showTargets = preferences.getBoolean (PREFS_SHOW_TARGETS, false);
     showStrings = preferences.getBoolean (PREFS_SHOW_STRINGS, false);

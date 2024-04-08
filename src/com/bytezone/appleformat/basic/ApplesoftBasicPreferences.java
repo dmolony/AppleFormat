@@ -51,7 +51,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public ApplesoftBasicPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//
   {
-    super ("Applesoft Basic Preferences", preferences);
+    super ("Applesoft Basic Preferences", preferences, OptionsType.APPLESOFT);
 
     boolean defaultValue = true;
 
