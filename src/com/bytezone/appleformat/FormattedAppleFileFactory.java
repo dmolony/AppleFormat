@@ -110,9 +110,25 @@ public class FormattedAppleFileFactory
       case 0 -> textPreferences;
       case 1 -> null;
       case 2 -> basicPreferences;
-      case 4, 16 -> assemblerPreferences;     // or graphics??
+      case 4, 16 -> getDosBinaryPreferences (appleFile);
       default -> null;
     };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private ApplePreferences getDosBinaryPreferences (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] buffer = appleFile.read ();
+
+    int address = Utility.getShort (buffer, 0);
+    int length = Utility.getShort (buffer, 2);
+
+    if ((address == 0x2000 || address == 0x4000)        // hi-res page address
+        && (length > 0x1F00 && length <= 0x4000))
+      return graphicsPreferences;
+
+    return assemblerPreferences;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -145,7 +161,7 @@ public class FormattedAppleFileFactory
   {
     return switch (appleFile.getFileType ())
     {
-      case 0 -> null;
+      case 3 -> textPreferences;
       default -> null;
     };
   }
@@ -154,9 +170,12 @@ public class FormattedAppleFileFactory
   private ApplePreferences getCpmPreferences (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    return switch (appleFile.getFileType ())
+    return switch (appleFile.getFileTypeText ())
     {
-      case 0 -> null;
+      case "DOC" -> textPreferences;
+      case "HLP" -> textPreferences;
+      case "TXT" -> textPreferences;
+      case "ASM" -> textPreferences;
       default -> null;
     };
   }

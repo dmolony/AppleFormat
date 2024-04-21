@@ -8,6 +8,9 @@ import com.bytezone.appleformat.ApplePreferences;
 public class GraphicsPreferences extends ApplePreferences
 // -----------------------------------------------------------------------------------//
 {
+  boolean colourQuirks = true;
+  boolean showColour = true;
+
   // ---------------------------------------------------------------------------------//
   public GraphicsPreferences (Preferences preferences)
   // ---------------------------------------------------------------------------------//

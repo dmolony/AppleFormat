@@ -47,6 +47,11 @@ public abstract class ApplePreferences
   public String toString ()
   // ---------------------------------------------------------------------------------//
   {
-    return String.format ("Name ..................... %s%n", name);
+    StringBuilder text = new StringBuilder ();
+
+    text.append (String.format ("Name ..................... %s%n", name));
+    text.append (String.format ("Type ..................... %s", optionsType));
+
+    return text.toString ();
   }
 }

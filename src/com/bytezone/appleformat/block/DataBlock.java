@@ -18,6 +18,12 @@ public class DataBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    return "Data Block : " + appleBlock.getFileOwner ().getFileName ();
+    StringBuilder text = new StringBuilder ();
+
+    text.append (
+        String.format ("Data Block : %s%n", appleBlock.getFileOwner ().getFileName ()));
+    text.append (String.format ("Block type : %s", appleBlock.getBlockSubType ()));
+
+    return text.toString ();
   }
 }

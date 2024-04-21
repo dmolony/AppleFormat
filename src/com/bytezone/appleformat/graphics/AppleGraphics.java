@@ -19,9 +19,6 @@ public class AppleGraphics extends Graphics
   private final Color[] line = new Color[280];
   private final int[] colourBits = new int[280];
 
-  private boolean colourQuirks = true;
-  private boolean showColour = true;
-
   // ---------------------------------------------------------------------------------//
   public AppleGraphics (AppleFile appleFile, byte[] buffer, int offset, int length,
       int address)
@@ -35,7 +32,8 @@ public class AppleGraphics extends Graphics
   public Image buildImage ()
   // ---------------------------------------------------------------------------------//
   {
-    return showColour ? createColourImage () : createMonochromeImage ();
+    return ((GraphicsPreferences) preferences).showColour ? createColourImage ()
+        : createMonochromeImage ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -143,7 +141,7 @@ public class AppleGraphics extends Graphics
         line[x - 1] = line[x] = Color.WHITE;
     }
 
-    if (colourQuirks)
+    if (((GraphicsPreferences) preferences).colourQuirks)
       applyColourQuirks ();
   }
 
