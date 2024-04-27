@@ -4,7 +4,8 @@ import java.util.prefs.Preferences;
 
 import com.bytezone.appleformat.block.Bin2HdrBlock;
 import com.bytezone.appleformat.block.CatalogCpm;
-import com.bytezone.appleformat.block.CatalogDosBlock;
+import com.bytezone.appleformat.block.CatalogDos3Block;
+import com.bytezone.appleformat.block.CatalogDos4Block;
 import com.bytezone.appleformat.block.CatalogLbr;
 import com.bytezone.appleformat.block.CatalogPascal;
 import com.bytezone.appleformat.block.CatalogProdosBlock;
@@ -54,7 +55,8 @@ public class FormattedAppleBlockFactory
 
     return switch (fs.getFileSystemType ())
     {
-      case DOS -> getFormattedAppleBlockDos (appleBlock);
+      case DOS3 -> getFormattedAppleBlockDos3 (appleBlock);
+      case DOS4 -> getFormattedAppleBlockDos4 (appleBlock);
       case PRODOS -> getFormattedAppleBlockProdos (appleBlock);
       case PASCAL -> getFormattedAppleBlockPascal (appleBlock);
       case CPM -> getFormattedAppleBlockCpm (appleBlock);
@@ -66,19 +68,49 @@ public class FormattedAppleBlockFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleBlock getFormattedAppleBlockDos (AppleBlock appleBlock)
+  private FormattedAppleBlock getFormattedAppleBlockDos3 (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
     return switch (appleBlock.getBlockSubType ())
     {
       case "DOS" -> new DosBlock (appleBlock);
       case "VTOC" -> new VtocBlock (appleBlock);
-      case "CATALOG" -> new CatalogDosBlock (appleBlock);
+      case "CATALOG" -> new CatalogDos3Block (appleBlock);
       case "TSLIST" -> new TsListBlock (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + appleBlock.getBlockSubType ());
     };
   }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleBlock getFormattedAppleBlockDos4 (AppleBlock appleBlock)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleBlock.getBlockSubType ())
+    {
+      case "DOS" -> new DosBlock (appleBlock);
+      case "VTOC" -> new VtocBlock (appleBlock);
+      case "CATALOG" -> new CatalogDos4Block (appleBlock);
+      case "TSLIST" -> new TsListBlock (appleBlock);
+      default -> throw new IllegalArgumentException (
+          "Unexpected value: " + appleBlock.getBlockSubType ());
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  //  private FormattedAppleBlock getFormattedAppleBlockDos4 (AppleBlock appleBlock)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    return switch (appleBlock.getBlockSubType ())
+  //    {
+  //      case "DOS" -> new DosBlock (appleBlock);
+  //      case "VTOC" -> new VtocBlock (appleBlock);
+  //      case "CATALOG" -> new CatalogDosBlock (appleBlock);
+  //      case "TSLIST" -> new TsListBlock (appleBlock);
+  //      default -> throw new IllegalArgumentException (
+  //          "Unexpected value: " + appleBlock.getBlockSubType ());
+  //    };
+  //  }
 
   // ---------------------------------------------------------------------------------//
   private FormattedAppleBlock getFormattedAppleBlockProdos (AppleBlock appleBlock)

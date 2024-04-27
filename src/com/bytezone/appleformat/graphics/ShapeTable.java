@@ -141,7 +141,7 @@ public class ShapeTable extends Graphics
       return false;
 
     int totalShapes = Utility.getSignedShort (buffer, offset);
-    if (totalShapes <= 0)
+    if (totalShapes <= 0 || totalShapes > 255)
       return false;
 
     int min = offset + totalShapes * 2 + 2;       // skip index
@@ -154,6 +154,9 @@ public class ShapeTable extends Graphics
     if (totalShapes * 500 < max)
       return false;
 
+    int lo = 99999;
+    int hi = 0;
+
     // check each index entry points inside the file (and after the index)
     for (int i = 0; i < totalShapes; i++)
     {
@@ -161,7 +164,20 @@ public class ShapeTable extends Graphics
       //      System.out.printf ("%3d  %04X  %04X  %04X%n", i, min, ptr, max);
       if (ptr < min || ptr >= max)
         return false;
+
+      if (ptr < lo)
+        lo = ptr;
+      if (ptr > hi)
+        hi = ptr;
     }
+
+    //    System.out.printf ("lo: %04X, hi: %04X%n", lo, hi);
+    int unusedLo = lo - min;
+    int unusedHi = max - hi;
+    //    System.out.printf ("Unused: %d, %d%n", unusedLo, unusedHi);
+
+    if (unusedLo + unusedHi > 200)
+      return false;
 
     // nibble0489.po SMALL.LETTERS is clearly a shape table, 
     // but some index entries are invalid

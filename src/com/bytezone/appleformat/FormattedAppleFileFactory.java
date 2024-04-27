@@ -60,7 +60,6 @@ import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.AppleForkedFile;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
-import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FilePascal;
 import com.bytezone.filesystem.FileProdos;
@@ -93,7 +92,7 @@ public class FormattedAppleFileFactory
   {
     return switch (appleFile.getFileSystemType ())
     {
-      case DOS -> getDosPreferences (appleFile);
+      case DOS3, DOS4 -> getDosPreferences (appleFile);
       case PRODOS -> getProdosPreferences (appleFile);
       case PASCAL -> getPascalPreferences (appleFile);
       case CPM -> getCpmPreferences (appleFile);
@@ -109,8 +108,8 @@ public class FormattedAppleFileFactory
     {
       case 0 -> textPreferences;
       case 1 -> null;
-      case 2 -> basicPreferences;
-      case 4, 16 -> getDosBinaryPreferences (appleFile);
+      case 2, 32 -> basicPreferences;
+      case 4, 16, 64 -> getDosBinaryPreferences (appleFile);
       default -> null;
     };
   }
@@ -205,7 +204,8 @@ public class FormattedAppleFileFactory
 
       return switch (appleFile.getFileSystemType ())
       {
-        case DOS -> getFormattedDosFile ((FileDos) appleFile);
+        case DOS3 -> getFormattedDosFile (appleFile);
+        case DOS4 -> getFormattedDosFile (appleFile);
         case PRODOS -> getFormattedProdosFile (appleFile);
         case PASCAL -> getFormattedPascalFile ((FilePascal) appleFile);
         case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
@@ -228,7 +228,7 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedDosFile (FileDos appleFile)
+  private FormattedAppleFile getFormattedDosFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = appleFile.read ();
@@ -239,15 +239,16 @@ public class FormattedAppleFileFactory
       case 0 -> checkDosText (appleFile, fileType, buffer);
       case 1 -> new IntegerBasicProgram (appleFile, buffer, 2,
           Utility.getShort (buffer, 0));
-      case 2 -> new ApplesoftBasicProgram (appleFile, buffer, 2,
+      case 2, 32 -> new ApplesoftBasicProgram (appleFile, buffer, 2,
           Utility.getShort (buffer, 0));
-      case 4, 16 -> checkDosBinary (appleFile, fileType, buffer);
+      case 4, 16, 64 -> checkDosBinary (appleFile, fileType, buffer);
       default -> new DataFile (appleFile, buffer);
     };
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkDosText (FileDos appleFile, int fileType, byte[] buffer)
+  private FormattedAppleFile checkDosText (AppleFile appleFile, int fileType,
+      byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     if (VisicalcFile.isVisicalcFile (buffer))
@@ -257,7 +258,7 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkDosBinary (FileDos appleFile, int fileType,
+  private FormattedAppleFile checkDosBinary (AppleFile appleFile, int fileType,
       byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {

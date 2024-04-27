@@ -348,6 +348,31 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
+  public static LocalDateTime getDos4LocalDateTime (byte[] buffer, int offset)
+  // ---------------------------------------------------------------------------------//
+  {
+    try
+    {
+      int[] val = new int[6];
+      for (int i = 0; i < 6; i++)
+      {
+        int tmp = buffer[offset++] & 0xFF;
+        val[i] = tmp / 16 * 10 + tmp % 16;
+      }
+
+      return LocalDateTime.of (val[3] + 2000, val[5], val[4], val[2], val[1], val[0]);
+    }
+    catch (DateTimeException e)
+    {
+      return null;
+    }
+    catch (NumberFormatException e2)
+    {
+      return null;
+    }
+  }
+
+  // ---------------------------------------------------------------------------------//
   public static String matchFlags (int flag, String[] chars)
   // ---------------------------------------------------------------------------------//
   {
@@ -482,6 +507,24 @@ public final class Utility
     {
       return null;
     }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static String string (byte[] buffer, int ptr, int nameLength)
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+    for (int i = 0; i < nameLength; i++)
+    {
+      int c = buffer[ptr + i] & 0x7F;
+      if (c < 32)
+        c += 64;
+      //      if (c >= 32)
+      text.append ((char) c);
+      //      else
+      //        text.append (".");
+    }
+    return text.toString ();
   }
 
   // ---------------------------------------------------------------------------------//
