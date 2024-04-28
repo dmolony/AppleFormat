@@ -1,6 +1,5 @@
 package com.bytezone.appleformat.block;
 
-import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
 import com.bytezone.filesystem.FsDos;
@@ -41,14 +40,13 @@ public class CatalogDos4Block extends CatalogDosBlock
 
       if (deleted)
       {
-        addText (text, buffer, i, 2,
-            "DEL: file @ " + HexFormatter.format2 (buffer[i + 32]) + " "
-                + HexFormatter.format2 (buffer[i + 1]));
+        addText (text, buffer, i, 2, String.format ("DEL: file @ %02X %02X",
+            buffer[i] & 0x7F, buffer[i + 1] & 0x1F));
         addText (text, buffer, i + 2, 1, "DEL: File type " + getType (buffer[i + 2]));
         if (buffer[i + 3] == 0)
           addText (text, buffer, i + 3, 4, "");
         else
-          addText (text, buffer, i + 3, 4, "DEL: " + getName (buffer, i + 3, 29));
+          addText (text, buffer, i + 3, 4, "DEL: " + getName (buffer, i + 3, 24));
         addTextAndDecimal (text, buffer, i + 33, 2, "DEL: Sector count");
       }
       else if (track > 0 || zero)               // file exists
