@@ -241,7 +241,8 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
     StringBuffer pgm = new StringBuffer ();
 
     //    pgm.append ("Name : " + name + "\n");
-    //    pgm.append ("Length : $" + HexFormatter.format4 (buffer.length) + " (" + buffer.length
+    //    pgm.append ("Length : $" + 
+    //            HexFormatter.format4 (buffer.length) + " (" + buffer.length
     //        + ")\n\n");
 
     int ptr = 0;

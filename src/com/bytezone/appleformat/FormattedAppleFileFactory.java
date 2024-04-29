@@ -5,6 +5,7 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ANI;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_BASIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ASP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_AWP;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BAT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BINARY;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FONT;
@@ -25,6 +26,7 @@ import com.bytezone.appleformat.assembler.AssemblerPreferences;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicPreferences;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
+import com.bytezone.appleformat.basic.BasicCpmProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.file.Catalog;
 import com.bytezone.appleformat.file.DataFile;
@@ -149,6 +151,7 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_AWP -> textPreferences;
       case FILE_TYPE_ADB -> null;
       case FILE_TYPE_ICN -> graphicsPreferences;
+      case FILE_TYPE_BAT -> textPreferences;
       case FILE_TYPE_NON -> null;
       default -> null;
     };
@@ -328,6 +331,7 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_ADB -> new AppleworksADBFile (appleFile, buffer);
       case FILE_TYPE_ICN -> new IconFile (appleFile, buffer);
       case FILE_TYPE_NON -> checkNon (appleFile, aux, buffer, length);
+      case FILE_TYPE_BAT -> new Text (appleFile, buffer, 0, length);
       default -> new DataFileProdos (appleFile, buffer);
     };
   }
@@ -517,6 +521,7 @@ public class FormattedAppleFileFactory
       case "HLP" -> new CpmText (appleFile, buffer);
       case "TXT" -> new CpmText (appleFile, buffer);
       case "ASM" -> new CpmText (appleFile, buffer);
+      case "BAS" -> new BasicCpmProgram (appleFile, buffer);
       default -> new DataFile (appleFile, buffer);
     };
   }
