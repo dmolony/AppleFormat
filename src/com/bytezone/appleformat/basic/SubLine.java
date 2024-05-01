@@ -312,12 +312,26 @@ public class SubLine implements ApplesoftConstants
 
       case TOKEN_DEF:
         byte[] lineBuffer = getBuffer ();
-        assert lineBuffer[0] == TOKEN_FN;
+        int fnPtr = getPosition (lineBuffer, 0, TOKEN_FN);
 
-        int leftBracket = getPosition (lineBuffer, 1, ASCII_LEFT_BRACKET);
+        if (fnPtr < 0 || lineBuffer.length == 1)
+        {
+          System.out.println ("bad FN 1");
+          break;
+        }
+
+        int namePtr = fnPtr + 1;
+
+        int leftBracket = getPosition (lineBuffer, namePtr, ASCII_LEFT_BRACKET);
         int rightBracket = getPosition (lineBuffer, leftBracket + 1, ASCII_RIGHT_BRACKET);
 
-        functionName = new String (lineBuffer, 1, leftBracket - 1);
+        if (leftBracket < 0 || rightBracket < 0)
+        {
+          System.out.println ("bad FN 2");
+          break;
+        }
+
+        functionName = new String (lineBuffer, namePtr, leftBracket - namePtr);
         functionArgument =
             new String (lineBuffer, leftBracket + 1, rightBracket - leftBracket - 1);
         functions.add (functionName);
