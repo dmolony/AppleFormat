@@ -302,7 +302,7 @@ public class FormattedAppleFileFactory
       buffer = fork.read ();
       aux = fork.getParentFile ().getAuxType ();
       if (fork.getForkType () == ForkType.RESOURCE)
-        return new ResourceFile (appleFile, buffer);
+        return new ResourceFile (appleFile, buffer, aux);
     }
     else
     {
@@ -332,7 +332,7 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_ICN -> new IconFile (appleFile, buffer);
       case FILE_TYPE_NON -> checkNon (appleFile, aux, buffer, length);
       case FILE_TYPE_BAT -> new Text (appleFile, buffer, 0, length);
-      default -> new DataFileProdos (appleFile, buffer);
+      default -> new DataFileProdos (appleFile, buffer, aux);
     };
   }
 
@@ -432,7 +432,7 @@ public class FormattedAppleFileFactory
         return new Animation (appleFile, buffer);
     }
 
-    return new DataFileProdos (appleFile, buffer);
+    return new DataFileProdos (appleFile, buffer, aux);
   }
 
   // Another notable exception is the Fotofile (FOT) format inherited by ProDOS

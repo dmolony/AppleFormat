@@ -3,6 +3,7 @@ package com.bytezone.appleformat.block;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
+import com.bytezone.filesystem.AppleFile;
 
 public class ForkProdosBlock extends AbstractFormattedAppleBlock
 {
@@ -19,8 +20,12 @@ public class ForkProdosBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
+    AppleFile appleFile = appleBlock.getFileOwner ();
+    assert appleFile.isForkedFile ();
+
     byte[] buffer = appleBlock.read ();
-    StringBuilder text = getHeader ("Prodos Extended Key Block");
+    StringBuilder text =
+        getHeader ("Prodos Extended Key Block : " + appleFile.getFileName ());
 
     for (int i = 0; i < 512; i += 256)
     {

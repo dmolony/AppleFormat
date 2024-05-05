@@ -1,6 +1,8 @@
 package com.bytezone.appleformat.block;
 
 import com.bytezone.filesystem.AppleBlock;
+import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.ForkProdos;
 
 // -----------------------------------------------------------------------------------//
 public class DataBlock extends AbstractFormattedAppleBlock
@@ -20,9 +22,12 @@ public class DataBlock extends AbstractFormattedAppleBlock
   {
     StringBuilder text = new StringBuilder ();
 
-    text.append (
-        String.format ("Data Block : %s%n", appleBlock.getFileOwner ().getFileName ()));
-    text.append (String.format ("Block type : %s", appleBlock.getBlockSubType ()));
+    AppleFile appleFile = appleBlock.getFileOwner ();
+    String name = appleFile.isFork ()
+        ? ((ForkProdos) appleFile).getParentFile ().getFileName () + " : " : "";
+
+    text.append (String.format ("Data Block : %s%s%n", name, appleFile.getFileName ()));
+    text.append (String.format ("Block type : %s%n", appleBlock.getBlockSubType ()));
 
     return text.toString ();
   }

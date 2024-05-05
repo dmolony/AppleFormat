@@ -2,6 +2,8 @@ package com.bytezone.appleformat.block;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
+import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.ForkProdos;
 
 // -----------------------------------------------------------------------------------//
 public class IndexProdosBlock extends AbstractFormattedAppleBlock
@@ -19,13 +21,17 @@ public class IndexProdosBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
+    AppleFile appleFile = appleBlock.getFileOwner ();
     byte[] buffer = appleBlock.read ();
     String subType = appleBlock.getBlockSubType ();
     String subTypeText = subType.equals ("M-INDEX") ? "Master " : "";
-    String fileName = appleBlock.getFileOwner ().getFileName ();
+    String fileName = appleFile.getFileName ();
+
+    String name = appleFile.isFork ()
+        ? ((ForkProdos) appleFile).getParentFile ().getFileName () + " : " : "";
 
     StringBuilder text =
-        getHeader (String.format ("Prodos %sIndex : %s", subTypeText, fileName));
+        getHeader (String.format ("Prodos %sIndex : %s %s", subTypeText, name, fileName));
 
     for (int i = 0; i < 256; i++)
     {
