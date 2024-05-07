@@ -2,6 +2,7 @@ package com.bytezone.appleformat.block;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
+import com.bytezone.filesystem.AppleFileSystem.FileSystemType;
 
 // -----------------------------------------------------------------------------------//
 public class TsListBlock extends AbstractFormattedAppleBlock
@@ -19,10 +20,11 @@ public class TsListBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
+    FileSystemType fileSystemType = appleBlock.getFileSystem ().getFileSystemType ();
     byte[] buffer = appleBlock.read ();
 
-    StringBuilder text = getHeader (
-        "DOS Track/Sector List : " + appleBlock.getFileOwner ().getFileName ());
+    StringBuilder text = getHeader (fileSystemType + " Track/Sector List : "
+        + appleBlock.getFileOwner ().getFileName ());
 
     int nextTrack = buffer[1] & 0xFF;
     int nextSector = buffer[2] & 0xFF;
@@ -46,7 +48,7 @@ public class TsListBlock extends AbstractFormattedAppleBlock
     addText (text, buffer, 7, 4, "Not used");
     addText (text, buffer, 11, 1, "Not used");
 
-    int sectorBase = Utility.getShort (buffer, 5);
+    int blockNo = Utility.getShort (buffer, 5);
 
     for (int i = 12; i <= 255; i += 2)
     {
@@ -54,10 +56,11 @@ public class TsListBlock extends AbstractFormattedAppleBlock
         msg = "";
       else
       {
-        String msg2 = buffer[i] == 0x40 ? "  - track zero" : "";
-        msg = String.format ("Track/sector of file sector %04X (%<,d)%s",
-            ((i - 12) / 2 + sectorBase), msg2);
+        String msg2 = fileSystemType == FileSystemType.DOS4 && (buffer[i] & 0x40) != 0
+            ? "  - track zero" : "";
+        msg = String.format ("Track/sector of file sector %04X (%<d)%s", blockNo, msg2);
       }
+      blockNo++;
       addText (text, buffer, i, 2, msg);
     }
 

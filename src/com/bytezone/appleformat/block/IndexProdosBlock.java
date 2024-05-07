@@ -3,6 +3,7 @@ package com.bytezone.appleformat.block;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.ForkProdos;
 
 // -----------------------------------------------------------------------------------//
@@ -32,16 +33,17 @@ public class IndexProdosBlock extends AbstractFormattedAppleBlock
 
     StringBuilder text =
         getHeader (String.format ("Prodos %sIndex : %s %s", subTypeText, name, fileName));
+    AppleFileSystem fs = appleFile.getParentFileSystem ();
 
     for (int i = 0; i < 256; i++)
     {
       text.append (
           String.format ("%02X        %02X %02X", i, buffer[i], buffer[i + 256]));
-      if (buffer[i] != 0 || buffer[i + 256] != 0)
+      int blockNo = Utility.intValue (buffer[i], buffer[i + 256]);
+      if (blockNo != 0)
       {
-        int blockNo = Utility.intValue (buffer[i], buffer[i + 256]);
-        //        String valid = disk.isValidAddress (blockNo) ? "" : " *** invalid ***";
-        text.append (String.format ("         block %,6d%n", blockNo));
+        String valid = fs.isValidAddress (blockNo) ? "" : " *** invalid ***";
+        text.append (String.format ("         block %,6d  %s%n", blockNo, valid));
       }
       else
         text.append ("\n");
