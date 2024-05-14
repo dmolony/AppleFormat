@@ -13,6 +13,13 @@ public class Text extends AbstractFormattedAppleFile
   private final TextFormatter textFormatter;
 
   // ---------------------------------------------------------------------------------//
+  public Text (AppleFile appleFile, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    this (appleFile, buffer, 0, buffer.length);
+  }
+
+  // ---------------------------------------------------------------------------------//
   public Text (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {

@@ -20,8 +20,14 @@ public class AppleGraphics extends Graphics
   private final int[] colourBits = new int[280];
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphics (AppleFile appleFile, byte[] buffer, int offset, int length,
-      int address)
+  public AppleGraphics (AppleFile appleFile, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    this (appleFile, buffer, 0, buffer.length);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public AppleGraphics (AppleFile appleFile, byte[] buffer, int offset, int length)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, buffer, offset, length);
