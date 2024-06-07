@@ -66,6 +66,7 @@ import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FilePascal;
+import com.bytezone.filesystem.FilePascalCode;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.FileProdos.ForkType;
 import com.bytezone.filesystem.ForkNuFX;
@@ -213,6 +214,7 @@ public class FormattedAppleFileFactory
         case DOS4 -> getFormattedDosFile (appleFile);
         case PRODOS -> getFormattedProdosFile (appleFile);
         case PASCAL -> getFormattedPascalFile ((FilePascal) appleFile);
+        case PASCAL_CODE -> getFormattedPascalCodeFile ((FilePascalCode) appleFile);
         case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
         case NUFX -> getFormattedNufxFile (appleFile);
         case BIN2 -> getFormattedBin2File ((FileBinary2) appleFile);
@@ -519,12 +521,24 @@ public class FormattedAppleFileFactory
   {
     byte[] buffer = appleFile.read ();
     int fileType = appleFile.getFileType ();
+    int eof = appleFile.getFileLength ();
 
     return switch (fileType)
     {
-      case 3 -> new PascalText (appleFile, buffer);
-      default -> new DataFile (appleFile, buffer);
+      case 3 -> new PascalText (appleFile, buffer, 0, eof);
+      default -> new DataFile (appleFile, buffer, 0, eof);
     };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile getFormattedPascalCodeFile (FilePascalCode appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] buffer = appleFile.read ();
+    //    int fileType = appleFile.getFileType ();
+    int eof = appleFile.getFileLength ();
+
+    return new DataFile (appleFile, buffer, 0, eof);
   }
 
   // ---------------------------------------------------------------------------------//
