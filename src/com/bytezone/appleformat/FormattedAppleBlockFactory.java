@@ -8,6 +8,7 @@ import com.bytezone.appleformat.block.CatalogDos3Block;
 import com.bytezone.appleformat.block.CatalogDos4Block;
 import com.bytezone.appleformat.block.CatalogLbr;
 import com.bytezone.appleformat.block.CatalogPascal;
+import com.bytezone.appleformat.block.CatalogPascalCode;
 import com.bytezone.appleformat.block.CatalogProdosBlock;
 import com.bytezone.appleformat.block.DataBlock;
 import com.bytezone.appleformat.block.DosBlock;
@@ -59,6 +60,7 @@ public class FormattedAppleBlockFactory
       case DOS4 -> getFormattedAppleBlockDos4 (appleBlock);
       case PRODOS -> getFormattedAppleBlockProdos (appleBlock);
       case PASCAL -> getFormattedAppleBlockPascal (appleBlock);
+      case PASCAL_CODE -> getFormattedAppleBlockPascalCode (appleBlock);
       case CPM -> getFormattedAppleBlockCpm (appleBlock);
       case BIN2 -> getFormattedAppleBlockBin2 (appleBlock);
       case LBR -> getFormattedAppleBlockLbr (appleBlock);
@@ -98,21 +100,6 @@ public class FormattedAppleBlockFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  //  private FormattedAppleBlock getFormattedAppleBlockDos4 (AppleBlock appleBlock)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    return switch (appleBlock.getBlockSubType ())
-  //    {
-  //      case "DOS" -> new DosBlock (appleBlock);
-  //      case "VTOC" -> new VtocBlock (appleBlock);
-  //      case "CATALOG" -> new CatalogDosBlock (appleBlock);
-  //      case "TSLIST" -> new TsListBlock (appleBlock);
-  //      default -> throw new IllegalArgumentException (
-  //          "Unexpected value: " + appleBlock.getBlockSubType ());
-  //    };
-  //  }
-
-  // ---------------------------------------------------------------------------------//
   private FormattedAppleBlock getFormattedAppleBlockProdos (AppleBlock appleBlock)
   // ---------------------------------------------------------------------------------//
   {
@@ -134,6 +121,18 @@ public class FormattedAppleBlockFactory
     return switch (appleBlock.getBlockSubType ())
     {
       case "CATALOG" -> new CatalogPascal (appleBlock);
+      default -> throw new IllegalArgumentException (
+          "Unexpected value: " + appleBlock.getBlockSubType ());
+    };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleBlock getFormattedAppleBlockPascalCode (AppleBlock appleBlock)
+  // ---------------------------------------------------------------------------------//
+  {
+    return switch (appleBlock.getBlockSubType ())
+    {
+      case "CATALOG" -> new CatalogPascalCode (appleBlock);
       default -> throw new IllegalArgumentException (
           "Unexpected value: " + appleBlock.getBlockSubType ());
     };

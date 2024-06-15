@@ -10,7 +10,9 @@ import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleBlock;
 import com.bytezone.filesystem.FsPascal;
 
+// -----------------------------------------------------------------------------------//
 public class CatalogPascal extends AbstractFormattedAppleBlock
+// -----------------------------------------------------------------------------------//
 {
   private final DateTimeFormatter dtf =
       DateTimeFormatter.ofLocalizedDate (FormatStyle.SHORT);

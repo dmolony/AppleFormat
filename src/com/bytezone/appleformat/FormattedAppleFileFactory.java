@@ -30,10 +30,13 @@ import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.BasicCpmProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.file.Catalog;
+import com.bytezone.appleformat.file.CodeFilePascal;
 import com.bytezone.appleformat.file.DataFile;
 import com.bytezone.appleformat.file.DataFileProdos;
 import com.bytezone.appleformat.file.FormattedAppleFile;
 import com.bytezone.appleformat.file.LocalFolder;
+import com.bytezone.appleformat.file.PascalProcedure;
+import com.bytezone.appleformat.file.PascalSegment;
 import com.bytezone.appleformat.file.ResourceFile;
 import com.bytezone.appleformat.fonts.FontFile;
 import com.bytezone.appleformat.fonts.FontValidationException;
@@ -65,8 +68,7 @@ import com.bytezone.filesystem.AppleForkedFile;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileNuFX;
-import com.bytezone.filesystem.FilePascal;
-import com.bytezone.filesystem.FilePascalCode;
+import com.bytezone.filesystem.FilePascalCodeSegment;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.FileProdos.ForkType;
 import com.bytezone.filesystem.ForkNuFX;
@@ -213,8 +215,9 @@ public class FormattedAppleFileFactory
         case DOS3 -> getFormattedDosFile (appleFile);
         case DOS4 -> getFormattedDosFile (appleFile);
         case PRODOS -> getFormattedProdosFile (appleFile);
-        case PASCAL -> getFormattedPascalFile ((FilePascal) appleFile);
-        case PASCAL_CODE -> getFormattedPascalCodeFile ((FilePascalCode) appleFile);
+        case PASCAL -> getFormattedPascalFile (appleFile);
+        case PASCAL_CODE -> getFormattedPascalCodeFile (
+            (FilePascalCodeSegment) appleFile);
         case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
         case NUFX -> getFormattedNufxFile (appleFile);
         case BIN2 -> getFormattedBin2File ((FileBinary2) appleFile);
@@ -516,7 +519,7 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedPascalFile (FilePascal appleFile)
+  private FormattedAppleFile getFormattedPascalFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = appleFile.read ();
@@ -526,19 +529,20 @@ public class FormattedAppleFileFactory
     return switch (fileType)
     {
       case 3 -> new PascalText (appleFile, buffer, 0, eof);
+      case 98 -> new PascalSegment (appleFile, buffer, 0, eof);
+      case 99 -> new PascalProcedure (appleFile, buffer, 0, eof);
       default -> new DataFile (appleFile, buffer, 0, eof);
     };
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedPascalCodeFile (FilePascalCode appleFile)
+  private FormattedAppleFile getFormattedPascalCodeFile (FilePascalCodeSegment appleFile)
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = appleFile.read ();
-    //    int fileType = appleFile.getFileType ();
     int eof = appleFile.getFileLength ();
 
-    return new DataFile (appleFile, buffer, 0, eof);
+    return new CodeFilePascal (appleFile, buffer, 0, eof);
   }
 
   // ---------------------------------------------------------------------------------//

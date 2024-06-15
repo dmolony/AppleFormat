@@ -92,14 +92,24 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;
-    appleFile = null;
     forkedFile = null;
     this.container = Objects.requireNonNull (container);
 
+    if (container instanceof AppleFile af)
+    {
+      appleFile = af;
+      buffer = af.read ();
+      length = af.getFileLength ();
+    }
+    else
+    {
+      appleFile = null;
+      buffer = null;
+      length = 0;
+    }
+
     name = "";
-    buffer = null;
     offset = 0;
-    length = 0;
   }
 
   // ---------------------------------------------------------------------------------//
