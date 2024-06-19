@@ -10,10 +10,11 @@ public class VisicalcFile extends AbstractFormattedAppleFile
   private Sheet sheet;
 
   // ---------------------------------------------------------------------------------//
-  public VisicalcFile (AppleFile appleFile, byte[] buffer)
+  public VisicalcFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    //    super (appleFile, buffer);
+    super (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -22,7 +23,7 @@ public class VisicalcFile extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     if (sheet == null)
-      sheet = new Sheet (buffer);
+      sheet = new Sheet (dataRecord.data ());
 
     StringBuilder text = new StringBuilder ();
 

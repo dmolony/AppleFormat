@@ -7,11 +7,18 @@ import com.bytezone.filesystem.PascalProcedure;
 public class CodeFilePascal extends AbstractFormattedAppleFile
 {
   // ---------------------------------------------------------------------------------//
-  public CodeFilePascal (FilePascalCodeSegment appleFile, byte[] buffer, int offset,
-      int length)
+  //  public CodeFilePascal (FilePascalCodeSegment appleFile, byte[] buffer, int offset,
+  //      int length)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    super (appleFile, buffer, offset, length);
+  //  }
+
+  // ---------------------------------------------------------------------------------//
+  public CodeFilePascal (FilePascalCodeSegment appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -19,7 +26,7 @@ public class CodeFilePascal extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    if (buffer == null)
+    if (!appleFile.hasData ())
       return "This file has no data\n\n" + appleFile.getErrorMessage ();
 
     StringBuilder text = new StringBuilder ();

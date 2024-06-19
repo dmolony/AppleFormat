@@ -7,12 +7,11 @@ import com.bytezone.utility.Utility;
 public class CpmText extends Text
 // -----------------------------------------------------------------------------------//
 {
-
   // ---------------------------------------------------------------------------------//
-  public CpmText (AppleFile file, byte[] buffer)
+  public CpmText (AppleFile file)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer, 0, buffer.length);
+    super (file);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -21,11 +20,12 @@ public class CpmText extends Text
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
+    byte[] buffer = dataRecord.data ();
 
     int ptr = 0;
     while (ptr < buffer.length && buffer[ptr] != (byte) 0x1A)
     {
-      String line = getLine (ptr);
+      String line = getLine (buffer, ptr);
       text.append (line + "\n");
       ptr += line.length () + 1;
       if (ptr < buffer.length && buffer[ptr - 1] == 0x0D && buffer[ptr] == 0x0A)
@@ -39,7 +39,7 @@ public class CpmText extends Text
   }
 
   // ---------------------------------------------------------------------------------//
-  private String getLine (int ptr)
+  private String getLine (byte[] buffer, int ptr)
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder line = new StringBuilder ();

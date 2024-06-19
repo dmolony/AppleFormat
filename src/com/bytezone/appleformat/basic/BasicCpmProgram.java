@@ -4,6 +4,7 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public class BasicCpmProgram extends AbstractFormattedAppleFile
@@ -40,18 +41,25 @@ public class BasicCpmProgram extends AbstractFormattedAppleFile
   };
 
   // ---------------------------------------------------------------------------------//
-  public BasicCpmProgram (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public BasicCpmProgram (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
-  public BasicCpmProgram (AppleFile appleFile, byte[] buffer)
+  public BasicCpmProgram (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, 0, buffer.length);
+    super (appleFile, dataRecord);
   }
+
+  // ---------------------------------------------------------------------------------//
+  //  public BasicCpmProgram (AppleFile appleFile, byte[] buffer)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    super (appleFile, buffer, 0, buffer.length);
+  //  }
 
   // ---------------------------------------------------------------------------------//
   @Override
@@ -63,15 +71,19 @@ public class BasicCpmProgram extends AbstractFormattedAppleFile
     //    if (basicPreferences.showHeader)
     //      text.append ("Name : " + name + "\n\n");
 
-    int ptr = 5;
-    while (buffer[ptr] != 0)
-      ptr++;
+    byte[] buffer = dataRecord.data ();
+    //    int ptr = dataRecord.offset () + 5;
+
+    //    while (buffer[ptr] != 0)
+    //      ptr++;
 
     //    if (showDebugText)
     //      return debugText ();
 
-    ptr = 1;
-    while (ptr < buffer.length)
+    //    ptr = 1;
+
+    int ptr = dataRecord.offset () + 1;
+    while (ptr < dataRecord.max ())
     {
       int nextAddress = Utility.getShort (buffer, ptr);
 
@@ -200,10 +212,12 @@ public class BasicCpmProgram extends AbstractFormattedAppleFile
   {
     StringBuilder text = new StringBuilder ();
 
-    int ptr = 1;
+    byte[] buffer = dataRecord.data ();
+
+    int ptr = dataRecord.offset () + 1;
     int lastPtr;
 
-    while (ptr < buffer.length)
+    while (ptr < dataRecord.max ())
     {
       int nextAddress = Utility.getShort (buffer, ptr);
       if (nextAddress == 0)

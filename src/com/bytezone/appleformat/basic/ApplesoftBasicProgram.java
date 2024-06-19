@@ -7,6 +7,7 @@ import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
@@ -15,27 +16,46 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
 {
   private final List<SourceLine> sourceLines = new ArrayList<> ();
 
-  private final UserBasicFormatter userBasicFormatter;
-  private final AppleBasicFormatter appleBasicFormatter;
-  private final DebugBasicFormatter debugBasicFormatter;
-  private final XrefFormatter xrefFormatter;
+  ApplesoftBasicPreferences basicPreferences = FormattedAppleFileFactory.basicPreferences;
+
+  private final UserBasicFormatter userBasicFormatter =
+      new UserBasicFormatter (this, basicPreferences);
+  private final AppleBasicFormatter appleBasicFormatter =
+      new AppleBasicFormatter (this, basicPreferences);
+  private final DebugBasicFormatter debugBasicFormatter =
+      new DebugBasicFormatter (this, basicPreferences);
+  private final XrefFormatter xrefFormatter = new XrefFormatter (this, basicPreferences);
 
   boolean showDebugText;
   private int endPtr;
 
   // ---------------------------------------------------------------------------------//
-  public ApplesoftBasicProgram (AppleFile appleFile, byte[] buffer, int offset,
-      int length)
+  public ApplesoftBasicProgram (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile);
 
-    ApplesoftBasicPreferences basicPreferences =
-        FormattedAppleFileFactory.basicPreferences;
+    setup ();
+  }
 
+  // ---------------------------------------------------------------------------------//
+  public ApplesoftBasicProgram (AppleFile appleFile, DataRecord dataRecord)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (appleFile, dataRecord);
+
+    setup ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private void setup ()
+  // ---------------------------------------------------------------------------------//
+  {
     preferences = basicPreferences;
 
-    int ptr = offset;
+    int ptr = dataRecord.offset ();
+    byte[] buffer = dataRecord.data ();
+
     while (buffer[ptr + 1] != 0)    // msb of link field
     {
       SourceLine line = new SourceLine (this, buffer, ptr);
@@ -44,11 +64,6 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
     }
 
     endPtr = ptr;
-
-    userBasicFormatter = new UserBasicFormatter (this, basicPreferences);
-    appleBasicFormatter = new AppleBasicFormatter (this, basicPreferences);
-    debugBasicFormatter = new DebugBasicFormatter (this, basicPreferences);
-    xrefFormatter = new XrefFormatter (this, basicPreferences);
   }
 
   // ---------------------------------------------------------------------------------//

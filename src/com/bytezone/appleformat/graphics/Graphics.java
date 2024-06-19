@@ -3,6 +3,7 @@ package com.bytezone.appleformat.graphics;
 import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public abstract class Graphics extends AbstractFormattedAppleFile
@@ -12,17 +13,19 @@ public abstract class Graphics extends AbstractFormattedAppleFile
   protected String failureReason = "";
 
   // ---------------------------------------------------------------------------------//
-  public Graphics (AppleFile appleFile, byte[] buffer)
+  public Graphics (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, buffer, 0, buffer.length);
+    super (appleFile);
+
+    preferences = FormattedAppleFileFactory.graphicsPreferences;
   }
 
   // ---------------------------------------------------------------------------------//
-  public Graphics (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public Graphics (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile, dataRecord);
 
     preferences = FormattedAppleFileFactory.graphicsPreferences;
   }

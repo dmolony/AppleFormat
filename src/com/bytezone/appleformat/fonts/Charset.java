@@ -13,14 +13,18 @@ public class Charset extends CharacterList
   private static final int charsX = 16;
 
   // ---------------------------------------------------------------------------------//
-  public Charset (AppleFile file, byte[] buffer)
+  public Charset (AppleFile file)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer);
+    super (file);
 
-    int ptr = 0;
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
-    while (ptr < buffer.length)
+    int ptr = offset;
+
+    while (ptr < dataRecord.max ())
     {
       characters.add (new CharsetCharacter (buffer, ptr));
       ptr += sizeY;

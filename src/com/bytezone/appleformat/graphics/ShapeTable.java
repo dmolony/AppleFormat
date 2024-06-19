@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -32,15 +33,19 @@ public class ShapeTable extends Graphics
   private final int maxShapeHeight;
 
   // ---------------------------------------------------------------------------------//
-  public ShapeTable (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public ShapeTable (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile, dataRecord);
 
     int minY = Shape.ORIGIN;
     int minX = Shape.ORIGIN;
     int maxY = Shape.ORIGIN;
     int maxX = Shape.ORIGIN;
+
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
     int totalShapes = Utility.getShort (buffer, offset);
     index = new ArrayList<> (totalShapes);

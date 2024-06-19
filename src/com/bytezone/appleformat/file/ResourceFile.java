@@ -2,6 +2,7 @@ package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public class ResourceFile extends AbstractFormattedAppleFile
@@ -10,10 +11,10 @@ public class ResourceFile extends AbstractFormattedAppleFile
   int aux;
 
   // ---------------------------------------------------------------------------------//
-  public ResourceFile (AppleFile appleFile, byte[] buffer, int aux)
+  public ResourceFile (AppleFile appleFile, DataRecord dataRecord, int aux)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, 0, buffer.length);
+    super (appleFile, dataRecord);
 
     this.aux = aux;
   }
@@ -23,7 +24,7 @@ public class ResourceFile extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    if (buffer == null)
+    if (dataRecord.length () == 0)
       return "This file has no data\n\n" + appleFile.getErrorMessage ();
 
     StringBuilder text = new StringBuilder ();

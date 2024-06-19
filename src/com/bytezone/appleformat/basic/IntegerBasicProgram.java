@@ -5,6 +5,7 @@ import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public class IntegerBasicProgram extends AbstractFormattedAppleFile
@@ -23,11 +24,30 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
       "LIST ", ",", "LIST ", "POP ", "NODSP ", "NODSP ", "NOTRACE ", "DSP ", "DSP ",
       "TRACE ", "PR#", "IN#", };
 
+  byte[] buffer;
+  int offset;
+  int length;
+
   // ---------------------------------------------------------------------------------//
-  public IntegerBasicProgram (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public IntegerBasicProgram (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile);
+
+    buffer = dataRecord.data ();
+    offset = dataRecord.offset ();
+    length = dataRecord.length ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public IntegerBasicProgram (AppleFile appleFile, DataRecord dataRecord)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (appleFile, dataRecord);
+
+    buffer = dataRecord.data ();
+    offset = dataRecord.offset ();
+    length = dataRecord.length ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -40,8 +60,9 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
     //    pgm.append ("Name    : " + name + "\n");
     //    pgm.append (String.format ("Length  : $%04X (%<,d)%n%n", length));
 
-    int ptr = offset;
-    int max = offset + length;
+    //    byte[] buffer = dataRecord.data ();
+    int ptr = dataRecord.offset ();
+    int max = dataRecord.max ();
 
     boolean looksLikeAssembler = checkForAssembler ();      // this can probably go
     boolean looksLikeSCAssembler = checkForSCAssembler ();
@@ -66,7 +87,7 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
       if (looksLikeSCAssembler)
         appendSCAssembler (pgm, ptr);
       else if (looksLikeAssembler)
-        appendAssembler (pgm, ptr, lineLength);
+        appendAssembler (pgm, buffer, ptr, lineLength);
       else
         appendInteger (pgm, ptr, lineLength);
 
@@ -78,8 +99,8 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
     {
       int address = Utility.intValue (buffer[ptr + 2], buffer[ptr + 3]);
       int remainingBytes = max - ptr - 5;
-      AssemblerProgram ap =
-          new AssemblerProgram (appleFile, buffer, ptr + 4, remainingBytes, address);
+      AssemblerProgram ap = new AssemblerProgram (appleFile,
+          new DataRecord (buffer, ptr + 4, remainingBytes), address);
       pgm.append ("\n" + ap.getText () + "\n");
     }
 
@@ -88,7 +109,7 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  private void appendAssembler (StringBuilder pgm, int ptr, int lineLength)
+  private void appendAssembler (StringBuilder pgm, byte[] buffer, int ptr, int lineLength)
   // ---------------------------------------------------------------------------------//
   {
     for (int i = ptr + 3; i < ptr + lineLength - 1; i++)
@@ -109,8 +130,9 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
   private boolean checkForAssembler ()
   // ---------------------------------------------------------------------------------//
   {
-    int ptr = offset;
-    int max = offset + length;
+    //    byte[] buffer = dataRecord.data ();
+    int ptr = dataRecord.offset ();
+    int max = dataRecord.max ();
 
     while (ptr < max)
     {

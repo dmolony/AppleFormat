@@ -22,15 +22,19 @@ public class Pic0002 extends Graphics
   //  private Image image;
 
   // ---------------------------------------------------------------------------------//
-  public Pic0002 (AppleFile appleFile, byte[] buffer)
+  public Pic0002 (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
+
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
     // 00000 - 31999  pixel data 32,000 bytes
     // 32000 - 38400  200 color tables
 
-    int ptr = COLOR_TABLE_OFFSET_AUX_2;
+    int ptr = offset + COLOR_TABLE_OFFSET_AUX_2;
     for (int i = 0; i < NUM_COLOR_TABLES; i++)
     {
       colorTables[i] = new ColorTable (i, buffer, ptr);
@@ -70,8 +74,12 @@ public class Pic0002 extends Graphics
   {
     ColorTable colorTable = colorTables[row];
 
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
     int col = 0;
-    int ptr = row * 160;
+    int ptr = offset + row * 160;
 
     for (int i = 0; i < 160; i++)
     {
@@ -117,9 +125,14 @@ public class Pic0002 extends Graphics
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
     FileProdos file = (FileProdos) appleFile;
     int aux = file.getAuxType ();
     String auxText = "";
+
     StringBuilder text = new StringBuilder ();
 
     text.append (String.format ("Image File : %s%n", name));

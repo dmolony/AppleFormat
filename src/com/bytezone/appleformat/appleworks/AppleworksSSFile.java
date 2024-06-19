@@ -7,6 +7,7 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public class AppleworksSSFile extends AbstractFormattedAppleFile
@@ -16,12 +17,13 @@ public class AppleworksSSFile extends AbstractFormattedAppleFile
   List<Row> rows = new ArrayList<> ();
 
   // ---------------------------------------------------------------------------------//
-  public AppleworksSSFile (AppleFile appleFile, byte[] buffer)
+  public AppleworksSSFile (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile, dataRecord);
 
-    header = new Header ();
+    byte[] buffer = dataRecord.data ();
+    header = new Header (buffer);
 
     int ptr = header.ssMinVers == 0 ? 300 : 302;
     while (ptr < buffer.length)
@@ -32,7 +34,7 @@ public class AppleworksSSFile extends AbstractFormattedAppleFile
         break;
 
       ptr += 2;
-      Row row = new Row (ptr);
+      Row row = new Row (buffer, ptr);
       rows.add (row);
       ptr += length;
     }
@@ -96,7 +98,7 @@ public class AppleworksSSFile extends AbstractFormattedAppleFile
 
     private final int ssMinVers;
 
-    public Header ()
+    public Header (byte[] buffer)
     {
       int ptr = 4;
       for (int i = 0; i < columnWidths.length; i++)
@@ -109,8 +111,8 @@ public class AppleworksSSFile extends AbstractFormattedAppleFile
       windowLayout = (char) buffer[136];
       windowSynch = buffer[137] != 0;
 
-      currentWindow = new Window (138);
-      secondWindow = new Window (162);
+      currentWindow = new Window (buffer, 138);
+      secondWindow = new Window (buffer, 162);
 
       cellProtection = buffer[213] != 0;
       platenWidth = buffer[215] & 0xFF;
@@ -197,7 +199,7 @@ public class AppleworksSSFile extends AbstractFormattedAppleFile
     private final boolean topTitleSwitch;
     private final boolean sideTitleSwitch;
 
-    public Window (int offset)
+    public Window (byte[] buffer, int offset)
     {
       justification = buffer[offset] & 0xFF;
 
@@ -264,7 +266,7 @@ public class AppleworksSSFile extends AbstractFormattedAppleFile
     private final int rowNumber;
     private final List<Cell> cells = new ArrayList<> ();
 
-    public Row (int ptr)
+    public Row (byte[] buffer, int ptr)
     {
       rowNumber = Utility.getShort (buffer, ptr);
       ptr += 2;                                   // first control byte

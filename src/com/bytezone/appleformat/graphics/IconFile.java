@@ -7,6 +7,7 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -27,10 +28,12 @@ public class IconFile extends Graphics
   private final boolean debug = false;
 
   // ---------------------------------------------------------------------------------//
-  public IconFile (AppleFile appleFile, byte[] buffer)
+  public IconFile (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile, dataRecord);
+
+    byte[] buffer = dataRecord.data ();
 
     iBlkNext = Utility.getLong (buffer, 0);
     iBlkID = Utility.getShort (buffer, 4);

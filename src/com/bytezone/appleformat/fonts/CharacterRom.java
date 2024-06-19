@@ -2,6 +2,7 @@ package com.bytezone.appleformat.fonts;
 
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
@@ -17,15 +18,17 @@ public class CharacterRom extends CharacterList
   String description;
 
   // ---------------------------------------------------------------------------------//
-  public CharacterRom (AppleFile file, byte[] buffer)
+  public CharacterRom (AppleFile file, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer);
+    super (file, dataRecord);
 
+    byte[] buffer = dataRecord.data ();
     description = HexFormatter.getCString (buffer, 16);
-    int ptr = HEADER_LENGTH;
+    int ptr = dataRecord.offset () + HEADER_LENGTH;
+    int max = dataRecord.offset () + dataRecord.length ();
 
-    while (ptr < buffer.length)
+    while (ptr < max)
     {
       characters.add (new CharacterRomCharacter (buffer, ptr));
       ptr += sizeY;

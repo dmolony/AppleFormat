@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -20,17 +21,17 @@ public class AppleGraphics extends Graphics
   private final int[] colourBits = new int[280];
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphics (AppleFile appleFile, byte[] buffer)
+  public AppleGraphics (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, buffer, 0, buffer.length);
+    super (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphics (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public AppleGraphics (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile, dataRecord);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -46,6 +47,10 @@ public class AppleGraphics extends Graphics
   protected Image createMonochromeImage ()
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
     int rows = length <= 8192 ? 192 : 384;
     int pages = rows / 192;
 
@@ -86,6 +91,10 @@ public class AppleGraphics extends Graphics
   protected Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
     int rows = length <= 8192 ? 192 : 384;
 
     WritableImage image = new WritableImage (280, rows);
@@ -112,6 +121,10 @@ public class AppleGraphics extends Graphics
   private void fillLine (int base)
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
     Palette palette = paletteFactory.getCurrentPalette ();
     Color[] colours = palette.getColours ();
 

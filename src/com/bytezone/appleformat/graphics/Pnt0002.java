@@ -25,15 +25,19 @@ public class Pnt0002 extends Graphics
   private ColorTable defaultColorTable640 = new ColorTable (0, 0x80);
 
   // ---------------------------------------------------------------------------------//
-  public Pnt0002 (AppleFile appleFile, byte[] buffer)
+  public Pnt0002 (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
 
-    int ptr = 0;
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
+    int ptr = offset;
     int maxLen = appleFile.getFileLength ();
 
-    while (ptr < maxLen)
+    while (ptr < dataRecord.max ())
     {
       int len = Utility.getLong (buffer, ptr);
 
@@ -108,6 +112,10 @@ public class Pnt0002 extends Graphics
   private Image createMonochromeImage ()
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
     WritableImage image = new WritableImage (320, 200);
     PixelWriter pw = image.getPixelWriter ();
 

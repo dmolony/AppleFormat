@@ -25,12 +25,16 @@ public class Pnt8005 extends Graphics
   int imageWidth;
 
   // ---------------------------------------------------------------------------------//
-  public Pnt8005 (AppleFile appleFile, byte[] buffer)
+  public Pnt8005 (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
 
-    int ptr = buffer.length - 17;
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
+    int ptr = dataRecord.max () - 17;
 
     imageType = Utility.getShort (buffer, ptr);
     imageHeight = Utility.getShort (buffer, ptr + 2);
@@ -51,10 +55,10 @@ public class Pnt8005 extends Graphics
 
     colorTables = new ColorTable[imageHeight];
 
-    ptr = 32000;
+    ptr = offset + 32000;
     for (int i = 0; i < colorTables.length; i++)
     {
-      colorTables[i] = new ColorTable (i, this.buffer, ptr);
+      colorTables[i] = new ColorTable (i, buffer, ptr);
       colorTables[i].reverse ();
       ptr += COLOR_TABLE_SIZE;
     }

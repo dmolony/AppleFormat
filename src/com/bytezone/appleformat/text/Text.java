@@ -3,6 +3,7 @@ package com.bytezone.appleformat.text;
 import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public class Text extends AbstractFormattedAppleFile
@@ -13,28 +14,46 @@ public class Text extends AbstractFormattedAppleFile
   private final TextFormatter textFormatter;
 
   // ---------------------------------------------------------------------------------//
-  public Text (AppleFile appleFile, byte[] buffer)
+  public Text (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, buffer, 0, buffer.length);
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public Text (AppleFile appleFile, byte[] buffer, int offset, int length)
-  // ---------------------------------------------------------------------------------//
-  {
-    super (appleFile, buffer, offset, length);
-
+    super (appleFile);
     textFormatter = new TextFormatter (this);
     preferences = FormattedAppleFileFactory.textPreferences;
   }
+
+  // ---------------------------------------------------------------------------------//
+  public Text (AppleFile appleFile, DataRecord dataRecord)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (appleFile, dataRecord);
+    textFormatter = new TextFormatter (this);
+    preferences = FormattedAppleFileFactory.textPreferences;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  //  public Text (AppleFile appleFile, byte[] buffer)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    this (appleFile, buffer, 0, buffer.length);
+  //  }
+  //
+  //  // ---------------------------------------------------------------------------------//
+  //  public Text (AppleFile appleFile, byte[] buffer, int offset, int length)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    super (appleFile, buffer, offset, length);
+  //
+  //    textFormatter = new TextFormatter (this);
+  //    preferences = FormattedAppleFileFactory.textPreferences;
+  //  }
 
   // ---------------------------------------------------------------------------------//
   @Override
   public byte[] getBuffer ()
   // ---------------------------------------------------------------------------------//
   {
-    return buffer;
+    return dataRecord.data ();        // this shouldn't exist
   }
 
   // ---------------------------------------------------------------------------------//

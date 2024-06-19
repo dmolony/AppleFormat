@@ -8,6 +8,7 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
@@ -57,10 +58,15 @@ public class QuickDrawFont extends CharacterList
   private BitSet[] strike;        // bit image of all characters
 
   // ---------------------------------------------------------------------------------//
-  public QuickDrawFont (AppleFile file, byte[] buffer) throws FontValidationException
+  public QuickDrawFont (AppleFile file, DataRecord dataRecord)
+      throws FontValidationException
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer);
+    super (file, dataRecord);
+
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
     assert file.getFileType () == ProdosConstants.FILE_TYPE_FONT;
 
@@ -284,6 +290,10 @@ public class QuickDrawFont extends CharacterList
       text.append ("\nCannot interpret Font file");
       return text.toString ();
     }
+
+    byte[] buffer = dataRecord.data ();
+    //    int offset = dataRecord.offset ();
+    //    int length = dataRecord.length ();
 
     text.append ("Pos   Ascii   Loc table   Offset   Width\n");
     text.append ("---   -----   ---------   ------   -----\n");

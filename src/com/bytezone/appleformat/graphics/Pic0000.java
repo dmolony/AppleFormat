@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
@@ -23,12 +24,33 @@ public class Pic0000 extends Graphics
   byte[] controlBytes;
 
   //  private Image image;
+  //  private Image image;
 
   // ---------------------------------------------------------------------------------//
-  public Pic0000 (AppleFile appleFile, byte[] buffer)
+  public Pic0000 (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
+
+    setup ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public Pic0000 (AppleFile appleFile, DataRecord dataRecord)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (appleFile, dataRecord);
+
+    setup ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private void setup ()
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
     //      0 - 31,999  pixel data 32,000 bytes
     // 32,000 - 32,199  200 control bytes (one per scan line)
@@ -36,10 +58,11 @@ public class Pic0000 extends Graphics
     // 32,256 - 32,767  16 color tables of 32 bytes each
 
     controlBytes = new byte[SCAN_LINES];
-    System.arraycopy (buffer, 32000, controlBytes, 0, controlBytes.length);
+    System.arraycopy (buffer, offset + 32000, controlBytes, 0, controlBytes.length);
 
     colorTables = new ColorTable[16];
-    int ptr = COLOR_TABLE_OFFSET_AUX_0;
+    int ptr = offset + COLOR_TABLE_OFFSET_AUX_0;
+
     for (int i = 0; i < colorTables.length; i++)
     {
       colorTables[i] = new ColorTable (i, buffer, ptr);
@@ -91,8 +114,12 @@ public class Pic0000 extends Graphics
   void mode320Line (PixelWriter pixelWriter, int row, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
     int col = 0;
-    int ptr = row * 160;
+    int ptr = offset + row * 160;
 
     for (int i = 0; i < 160; i++)
     {
@@ -114,8 +141,12 @@ public class Pic0000 extends Graphics
   void mode640Line (PixelWriter pixelWriter, int row, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
     int col = 0;
-    int ptr = row * 160;
+    int ptr = offset + row * 160;
 
     for (int i = 0; i < 160; i++)
     {
@@ -170,7 +201,7 @@ public class Pic0000 extends Graphics
     if (!auxText.isEmpty ())
       text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
 
-    text.append (String.format ("File size  : %,d%n", buffer.length));
+    text.append (String.format ("File size  : %,d%n", dataRecord.data ().length));
     text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
     if (!failureReason.isEmpty ())
       text.append (String.format ("Failure    : %s%n", failureReason));

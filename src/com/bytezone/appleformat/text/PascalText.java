@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.text;
 
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
@@ -10,18 +11,32 @@ public class PascalText extends Text
   private final static int PAGE_SIZE = 1024;
 
   // ---------------------------------------------------------------------------------//
-  public PascalText (AppleFile file, byte[] buffer)
+  public PascalText (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer, 0, buffer.length);
+    super (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
-  public PascalText (AppleFile file, byte[] buffer, int offset, int length)
+  public PascalText (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer, offset, length);
+    super (appleFile, dataRecord);
   }
+
+  // ---------------------------------------------------------------------------------//
+  //  public PascalText (AppleFile file, byte[] buffer)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    super (file, buffer, 0, buffer.length);
+  //  }
+  //
+  //  // ---------------------------------------------------------------------------------//
+  //  public PascalText (AppleFile file, byte[] buffer, int offset, int length)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    super (file, buffer, offset, length);
+  //  }
 
   // ---------------------------------------------------------------------------------//
   @Override
@@ -33,9 +48,10 @@ public class PascalText extends Text
 
     StringBuilder text = new StringBuilder ();
 
-    int ptr = PAGE_SIZE;                                // skip text editor header
+    byte[] buffer = dataRecord.data ();
+    int ptr = dataRecord.offset () + PAGE_SIZE;         // skip text editor header
 
-    while (ptr < buffer.length)
+    while (ptr < dataRecord.max ())
     {
       if (buffer[ptr] == 0x00)                          // padding to page boundary
       {

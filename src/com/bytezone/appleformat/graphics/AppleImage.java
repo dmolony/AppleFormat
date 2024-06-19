@@ -17,11 +17,16 @@ public class AppleImage extends AbstractFormattedAppleFile
   Image image;
 
   // ---------------------------------------------------------------------------------//
-  public AppleImage (AppleFile appleFile, byte[] buffer)
+  public AppleImage (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
 
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
+
+    // fix this
     image = new Image (new ByteArrayInputStream (buffer, 0, appleFile.getFileLength ()));
   }
 

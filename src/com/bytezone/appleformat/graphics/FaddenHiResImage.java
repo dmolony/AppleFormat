@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // https://github.com/fadden/fhpack/blob/master/fhpack.cpp
 // -----------------------------------------------------------------------------------//
@@ -8,16 +9,19 @@ public class FaddenHiResImage extends AppleGraphics
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public FaddenHiResImage (AppleFile appleFile, byte[] buffer)
+  public FaddenHiResImage (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, new byte[0x2000]);
+    super (appleFile);
 
-    assert buffer[0] == 0x66;
+    byte[] buffer = dataRecord.data ();
+    byte[] outBuffer = new byte[0x2000];
 
+    int ptr = dataRecord.offset ();
     int outPtr = 0;
 
-    int ptr = 1;
+    assert buffer[ptr++] == 0x66;
+
     while (ptr < buffer.length)
     {
       int literalLen = (buffer[ptr] & 0xF0) >>> 4;
@@ -28,7 +32,7 @@ public class FaddenHiResImage extends AppleGraphics
 
       if (literalLen > 0)
       {
-        System.arraycopy (buffer, ptr, this.buffer, outPtr, literalLen);
+        System.arraycopy (buffer, ptr, outBuffer, outPtr, literalLen);
         ptr += literalLen;
         outPtr += literalLen;
       }
@@ -45,7 +49,9 @@ public class FaddenHiResImage extends AppleGraphics
 
       int offset2 = (buffer[ptr++] & 0xFF) | ((buffer[ptr++] & 0xFF) << 8);
       while (matchLen-- > 0)
-        this.buffer[outPtr++] = this.buffer[offset2++];
+        outBuffer[outPtr++] = outBuffer[offset2++];
+
+      this.dataRecord = new DataRecord (outBuffer, 0, outBuffer.length);
     }
   }
 }

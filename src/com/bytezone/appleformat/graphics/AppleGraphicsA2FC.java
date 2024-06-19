@@ -1,7 +1,5 @@
 package com.bytezone.appleformat.graphics;
 
-import java.util.Objects;
-
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.filesystem.AppleFile;
 
@@ -27,26 +25,30 @@ public class AppleGraphicsA2FC extends Graphics
   private int auxBufferOffset;
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphicsA2FC (AppleFile appleFile, byte[] buffer, byte[] auxBuffer)
+  //  public AppleGraphicsA2FC (AppleFile appleFile, byte[] buffer, byte[] auxBuffer)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    super (appleFile, buffer);
+  //
+  //    primaryBuffer = buffer;
+  //    this.auxBuffer = Objects.requireNonNull (auxBuffer);
+  //
+  //    buildImage ();
+  //  }
+
+  // ---------------------------------------------------------------------------------//
+  public AppleGraphicsA2FC (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
 
-    primaryBuffer = buffer;
-    this.auxBuffer = Objects.requireNonNull (auxBuffer);
-
-    buildImage ();
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public AppleGraphicsA2FC (AppleFile appleFile, byte[] buffer)
-  // ---------------------------------------------------------------------------------//
-  {
-    super (appleFile, buffer);
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
     if (name.endsWith (".PAC"))
     {
-      DoubleScrunch doubleScrunch = new DoubleScrunch (buffer);
+      DoubleScrunch doubleScrunch = new DoubleScrunch (buffer);     // fix this
       auxBuffer = doubleScrunch.memory[0];
       primaryBuffer = doubleScrunch.memory[1];
     }

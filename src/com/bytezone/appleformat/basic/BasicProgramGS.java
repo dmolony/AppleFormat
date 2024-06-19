@@ -7,7 +7,8 @@ import java.util.List;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
-import com.bytezone.filesystem.AppleFile;;
+import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;;
 
 // -----------------------------------------------------------------------------------//
 public class BasicProgramGS extends AbstractFormattedAppleFile
@@ -85,19 +86,24 @@ public class BasicProgramGS extends AbstractFormattedAppleFile
 
   private final List<SourceLine> sourceLines = new ArrayList<> ();
 
+  byte[] buffer;
+  int offset;
+  int length;
+
   // ---------------------------------------------------------------------------------//
-  public BasicProgramGS (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public BasicProgramGS (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile, dataRecord);
 
     // need to validate these files - seem to sometimes contain palette files
     // 0132 816-Paint.po
 
-    int ptr = offset + 5;
-    while (ptr < buffer.length)
+    buffer = dataRecord.data ();
+    int ptr = dataRecord.offset () + 5;
+    while (ptr < dataRecord.max ())
     {
-      SourceLine sourceLine = new SourceLine (ptr);
+      SourceLine sourceLine = new SourceLine (buffer, ptr);
 
       if (sourceLine.lineNumber == 0)
         break;
@@ -127,7 +133,7 @@ public class BasicProgramGS extends AbstractFormattedAppleFile
     String label;
     String line;
 
-    public SourceLine (int ptr)
+    public SourceLine (byte[] buffer, int ptr)
     {
       int labelLength = buffer[ptr] & 0xFF;
       if (labelLength > 1)
@@ -151,14 +157,14 @@ public class BasicProgramGS extends AbstractFormattedAppleFile
       {
         byte b1 = buffer[ptr++];
         if (isHighBitSet (b1))
-          ptr = tokenOrNumber (b1, text, ptr);
+          ptr = tokenOrNumber (buffer, b1, text, ptr);
         else
           text.append ((b1 & 0xFF) < 32 ? '.' : (char) b1);
       }
       line = text.toString ();
     }
 
-    private int tokenOrNumber (byte b1, StringBuilder text, int ptr)
+    private int tokenOrNumber (byte[] buffer, byte b1, StringBuilder text, int ptr)
     {
       if (b1 == (byte) 0xDF)
       {
@@ -216,8 +222,10 @@ public class BasicProgramGS extends AbstractFormattedAppleFile
     private int get (int ptr, int size)
     {
       int val = 0;
+
       for (int i = 0; i < size; i++)
         val |= (buffer[ptr++] & 0xFF) << (i * 8);
+
       return val;
     }
 
@@ -225,6 +233,7 @@ public class BasicProgramGS extends AbstractFormattedAppleFile
     {
       for (int i = 0; i < size; i++)
         System.out.printf (" %02X ", buffer[ptr++]);
+
       System.out.println ();
     }
 

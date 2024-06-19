@@ -6,6 +6,7 @@ import java.util.List;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public class AppleworksADBFile extends AbstractFormattedAppleFile
@@ -46,11 +47,12 @@ public class AppleworksADBFile extends AbstractFormattedAppleFile
   private final Record standardRecord;
 
   // ---------------------------------------------------------------------------------//
-  public AppleworksADBFile (AppleFile appleFile, byte[] buffer)
+  public AppleworksADBFile (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile, dataRecord);
 
+    byte[] buffer = dataRecord.data ();
     dbMinVersion = buffer[218] & 0xFF;
 
     headerSize = Utility.getShort (buffer, 0);

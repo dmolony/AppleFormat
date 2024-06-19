@@ -2,6 +2,7 @@ package com.bytezone.appleformat.appleworks;
 
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 // -----------------------------------------------------------------------------------//
 public class AppleworksWPFile extends AbstractFormattedAppleFile
@@ -10,12 +11,12 @@ public class AppleworksWPFile extends AbstractFormattedAppleFile
   Header header;
 
   // ---------------------------------------------------------------------------------//
-  public AppleworksWPFile (AppleFile appleFile, byte[] buffer)
+  public AppleworksWPFile (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile, dataRecord);
 
-    header = new Header ();
+    header = new Header (dataRecord.data (), dataRecord.offset ());
   }
 
   // ---------------------------------------------------------------------------------//
@@ -33,6 +34,8 @@ public class AppleworksWPFile extends AbstractFormattedAppleFile
     int ptr = 300; // skip the header
     StringBuilder text = new StringBuilder (header.toString ());
     text.append ("\n");
+
+    byte[] buffer = dataRecord.data ();
 
     while (true)
     {
@@ -164,13 +167,13 @@ public class AppleworksWPFile extends AbstractFormattedAppleFile
 
     private final boolean multipleRulers;
 
-    public Header ()
+    public Header (byte[] buffer, int ptr)
     {
       // see Asimov disks/images 2/pd_collections/apple_linc/
       //      1988-02 side A (no boot).dsk
       assert buffer[4] == 0x4F;
 
-      int ptr = 5;
+      ptr += 5;
       for (int i = 0; i < 80; i++)
         tabStops[i] = (char) buffer[ptr++];
 

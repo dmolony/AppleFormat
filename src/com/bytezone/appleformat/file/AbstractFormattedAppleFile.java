@@ -6,7 +6,9 @@ import java.util.Objects;
 import com.bytezone.appleformat.ApplePreferences;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.AppleForkedFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -23,9 +25,10 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final AppleForkedFile forkedFile;
 
   protected final String name;
-  protected final byte[] buffer;
-  protected final int offset;
-  protected final int length;
+  protected DataRecord dataRecord;
+  //  protected final byte[] buffer;
+  //  protected final int offset;
+  //  protected final int length;
 
   private Image image;
   private String text;
@@ -34,7 +37,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected ApplePreferences preferences;
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (File localFile)
+  public AbstractFormattedAppleFile (File localFile)          // local folder
   // ---------------------------------------------------------------------------------//
   {
     this.localFile = Objects.requireNonNull (localFile);
@@ -44,21 +47,36 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     container = null;
 
     name = localFile.getName ();
-    buffer = null;
-    offset = 0;
-    length = 0;
+    dataRecord = null;
+    //    buffer = null;
+    //    offset = 0;
+    //    length = 0;
   }
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer)
+  //  public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    this (appleFile, buffer, 0, buffer.length);
+  //  }
+  //
+  //  // ---------------------------------------------------------------------------------//
+  //  public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer, int offset,
+  //      int length)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    localFile = null;
+  //    this.appleFile = Objects.requireNonNull (appleFile);
+  //    forkedFile = null;
+  //    container = null;
+  //
+  //    name = appleFile.getFileName ();
+  //    this.buffer = Objects.requireNonNull (buffer);
+  //    this.offset = offset;
+  //    this.length = length;
+  //  }
   // ---------------------------------------------------------------------------------//
-  {
-    this (appleFile, buffer, 0, buffer.length);
-  }
-
-  // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (AppleFile appleFile, byte[] buffer, int offset,
-      int length)
+  public AbstractFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;
@@ -67,9 +85,24 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     container = null;
 
     name = appleFile.getFileName ();
-    this.buffer = Objects.requireNonNull (buffer);
-    this.offset = offset;
-    this.length = length;
+    dataRecord = appleFile.getDataRecord ();
+    //    this.buffer = Objects.requireNonNull (buffer);
+    //    this.offset = offset;
+    //    this.length = length;
+
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public AbstractFormattedAppleFile (AppleFile appleFile, DataRecord dataRecord)
+  // ---------------------------------------------------------------------------------//
+  {
+    localFile = null;
+    this.appleFile = Objects.requireNonNull (appleFile);
+    forkedFile = null;
+    container = null;
+
+    name = appleFile.getFileName ();
+    this.dataRecord = Objects.requireNonNull (dataRecord);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -82,9 +115,10 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     container = null;
 
     name = "";
-    buffer = null;
-    offset = 0;
-    length = 0;
+    dataRecord = null;
+    //    buffer = null;
+    //    offset = 0;
+    //    length = 0;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -98,18 +132,27 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     if (container instanceof AppleFile af)
     {
       appleFile = af;
-      buffer = af.read ();
-      length = af.getFileLength ();
+      //      buffer = af.read ();
+      dataRecord = af.getDataRecord ();
+      //      buffer = dataRecord.data ();
+      //      length = af.getFileLength ();
+    }
+    else if (container instanceof AppleFileSystem afs)
+    {
+      appleFile = null;
+      dataRecord = new DataRecord (afs.getDiskBuffer (), afs.getDiskOffset (),
+          afs.getDiskLength ());
     }
     else
     {
       appleFile = null;
-      buffer = null;
-      length = 0;
+      dataRecord = null;
+      //      buffer = null;
+      //      length = 0;
     }
 
     name = "";
-    offset = 0;
+    //    offset = 0;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -199,7 +242,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public byte[] getBuffer ()
   // ---------------------------------------------------------------------------------//
   {
-    return buffer;
+
+    return dataRecord == null ? null : dataRecord.data ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -207,7 +251,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public int getOffset ()
   // ---------------------------------------------------------------------------------//
   {
-    return offset;
+    //    return offset;
+    return dataRecord.offset ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -215,7 +260,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public int getLength ()
   // ---------------------------------------------------------------------------------//
   {
-    return length;
+    //    return length;
+    return dataRecord.length ();
   }
 
   // ---------------------------------------------------------------------------------//

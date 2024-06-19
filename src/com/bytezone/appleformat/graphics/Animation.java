@@ -15,10 +15,12 @@ public class Animation extends Pic0000
   int delay;
 
   // ---------------------------------------------------------------------------------//
-  public Animation (AppleFile appleFile, byte[] buffer)
+  public Animation (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
+
+    byte[] buffer = dataRecord.data ();
 
     //    int len = HexFormatter.getLong (buffer, 0x8000);
     delay = Utility.getLong (buffer, 0x8004);
@@ -54,6 +56,8 @@ public class Animation extends Pic0000
   public void nextFrame ()
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = dataRecord.data ();
+
     int ptr = framePointers.get (frameNumber++);
     frameNumber %= framePointers.size ();
 

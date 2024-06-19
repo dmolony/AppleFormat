@@ -20,19 +20,23 @@ public class AppleGraphics3201 extends Graphics
   private byte[] unpackedBuffer;
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphics3201 (AppleFile appleFile, byte[] buffer)
+  public AppleGraphics3201 (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
+
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
     //     0 -     3  APP/0
     //     4 - 06403  200 color tables
     // 06404 - eof    packed pixel data
 
-    int ptr = 4;
+    int ptr = offset + 4;
     for (int i = 0; i < colorTables.length; i++)
     {
-      colorTables[i] = new ColorTable (i, this.buffer, ptr);
+      colorTables[i] = new ColorTable (i, buffer, ptr);
       colorTables[i].reverse ();
       ptr += COLOR_TABLE_SIZE;
     }
@@ -105,7 +109,7 @@ public class AppleGraphics3201 extends Graphics
     text.append (String.format ("File type  : $%02X    %s%n", file.getFileType (),
         file.getFileTypeText ()));
     text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
-    text.append (String.format ("File size  : %,d%n", buffer.length));
+    text.append (String.format ("File size  : %,d%n", dataRecord.length ()));
     text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
     //    if (!failureReason.isEmpty ())
     //      text.append (String.format ("Failure    : %s%n", failureReason));

@@ -14,6 +14,7 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.basic.ApplesoftConstants;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
@@ -30,12 +31,19 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   private List<Integer> entryPoints;
   private List<StringLocation> stringLocations;
 
+  byte[] buffer;
+  int offset;
+  int length;
+
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length,
-      int address)
+  public AssemblerProgram (AppleFile appleFile, DataRecord dataRecord, int address)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile, dataRecord);
+
+    buffer = dataRecord.data ();
+    offset = dataRecord.offset ();
+    length = dataRecord.length ();
 
     preferences = FormattedAppleFileFactory.assemblerPreferences;
 
@@ -53,12 +61,16 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (AppleFile appleFile, byte[] buffer, int offset, int length,
-      int address, int executeOffset)
+  public AssemblerProgram (AppleFile appleFile, DataRecord dataRecord, int address,
+      int executeOffset)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, buffer, offset, length, address);
+    this (appleFile, dataRecord, address);
     this.executeOffset = executeOffset;
+
+    buffer = dataRecord.data ();
+    offset = dataRecord.offset ();
+    length = dataRecord.length ();
   }
 
   // ---------------------------------------------------------------------------------//

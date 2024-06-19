@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.fonts;
 
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
@@ -12,13 +13,17 @@ public class FontFile extends CharacterList
   private static final int charsX = 16;
 
   // ---------------------------------------------------------------------------------//
-  public FontFile (AppleFile file, byte[] buffer, int address)
+  public FontFile (AppleFile file, DataRecord dataRecord, int address)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer);
+    super (file, dataRecord);
+
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
     loadAddress = address;
-    int ptr = 0;
+    int ptr = offset;
 
     while (ptr < buffer.length)
     {

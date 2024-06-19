@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -26,10 +27,17 @@ abstract class CharacterList extends AbstractFormattedAppleFile
   int loadAddress;
 
   // ---------------------------------------------------------------------------------//
-  public CharacterList (AppleFile file, byte[] buffer)
+  public CharacterList (AppleFile file)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, buffer);
+    super (file);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public CharacterList (AppleFile file, DataRecord dataRecord)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (file, dataRecord);
   }
 
   // ---------------------------------------------------------------------------------//

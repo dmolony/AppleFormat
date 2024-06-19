@@ -2,14 +2,16 @@ package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.FilePascalProcedure;
 
 public class PascalProcedure extends AbstractFormattedAppleFile
 {
   // ---------------------------------------------------------------------------------//
-  public PascalProcedure (AppleFile appleFile, byte[] buffer, int offset, int length)
+  public PascalProcedure (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer, offset, length);
+    super (appleFile, dataRecord);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -17,14 +19,32 @@ public class PascalProcedure extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    if (buffer == null)
+    if (dataRecord.length () == 0)
       return "This file has no data\n\n" + appleFile.getErrorMessage ();
 
     StringBuilder text = new StringBuilder ();
 
     text.append (appleFile);
+    text.append (decode ());
 
     return Utility.rtrim (text);
+  }
+
+  private String decode ()
+  {
+    StringBuilder text = new StringBuilder ();
+    FilePascalProcedure fpp = (FilePascalProcedure) appleFile;
+
+    int ptr = fpp.getCodeStart ();
+    int max = fpp.getCodeEnd ();
+
+    //    while (ptr < max)
+    //    {
+    //      System.out.printf ("%02X ", buffer[ptr]);
+    //      ptr++;
+    //    }
+
+    return text.toString ();
   }
 
   /*

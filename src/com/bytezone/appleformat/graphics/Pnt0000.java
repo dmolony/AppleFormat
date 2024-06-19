@@ -3,6 +3,7 @@ package com.bytezone.appleformat.graphics;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -22,16 +23,36 @@ public class Pnt0000 extends Graphics
   int rows;
 
   // ---------------------------------------------------------------------------------//
-  public Pnt0000 (AppleFile appleFile, byte[] buffer)
+  public Pnt0000 (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, buffer);
+    super (appleFile);
+
+    setup ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public Pnt0000 (AppleFile appleFile, DataRecord dataRecord)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (appleFile, dataRecord);
+
+    setup ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private void setup ()
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] buffer = dataRecord.data ();
+    int offset = dataRecord.offset ();
+    int length = dataRecord.length ();
 
     // 00000 - 00032  1 Color table
     // 00033 - 00545  empty
     // 00546 - eof    packed pixel data
 
-    colorTable = new ColorTable (0, this.buffer, 0);
+    colorTable = new ColorTable (0, buffer, 0);
 
     unpackedBuffer = new byte[Utility.calculateBufferSize (buffer, 0x222)];
     Utility.unpackBytes (buffer, 0x222, buffer.length, unpackedBuffer, 0);
