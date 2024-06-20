@@ -562,7 +562,7 @@ public class FormattedAppleFileFactory
     {
       case 3 -> new PascalText (appleFile, dataRecord);
       case 98 -> new PascalSegment (appleFile, dataRecord);
-      case 99 -> new PascalProcedure (appleFile, dataRecord);
+      case 99 -> new PascalProcedure (appleFile);
       //      default -> new DataFile (appleFile, buffer, 0, eof);
       default -> new DataFile (appleFile);
     };

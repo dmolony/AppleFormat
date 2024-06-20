@@ -48,6 +48,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
     name = localFile.getName ();
     dataRecord = null;
+
     //    buffer = null;
     //    offset = 0;
     //    length = 0;
@@ -116,6 +117,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
     name = "";
     dataRecord = null;
+
     //    buffer = null;
     //    offset = 0;
     //    length = 0;
@@ -132,10 +134,10 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     if (container instanceof AppleFile af)
     {
       appleFile = af;
-      //      buffer = af.read ();
       dataRecord = af.getDataRecord ();
-      //      buffer = dataRecord.data ();
-      //      length = af.getFileLength ();
+      int eof = af.getFileLength ();
+      if (dataRecord.length () != eof)
+        dataRecord = new DataRecord (dataRecord.data (), dataRecord.offset (), eof);
     }
     else if (container instanceof AppleFileSystem afs)
     {
@@ -147,12 +149,9 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     {
       appleFile = null;
       dataRecord = null;
-      //      buffer = null;
-      //      length = 0;
     }
 
     name = "";
-    //    offset = 0;
   }
 
   // ---------------------------------------------------------------------------------//

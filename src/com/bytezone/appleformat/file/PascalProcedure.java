@@ -2,16 +2,15 @@ package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
 import com.bytezone.filesystem.FilePascalProcedure;
 
 public class PascalProcedure extends AbstractFormattedAppleFile
 {
   // ---------------------------------------------------------------------------------//
-  public PascalProcedure (AppleFile appleFile, DataRecord dataRecord)
+  public PascalProcedure (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataRecord);
+    super (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
