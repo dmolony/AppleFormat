@@ -1,11 +1,18 @@
 package com.bytezone.appleformat.file;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.DataRecord;
 import com.bytezone.filesystem.FilePascalProcedure;
 
 public class PascalProcedure extends AbstractFormattedAppleFile
 {
+  private int jumpTable = -8;
+  private List<PascalCodeStatement> statements;
+
   // ---------------------------------------------------------------------------------//
   public PascalProcedure (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
@@ -21,27 +28,53 @@ public class PascalProcedure extends AbstractFormattedAppleFile
     if (dataRecord.length () == 0)
       return "This file has no data\n\n" + appleFile.getErrorMessage ();
 
+    if (statements == null)
+    {
+      statements = new ArrayList<> ();
+      decode ();
+    }
+
     StringBuilder text = new StringBuilder ();
 
-    text.append (appleFile);
-    text.append (decode ());
+    //    text.append (appleFile);
+    //    text.append ("\n\n");
+
+    for (PascalCodeStatement pascalCodeStatement : statements)
+      text.append (pascalCodeStatement);
 
     return Utility.rtrim (text);
   }
 
+  // ---------------------------------------------------------------------------------//
   private String decode ()
+  // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
     FilePascalProcedure fpp = (FilePascalProcedure) appleFile;
 
+    int procHeader = fpp.getProcHeader ();
     int ptr = fpp.getCodeStart ();
     int max = fpp.getCodeEnd ();
 
-    //    while (ptr < max)
-    //    {
-    //      System.out.printf ("%02X ", buffer[ptr]);
-    //      ptr++;
-    //    }
+    DataRecord dataRecord = fpp.getDataRecord ();
+    byte[] buffer = dataRecord.data ();
+
+    while (ptr < max)
+    {
+      PascalCodeStatement pascalCodeStatement =
+          new PascalCodeStatement (buffer, ptr, procHeader);
+      statements.add (pascalCodeStatement);
+
+      if (pascalCodeStatement.val == 185 || pascalCodeStatement.val == 161)  // UJP, FJP
+        if (pascalCodeStatement.p1 < jumpTable)
+        {
+          System.out.printf ("jump @ %04X%n", ptr);
+          jumpTable = pascalCodeStatement.p1;
+          max = procHeader + jumpTable;
+        }
+
+      ptr += pascalCodeStatement.length;
+    }
 
     return text.toString ();
   }
@@ -84,7 +117,7 @@ public class PascalProcedure extends AbstractFormattedAppleFile
         break;
       }
       statements.add (cs);
-      if (cs.val == 185 || cs.val == 161)
+      if (cs.val == 185 || cs.val == 161)         // UJP, FJP
         if (cs.p1 < jumpTable)
         {
           jumpTable = cs.p1;

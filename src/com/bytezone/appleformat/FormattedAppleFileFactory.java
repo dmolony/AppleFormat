@@ -352,6 +352,7 @@ public class FormattedAppleFileFactory
     };
   }
 
+  // https://nicole.express/2024/phasing-in-and-out-of-existence.html
   // ---------------------------------------------------------------------------------//
   // 00 NON
   //       AppleData              .TIFF && isTiff()  not supported by JavaFX

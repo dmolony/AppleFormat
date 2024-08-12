@@ -31,24 +31,22 @@ public class Pnt0002 extends Graphics
     super (appleFile);
 
     byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
-
-    int ptr = offset;
-    int maxLen = appleFile.getFileLength ();
+    int ptr = dataRecord.offset ();
+    //    int maxLen = appleFile.getFileLength ();
 
     while (ptr < dataRecord.max ())
     {
       int len = Utility.getLong (buffer, ptr);
 
-      if (len == 0 || len > ptr + maxLen)
+      if (len == 0 || len >= ptr + dataRecord.max ())
       {
-        System.out.printf ("Block length: %d%n", len);
+        System.out.printf ("Pnt0002 Block length %s: %d%n", appleFile.getFileName (),
+            len);
         break;
       }
 
       String kind = HexFormatter.getPascalString (buffer, ptr + 4);
-      byte[] data = new byte[Math.min (len, maxLen - ptr)];
+      byte[] data = new byte[len];
       System.arraycopy (buffer, ptr, data, 0, data.length);
 
       switch (kind)

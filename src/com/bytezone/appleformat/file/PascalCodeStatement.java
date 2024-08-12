@@ -137,6 +137,15 @@ public class PascalCodeStatement implements PascalConstants
             p1 = buffer[ptr + 1] & 0xFF;
             p2 = getValueOfB (buffer, ptr + 2, length - 2);
             setParameters (p1, p2);
+
+            if (val == 178 || val == 182)
+              if (p1 == 1)
+                description = description.replaceFirst ("th", "st");
+              else if (p1 == 2)
+                description = description.replaceFirst ("th", "nd");
+              else if (p1 == 3)
+                description = description.replaceFirst ("th", "rd");
+
             break;
 
           // UB1, UB2
@@ -281,6 +290,7 @@ public class PascalCodeStatement implements PascalConstants
   {
     String hex = getHex (buffer, ptr, length > 4 ? 4 : length);
     StringBuilder text = new StringBuilder ();
+
     text.append (String.format ("%2s%05X: %-11s  %-6s %-10s  %s%n",
         jumpTarget ? "->" : "", ptr, hex, mnemonic, extras, description));
     if (length > 4)
@@ -316,11 +326,15 @@ public class PascalCodeStatement implements PascalConstants
       System.out.println ("too many");
       return "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
     }
+
     StringBuilder text = new StringBuilder ();
+
     for (int i = 0; i < length; i++)
       text.append (String.format ("%02X ", buffer[offset + i]));
+
     if (text.length () > 0)
       text.deleteCharAt (text.length () - 1);
+
     return text.toString ();
   }
 

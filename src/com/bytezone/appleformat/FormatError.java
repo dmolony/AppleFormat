@@ -1,6 +1,7 @@
 package com.bytezone.appleformat;
 
 import com.bytezone.appleformat.file.FormattedAppleFile;
+import com.bytezone.filesystem.DataRecord;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -42,6 +43,14 @@ public class FormatError implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return emptyImage;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public DataRecord getDataRecord ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return null;
   }
 
   // ---------------------------------------------------------------------------------//
