@@ -17,11 +17,5 @@ public interface FormattedAppleFile
 
   public DataRecord getDataRecord ();
 
-  public byte[] getBuffer ();
-
-  public int getOffset ();
-
-  public int getLength ();
-
   public ApplePreferences getPreferences ();
 }

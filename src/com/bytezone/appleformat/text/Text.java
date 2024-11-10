@@ -18,6 +18,7 @@ public class Text extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
+
     textFormatter = new TextFormatter (this);
     preferences = FormattedAppleFileFactory.textPreferences;
   }
@@ -27,6 +28,7 @@ public class Text extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);
+
     textFormatter = new TextFormatter (this);
     preferences = FormattedAppleFileFactory.textPreferences;
   }
@@ -49,12 +51,12 @@ public class Text extends AbstractFormattedAppleFile
   //  }
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  public byte[] getBuffer ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return dataRecord.data ();        // this shouldn't exist
-  }
+  //  @Override
+  //  public byte[] getBuffer ()
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    return dataRecord.data ();        // this shouldn't exist
+  //  }
 
   // ---------------------------------------------------------------------------------//
   @Override

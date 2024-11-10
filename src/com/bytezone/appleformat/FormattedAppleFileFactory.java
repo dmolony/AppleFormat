@@ -63,6 +63,7 @@ import com.bytezone.appleformat.text.TextPreferences;
 import com.bytezone.appleformat.visicalc.VisicalcFile;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.AppleFile.ForkType;
 import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.AppleForkedFile;
 import com.bytezone.filesystem.DataRecord;
@@ -71,7 +72,6 @@ import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FilePascalCodeSegment;
 import com.bytezone.filesystem.FileProdos;
-import com.bytezone.filesystem.FileProdos.ForkType;
 import com.bytezone.filesystem.ForkNuFX;
 import com.bytezone.filesystem.ForkProdos;
 

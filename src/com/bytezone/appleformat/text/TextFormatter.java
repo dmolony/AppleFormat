@@ -8,24 +8,31 @@ public class TextFormatter
 {
   Text text;
   TextPreferences textPreferences = FormattedAppleFileFactory.textPreferences;
+
   byte[] buffer;
+  int offset;
+  int length;
 
   // ---------------------------------------------------------------------------------//
   public TextFormatter (Text text)
   // ---------------------------------------------------------------------------------//
   {
     this.text = text;
-    this.buffer = text.getBuffer ();
+    //    this.buffer = text.getBuffer ();
+    buffer = text.getDataRecord ().data ();
+    offset = text.getDataRecord ().offset ();
+    length = text.getDataRecord ().length ();
   }
 
   // ---------------------------------------------------------------------------------//
   public void append (StringBuilder text)
   // ---------------------------------------------------------------------------------//
   {
-    int ptr = 0;
-    int length = this.text.getLength ();
+    int ptr = offset;
+    int max = offset + length;
+    //    int length = this.text.getLength ();
 
-    while (ptr < length)
+    while (ptr < max)
     {
       if (buffer[ptr] == 0x00)
         break;
@@ -43,9 +50,10 @@ public class TextFormatter
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder line = new StringBuilder ();
-    int length = this.text.getLength ();
+    //    int length = this.text.getLength ();
+    int max = offset + length;
 
-    while (ptr < length)
+    while (ptr < max)
     {
       int c = buffer[ptr++] & 0x7F;
       if (c == 0x0D || c == 0x00)

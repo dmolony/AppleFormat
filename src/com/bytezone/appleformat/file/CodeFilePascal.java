@@ -39,4 +39,12 @@ public class CodeFilePascal extends AbstractFormattedAppleFile
 
     return Utility.rtrim (text);
   }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  protected String buildExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return "No additional bollocks";
+  }
 }

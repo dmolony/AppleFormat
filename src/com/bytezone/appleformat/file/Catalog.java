@@ -38,4 +38,20 @@ public class Catalog extends AbstractFormattedAppleFile
   {
     return forkedFile != null ? forkedFile.getCatalog () : container.getCatalogText ();
   }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String buildExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return appleFile != null ? appleFile.getFileName () : "who?";
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String toString ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return forkedFile != null ? forkedFile.toString () : container.toString ();
+  }
 }
