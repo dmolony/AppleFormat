@@ -1,12 +1,12 @@
 package com.bytezone.appleformat.file;
 
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.FilePascalSegment;
+import com.bytezone.filesystem.FilePascalCode;
 
-public class PascalSegment extends AbstractFormattedAppleFile
+public class PascalCode extends AbstractFormattedAppleFile
 {
   // ---------------------------------------------------------------------------------//
-  public PascalSegment (AppleFile appleFile)
+  public PascalCode (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
@@ -17,10 +17,7 @@ public class PascalSegment extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    if (dataRecord.length () == 0)
-      return "This file has no data\n\n" + appleFile.getErrorMessage ();
-
-    return ((FilePascalSegment) appleFile).getCatalogText ();
+    return ((FilePascalCode) appleFile).getCatalogText ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -28,6 +25,6 @@ public class PascalSegment extends AbstractFormattedAppleFile
   protected String buildExtras ()
   // ---------------------------------------------------------------------------------//
   {
-    return "No additional hairy bollocks";
+    return "No additional bollocks";
   }
 }

@@ -1,7 +1,6 @@
 package com.bytezone.appleformat.text;
 
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
 import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
@@ -18,11 +17,11 @@ public class PascalText extends Text
   }
 
   // ---------------------------------------------------------------------------------//
-  public PascalText (AppleFile appleFile, DataRecord dataRecord)
-  // ---------------------------------------------------------------------------------//
-  {
-    super (appleFile, dataRecord);
-  }
+  //  public PascalText (AppleFile appleFile, DataRecord dataRecord)
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    super (appleFile, dataRecord);
+  //  }
 
   // ---------------------------------------------------------------------------------//
   //  public PascalText (AppleFile file, byte[] buffer)

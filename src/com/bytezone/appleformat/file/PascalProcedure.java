@@ -8,7 +8,9 @@ import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.DataRecord;
 import com.bytezone.filesystem.FilePascalProcedure;
 
+// -----------------------------------------------------------------------------------//
 public class PascalProcedure extends AbstractFormattedAppleFile
+// -----------------------------------------------------------------------------------//
 {
   private int jumpTable = -8;
   private List<PascalCodeStatement> statements;

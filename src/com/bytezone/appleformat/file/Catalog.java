@@ -36,7 +36,8 @@ public class Catalog extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    return forkedFile != null ? forkedFile.getCatalog () : container.getCatalogText ();
+    return forkedFile != null ? forkedFile.getCatalogText ()
+        : container.getCatalogText ();
   }
 
   // ---------------------------------------------------------------------------------//

@@ -23,18 +23,16 @@ import java.util.prefs.Preferences;
 import com.bytezone.appleformat.appleworks.AppleworksADBFile;
 import com.bytezone.appleformat.appleworks.AppleworksSSFile;
 import com.bytezone.appleformat.appleworks.AppleworksWPFile;
-import com.bytezone.appleformat.assembler.AssemblerPreferences;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
-import com.bytezone.appleformat.basic.ApplesoftBasicPreferences;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.BasicCpmProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.file.Catalog;
-import com.bytezone.appleformat.file.CodeFilePascal;
 import com.bytezone.appleformat.file.DataFile;
 import com.bytezone.appleformat.file.DataFileProdos;
 import com.bytezone.appleformat.file.FormattedAppleFile;
 import com.bytezone.appleformat.file.LocalFolder;
+import com.bytezone.appleformat.file.PascalCode;
 import com.bytezone.appleformat.file.PascalProcedure;
 import com.bytezone.appleformat.file.PascalSegment;
 import com.bytezone.appleformat.file.ResourceFile;
@@ -47,7 +45,6 @@ import com.bytezone.appleformat.graphics.AppleGraphics3201;
 import com.bytezone.appleformat.graphics.AppleGraphicsA2FC;
 import com.bytezone.appleformat.graphics.AppleImage;
 import com.bytezone.appleformat.graphics.FaddenHiResImage;
-import com.bytezone.appleformat.graphics.GraphicsPreferences;
 import com.bytezone.appleformat.graphics.IconFile;
 import com.bytezone.appleformat.graphics.Pic0000;
 import com.bytezone.appleformat.graphics.Pic0001;
@@ -59,7 +56,6 @@ import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.CpmText;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.Text;
-import com.bytezone.appleformat.text.TextPreferences;
 import com.bytezone.appleformat.visicalc.VisicalcFile;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
@@ -70,7 +66,6 @@ import com.bytezone.filesystem.DataRecord;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileNuFX;
-import com.bytezone.filesystem.FilePascalCodeSegment;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.ForkNuFX;
 import com.bytezone.filesystem.ForkProdos;
@@ -79,115 +74,20 @@ import com.bytezone.filesystem.ForkProdos;
 public class FormattedAppleFileFactory
 // -----------------------------------------------------------------------------------//
 {
-  public static ApplesoftBasicPreferences basicPreferences;
-  public static AssemblerPreferences assemblerPreferences;
-  public static GraphicsPreferences graphicsPreferences;
-  public static TextPreferences textPreferences;
+  PreferencesFactory preferencesFactory;
 
   // ---------------------------------------------------------------------------------//
   public FormattedAppleFileFactory (Preferences prefs)
   // ---------------------------------------------------------------------------------//
   {
-    basicPreferences = new ApplesoftBasicPreferences (prefs);
-    assemblerPreferences = new AssemblerPreferences (prefs);
-    graphicsPreferences = new GraphicsPreferences (prefs);
-    textPreferences = new TextPreferences (prefs);
+    preferencesFactory = new PreferencesFactory (prefs);
   }
 
   // ---------------------------------------------------------------------------------//
   public ApplePreferences getPreferences (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    return switch (appleFile.getFileSystemType ())
-    {
-      case DOS3, DOS4 -> getDosPreferences (appleFile);
-      case PRODOS -> getProdosPreferences (appleFile);
-      case PASCAL -> getPascalPreferences (appleFile);
-      case CPM -> getCpmPreferences (appleFile);
-      default -> null;
-    };
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private ApplePreferences getDosPreferences (AppleFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    return switch (appleFile.getFileType ())
-    {
-      case 0 -> textPreferences;
-      case 1 -> null;
-      case 2, 32 -> basicPreferences;
-      case 4, 16, 64 -> getDosBinaryPreferences (appleFile);
-      default -> null;
-    };
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private ApplePreferences getDosBinaryPreferences (AppleFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    //    byte[] buffer = appleFile.read ();
-    DataRecord dataRecord = appleFile.getDataRecord ();
-    byte[] buffer = dataRecord.data ();
-
-    int address = Utility.getShort (buffer, 0);
-    int length = Utility.getShort (buffer, 2);
-
-    if ((address == 0x2000 || address == 0x4000)        // hi-res page address
-        && (length > 0x1F00 && length <= 0x4000))
-      return graphicsPreferences;
-
-    return assemblerPreferences;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private ApplePreferences getProdosPreferences (AppleFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    return switch (appleFile.getFileType ())
-    {
-      case FILE_TYPE_TEXT -> textPreferences;
-      case FILE_TYPE_BINARY -> assemblerPreferences;
-      case FILE_TYPE_PNT -> graphicsPreferences;
-      case FILE_TYPE_PIC -> graphicsPreferences;
-      case FILE_TYPE_ANI -> graphicsPreferences;
-      case FILE_TYPE_FNT -> graphicsPreferences;
-      case FILE_TYPE_FONT -> graphicsPreferences;
-      case FILE_TYPE_APPLESOFT_BASIC -> basicPreferences;
-      case FILE_TYPE_INTEGER_BASIC -> null;
-      case FILE_TYPE_ASP -> null;
-      case FILE_TYPE_AWP -> textPreferences;
-      case FILE_TYPE_ADB -> null;
-      case FILE_TYPE_ICN -> graphicsPreferences;
-      case FILE_TYPE_BAT -> textPreferences;
-      case FILE_TYPE_NON -> null;
-      default -> null;
-    };
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private ApplePreferences getPascalPreferences (AppleFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    return switch (appleFile.getFileType ())
-    {
-      case 3 -> textPreferences;
-      default -> null;
-    };
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private ApplePreferences getCpmPreferences (AppleFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    return switch (appleFile.getFileTypeText ())
-    {
-      case "DOC" -> textPreferences;
-      case "HLP" -> textPreferences;
-      case "TXT" -> textPreferences;
-      case "ASM" -> textPreferences;
-      default -> null;
-    };
+    return preferencesFactory.getPreferences (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -202,9 +102,14 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
+    //    System.out.printf ("File system type %s%n", appleFile.getFileSystemType ());
+    //    System.out.printf ("File type %d%n", appleFile.getFileType ());
+    //    System.out.println ("------------");
+
     try
     {
-      if (appleFile instanceof AppleContainer container)
+      if (appleFile instanceof AppleContainer container     //
+          && appleFile.getFileType () == 0)                 // ignore actual files
         return new Catalog (container);
 
       if (appleFile.hasEmbeddedFileSystem ())
@@ -219,8 +124,6 @@ public class FormattedAppleFileFactory
         case DOS4 -> getFormattedDosFile (appleFile);
         case PRODOS -> getFormattedProdosFile (appleFile);
         case PASCAL -> getFormattedPascalFile (appleFile);
-        case PASCAL_CODE -> getFormattedPascalCodeFile (
-            (FilePascalCodeSegment) appleFile);
         case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
         case NUFX -> getFormattedNufxFile (appleFile);
         case BIN2 -> getFormattedBin2File ((FileBinary2) appleFile);
@@ -237,6 +140,11 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFileSystem appleFileSystem)
   // ---------------------------------------------------------------------------------//
   {
+    //    if (appleFileSystem.getFileSystemType () == FileSystemType.PASCAL)
+    //      System.out.println ("file system");
+    //    if (appleFileSystem.getFileSystemType () == FileSystemType.PASCAL_CODE)
+    //      System.out.println ("file code");
+
     return new Catalog (appleFileSystem);
   }
 
@@ -537,13 +445,8 @@ public class FormattedAppleFileFactory
 
     String name = appleFile.getFileName ();
     if (name.endsWith (".TIFF") && AppleImage.isTiff (buffer))
-    {
-      //      return new DataFile (appleFile, buffer, 0, eof);    // JavaFX doesn't support TIFF
       return new DataFile (appleFile);    // JavaFX doesn't support TIFF
-      //      return new AppleImage (appleFile, buffer);
-    }
 
-    //    return new DataFile (appleFile, buffer, 0, eof);
     return new DataFile (appleFile);
   }
 
@@ -551,45 +454,20 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile getFormattedPascalFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    //    byte[] buffer = appleFile.read ();
-    DataRecord dataRecord = appleFile.getDataRecord ();
-    byte[] buffer = dataRecord.data ();
-    int fileType = appleFile.getFileType ();
-    int eof = appleFile.getFileLength ();
-
-    dataRecord = new DataRecord (buffer, 0, eof);
-
-    return switch (fileType)
+    return switch (appleFile.getFileType ())
     {
-      case 3 -> new PascalText (appleFile, dataRecord);
-      case 98 -> new PascalSegment (appleFile, dataRecord);
-      case 99 -> new PascalProcedure (appleFile);
-      //      default -> new DataFile (appleFile, buffer, 0, eof);
+      case 3 -> new PascalText (appleFile);
+      case 2 -> new PascalCode (appleFile);
+      case 98 -> new PascalSegment (appleFile);         // not a real file type
+      case 99 -> new PascalProcedure (appleFile);       // not a real file type
       default -> new DataFile (appleFile);
     };
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedPascalCodeFile (FilePascalCodeSegment appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    //    byte[] buffer = appleFile.read ();
-    DataRecord dataRecord = appleFile.getDataRecord ();
-    byte[] buffer = dataRecord.data ();
-    int eof = appleFile.getFileLength ();
-
-    //    return new CodeFilePascal (appleFile, buffer, 0, eof);
-    return new CodeFilePascal (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile getFormattedCpmFile (FileCpm appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    //    byte[] buffer = appleFile.read ();
-    //    DataRecord dataRecord = appleFile.getDataRecord ();
-    //    byte[] buffer = dataRecord.data ();
-
     return switch (appleFile.getFileTypeText ())
     {
       case "DOC" -> new CpmText (appleFile);
@@ -597,7 +475,6 @@ public class FormattedAppleFileFactory
       case "TXT" -> new CpmText (appleFile);
       case "ASM" -> new CpmText (appleFile);
       case "BAS" -> new BasicCpmProgram (appleFile);
-      //      default -> new DataFile (appleFile, buffer);
       default -> new DataFile (appleFile);
     };
   }
@@ -608,9 +485,9 @@ public class FormattedAppleFileFactory
   {
     //    byte[] buffer = appleFile.read ();
     DataRecord dataRecord = appleFile.getDataRecord ();
-    byte[] buffer = dataRecord.data ();
+    //    byte[] buffer = dataRecord.data ();
     int fileType = appleFile.getFileType ();
-    int length = appleFile.getEof ();
+    //    int length = appleFile.getEof ();
     int auxType = appleFile.getAuxType ();
 
     switch (appleFile.getOsType ())
@@ -731,9 +608,10 @@ public class FormattedAppleFileFactory
   public void save ()
   // ---------------------------------------------------------------------------------//
   {
-    basicPreferences.save ();
-    assemblerPreferences.save ();
-    textPreferences.save ();
-    graphicsPreferences.save ();
+    preferencesFactory.save ();
+    //    basicPreferences.save ();
+    //    assemblerPreferences.save ();
+    //    textPreferences.save ();
+    //    graphicsPreferences.save ();
   }
 }

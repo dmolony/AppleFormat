@@ -1,6 +1,6 @@
 package com.bytezone.appleformat.text;
 
-import com.bytezone.appleformat.FormattedAppleFileFactory;
+import com.bytezone.appleformat.PreferencesFactory;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.DataRecord;
@@ -20,7 +20,7 @@ public class Text extends AbstractFormattedAppleFile
     super (appleFile);
 
     textFormatter = new TextFormatter (this);
-    preferences = FormattedAppleFileFactory.textPreferences;
+    preferences = PreferencesFactory.textPreferences;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -30,7 +30,7 @@ public class Text extends AbstractFormattedAppleFile
     super (appleFile, dataRecord);
 
     textFormatter = new TextFormatter (this);
-    preferences = FormattedAppleFileFactory.textPreferences;
+    preferences = PreferencesFactory.textPreferences;
   }
 
   // ---------------------------------------------------------------------------------//

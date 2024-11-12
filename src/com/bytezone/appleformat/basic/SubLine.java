@@ -22,8 +22,8 @@ import static com.bytezone.appleformat.Utility.isPossibleVariable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.HexFormatter;
+import com.bytezone.appleformat.PreferencesFactory;
 
 // -----------------------------------------------------------------------------------//
 public class SubLine implements ApplesoftConstants
@@ -713,8 +713,7 @@ public class SubLine implements ApplesoftConstants
   {
     StringBuilder line = new StringBuilder ();
 
-    ApplesoftBasicPreferences basicPreferences =
-        FormattedAppleFileFactory.basicPreferences;
+    ApplesoftBasicPreferences basicPreferences = PreferencesFactory.basicPreferences;
     boolean showThen = basicPreferences.showThen && basicPreferences.displayFormat == 1;
 
     // All sublines end with 0 or : except IF lines that are split into two

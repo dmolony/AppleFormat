@@ -25,7 +25,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final AppleForkedFile forkedFile;
 
   protected final String name;
-  protected DataRecord dataRecord;
+  protected DataRecord dataRecord;      // would be final except for FaddenHiResImage
 
   private Image image;
   private String text;
@@ -42,23 +42,29 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     appleFile = null;
     forkedFile = null;
     container = null;
+    System.out.println ("local folder - " + localFile.getName ());
 
     name = localFile.getName ();
     dataRecord = null;
   }
 
+  // Pascal proc (inside segment)
+  // Data fork
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     this (appleFile, appleFile.getDataRecord ());
+    System.out.println ("AF");
   }
 
+  // Resource fork
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (AppleFile appleFile, DataRecord dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;
+    System.out.printf ("AF, DR - %s%n", appleFile.getFileName ());
     this.appleFile = Objects.requireNonNull (appleFile);
     forkedFile = null;
     container = null;
@@ -67,6 +73,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     this.dataRecord = Objects.requireNonNull (dataRecord);
   }
 
+  // Prodos file with forks
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (AppleForkedFile forkedFile)
   // ---------------------------------------------------------------------------------//
@@ -75,11 +82,16 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     appleFile = null;
     this.forkedFile = Objects.requireNonNull (forkedFile);
     container = null;
+    System.out.printf ("FF - %s%n", ((AppleFile) forkedFile).getFileName ());
 
     name = "";
     dataRecord = null;
   }
 
+  // Disk file - file system
+  // Disk file - hybrid disk
+  // Pascal code file
+  // Pascal segment (inside code file)
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (AppleContainer container)
   // ---------------------------------------------------------------------------------//
@@ -91,21 +103,25 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     if (container instanceof AppleFile af)
     {
       appleFile = af;
-      dataRecord = af.getDataRecord ();
+      System.out.printf ("AC -> AF - %s%n", af.getFileName ());
+
       int eof = af.getFileLength ();
-      if (dataRecord.length () != eof)
-        dataRecord = new DataRecord (dataRecord.data (), dataRecord.offset (), eof);
+      DataRecord temp = af.getDataRecord ();
+
+      dataRecord = temp.length () == eof ? temp
+          : new DataRecord (temp.data (), temp.offset (), eof);
     }
     else if (container instanceof AppleFileSystem afs)
     {
       appleFile = null;
-      dataRecord = new DataRecord (afs.getDiskBuffer (), afs.getDiskOffset (),
-          afs.getDiskLength ());
+      dataRecord = afs.getDataRecord ();
+      System.out.printf ("AC -> AFS - %s%n", afs.getFileName ());
     }
     else
     {
       appleFile = null;
       dataRecord = null;
+      System.out.printf ("AC -> null - %s%n", "??");
     }
 
     name = "";

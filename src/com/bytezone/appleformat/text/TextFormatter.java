@@ -1,13 +1,13 @@
 package com.bytezone.appleformat.text;
 
-import com.bytezone.appleformat.FormattedAppleFileFactory;
+import com.bytezone.appleformat.PreferencesFactory;
 
 // -----------------------------------------------------------------------------------//
 public class TextFormatter
 // -----------------------------------------------------------------------------------//
 {
   Text text;
-  TextPreferences textPreferences = FormattedAppleFileFactory.textPreferences;
+  TextPreferences textPreferences = PreferencesFactory.textPreferences;
 
   byte[] buffer;
   int offset;

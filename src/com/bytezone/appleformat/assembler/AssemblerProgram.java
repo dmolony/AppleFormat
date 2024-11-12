@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.bytezone.appleformat.FormattedAppleFileFactory;
 import com.bytezone.appleformat.HexFormatter;
+import com.bytezone.appleformat.PreferencesFactory;
 import com.bytezone.appleformat.basic.ApplesoftConstants;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
@@ -45,7 +45,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     offset = dataRecord.offset ();
     length = dataRecord.length ();
 
-    preferences = FormattedAppleFileFactory.assemblerPreferences;
+    preferences = PreferencesFactory.assemblerPreferences;
 
     this.loadAddress = address;
 

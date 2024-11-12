@@ -1,6 +1,6 @@
 package com.bytezone.appleformat.graphics;
 
-import com.bytezone.appleformat.FormattedAppleFileFactory;
+import com.bytezone.appleformat.PreferencesFactory;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.DataRecord;
@@ -18,7 +18,7 @@ public abstract class Graphics extends AbstractFormattedAppleFile
   {
     super (appleFile);
 
-    preferences = FormattedAppleFileFactory.graphicsPreferences;
+    preferences = PreferencesFactory.graphicsPreferences;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -27,6 +27,6 @@ public abstract class Graphics extends AbstractFormattedAppleFile
   {
     super (appleFile, dataRecord);
 
-    preferences = FormattedAppleFileFactory.graphicsPreferences;
+    preferences = PreferencesFactory.graphicsPreferences;
   }
 }

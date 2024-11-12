@@ -3,7 +3,7 @@ package com.bytezone.appleformat.basic;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.appleformat.FormattedAppleFileFactory;
+import com.bytezone.appleformat.PreferencesFactory;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
@@ -16,7 +16,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
 {
   private final List<SourceLine> sourceLines = new ArrayList<> ();
 
-  ApplesoftBasicPreferences basicPreferences = FormattedAppleFileFactory.basicPreferences;
+  ApplesoftBasicPreferences basicPreferences = PreferencesFactory.basicPreferences;
 
   private final UserBasicFormatter userBasicFormatter =
       new UserBasicFormatter (this, basicPreferences);
