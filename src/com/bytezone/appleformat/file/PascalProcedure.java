@@ -70,7 +70,7 @@ public class PascalProcedure extends AbstractFormattedAppleFile
       if (pascalCodeStatement.val == 185 || pascalCodeStatement.val == 161)  // UJP, FJP
         if (pascalCodeStatement.p1 < jumpTable)
         {
-          System.out.printf ("jump @ %04X%n", ptr);
+          //          System.out.printf ("jump @ %04X%n", ptr);
           jumpTable = pascalCodeStatement.p1;
           max = procHeader + jumpTable;
         }
