@@ -18,13 +18,10 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
 
   ApplesoftBasicPreferences basicPreferences = PreferencesFactory.basicPreferences;
 
-  private final UserBasicFormatter userBasicFormatter =
-      new UserBasicFormatter (this, basicPreferences);
-  private final AppleBasicFormatter appleBasicFormatter =
-      new AppleBasicFormatter (this, basicPreferences);
-  private final DebugBasicFormatter debugBasicFormatter =
-      new DebugBasicFormatter (this, basicPreferences);
-  private final XrefFormatter xrefFormatter = new XrefFormatter (this, basicPreferences);
+  private UserBasicFormatter userBasicFormatter;
+  private AppleBasicFormatter appleBasicFormatter;
+  private DebugBasicFormatter debugBasicFormatter;
+  private XrefFormatter xrefFormatter;
 
   boolean showDebugText;
   private int endPtr;
@@ -64,6 +61,11 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
     }
 
     endPtr = ptr;
+
+    userBasicFormatter = new UserBasicFormatter (this, basicPreferences);
+    appleBasicFormatter = new AppleBasicFormatter (this, basicPreferences);
+    debugBasicFormatter = new DebugBasicFormatter (this, basicPreferences);
+    xrefFormatter = new XrefFormatter (this, basicPreferences);
   }
 
   // ---------------------------------------------------------------------------------//

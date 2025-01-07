@@ -60,4 +60,12 @@ public abstract class BasicFormatter implements ApplesoftConstants
 
     return ptr - offset;
   }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public String toString ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return basicPreferences.toString ();
+  }
 }

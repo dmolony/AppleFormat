@@ -42,7 +42,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     appleFile = null;
     forkedFile = null;
     container = null;
-    System.out.println ("local folder - " + localFile.getName ());
+    //    System.out.println ("local folder - " + localFile.getName ());
 
     name = localFile.getName ();
     dataRecord = null;
@@ -55,7 +55,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     this (appleFile, appleFile.getDataRecord ());
-    System.out.println ("AF");
+    //    System.out.println ("AF");
   }
 
   // Resource fork
@@ -64,7 +64,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;
-    System.out.printf ("AF, DR - %s%n", appleFile.getFileName ());
+    //    System.out.printf ("AF, DR - %s%n", appleFile.getFileName ());
     this.appleFile = Objects.requireNonNull (appleFile);
     forkedFile = null;
     container = null;
@@ -82,7 +82,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     appleFile = null;
     this.forkedFile = Objects.requireNonNull (forkedFile);
     container = null;
-    System.out.printf ("FF - %s%n", ((AppleFile) forkedFile).getFileName ());
+    //    System.out.printf ("FF - %s%n", ((AppleFile) forkedFile).getFileName ());
 
     name = "";
     dataRecord = null;
@@ -103,7 +103,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     if (container instanceof AppleFile af)
     {
       appleFile = af;
-      System.out.printf ("AC -> AF - %s%n", af.getFileName ());
+      //      System.out.printf ("AC -> AF - %s%n", af.getFileName ());
 
       int eof = af.getFileLength ();
       DataRecord temp = af.getDataRecord ();
@@ -115,13 +115,13 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     {
       appleFile = null;
       dataRecord = afs.getDataRecord ();
-      System.out.printf ("AC -> AFS - %s%n", afs.getFileName ());
+      //      System.out.printf ("AC -> AFS - %s%n", afs.getFileName ());
     }
     else
     {
       appleFile = null;
       dataRecord = null;
-      System.out.printf ("AC -> null - %s%n", "??");
+      //      System.out.printf ("AC -> null - %s%n", "??");
     }
 
     name = "";

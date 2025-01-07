@@ -84,13 +84,6 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  public ApplePreferences getPreferences (AppleFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    return preferencesFactory.getPreferences (appleFile);
-  }
-
-  // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (File localFile)
   // ---------------------------------------------------------------------------------//
   {
@@ -108,7 +101,7 @@ public class FormattedAppleFileFactory
 
     try
     {
-      if (appleFile instanceof AppleContainer container     //
+      if (appleFile instanceof AppleContainer container     // what about prodos folders?
           && appleFile.getFileType () == 0)                 // ignore actual files
         return new Catalog (container);
 
@@ -140,11 +133,6 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFileSystem appleFileSystem)
   // ---------------------------------------------------------------------------------//
   {
-    //    if (appleFileSystem.getFileSystemType () == FileSystemType.PASCAL)
-    //      System.out.println ("file system");
-    //    if (appleFileSystem.getFileSystemType () == FileSystemType.PASCAL_CODE)
-    //      System.out.println ("file code");
-
     return new Catalog (appleFileSystem);
   }
 
@@ -152,7 +140,6 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile getFormattedDosFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    //    byte[] buffer = appleFile.read ();              // multiple of 256
     DataRecord dataRecord = appleFile.getDataRecord ();
     byte[] buffer = dataRecord.data ();
 
@@ -184,7 +171,6 @@ public class FormattedAppleFileFactory
   // ---------------------------------------------------------------------------------//
   {
     if (buffer.length <= 4)
-      //      return new DataFile (appleFile, buffer);
       return new DataFile (appleFile);
 
     int address = Utility.getShort (buffer, 0);
@@ -605,13 +591,16 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
+  public ApplePreferences getPreferences (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    return preferencesFactory.getPreferences (appleFile);
+  }
+
+  // ---------------------------------------------------------------------------------//
   public void save ()
   // ---------------------------------------------------------------------------------//
   {
     preferencesFactory.save ();
-    //    basicPreferences.save ();
-    //    assemblerPreferences.save ();
-    //    textPreferences.save ();
-    //    graphicsPreferences.save ();
   }
 }
