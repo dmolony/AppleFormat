@@ -8,7 +8,7 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
@@ -58,8 +58,7 @@ public class QuickDrawFont extends CharacterList
   private BitSet[] strike;        // bit image of all characters
 
   // ---------------------------------------------------------------------------------//
-  public QuickDrawFont (AppleFile file, DataRecord dataRecord)
-      throws FontValidationException
+  public QuickDrawFont (AppleFile file, Buffer dataRecord) throws FontValidationException
   // ---------------------------------------------------------------------------------//
   {
     super (file, dataRecord);

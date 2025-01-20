@@ -2,7 +2,7 @@ package com.bytezone.appleformat.appleworks;
 
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class AppleworksWPFile extends AbstractFormattedAppleFile
@@ -11,7 +11,7 @@ public class AppleworksWPFile extends AbstractFormattedAppleFile
   Header header;
 
   // ---------------------------------------------------------------------------------//
-  public AppleworksWPFile (AppleFile appleFile, DataRecord dataRecord)
+  public AppleworksWPFile (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

@@ -1,7 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // https://github.com/fadden/fhpack/blob/master/fhpack.cpp
 // -----------------------------------------------------------------------------------//
@@ -51,7 +51,7 @@ public class FaddenHiResImage extends AppleGraphics
       while (matchLen-- > 0)
         outBuffer[outPtr++] = outBuffer[offset2++];
 
-      this.dataRecord = new DataRecord (outBuffer, 0, outBuffer.length);
+      this.dataRecord = new Buffer (outBuffer, 0, outBuffer.length);
     }
   }
 }

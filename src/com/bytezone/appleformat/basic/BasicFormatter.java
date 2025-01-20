@@ -3,7 +3,7 @@ package com.bytezone.appleformat.basic;
 import java.util.List;
 
 import com.bytezone.appleformat.Utility;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public abstract class BasicFormatter implements ApplesoftConstants
@@ -26,7 +26,7 @@ public abstract class BasicFormatter implements ApplesoftConstants
   {
     this.program = program;
     this.basicPreferences = basicPreferences;
-    DataRecord dataRecord = program.getDataRecord ();
+    Buffer dataRecord = program.getDataRecord ();
     this.buffer = dataRecord.data ();
     this.offset = dataRecord.offset ();
     this.sourceLines = program.getSourceLines ();

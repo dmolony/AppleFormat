@@ -8,7 +8,7 @@ import java.util.List;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;;
+import com.bytezone.filesystem.Buffer;;
 
 // -----------------------------------------------------------------------------------//
 public class BasicProgramGS extends AbstractFormattedAppleFile
@@ -91,7 +91,7 @@ public class BasicProgramGS extends AbstractFormattedAppleFile
   int length;
 
   // ---------------------------------------------------------------------------------//
-  public BasicProgramGS (AppleFile appleFile, DataRecord dataRecord)
+  public BasicProgramGS (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

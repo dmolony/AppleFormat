@@ -2,7 +2,7 @@ package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 //-----------------------------------------------------------------------------------//
 public class DataFileProdos extends AbstractFormattedAppleFile
@@ -11,7 +11,7 @@ public class DataFileProdos extends AbstractFormattedAppleFile
   int aux;
 
   // ---------------------------------------------------------------------------------//
-  public DataFileProdos (AppleFile appleFile, DataRecord dataRecord, int aux)
+  public DataFileProdos (AppleFile appleFile, Buffer dataRecord, int aux)
   // ---------------------------------------------------------------------------------//
   {
     //    super (appleFile, buffer, 0, buffer.length);

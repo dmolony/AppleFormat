@@ -3,7 +3,7 @@ package com.bytezone.appleformat.graphics;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -32,7 +32,7 @@ public class Pnt0000 extends Graphics
   }
 
   // ---------------------------------------------------------------------------------//
-  public Pnt0000 (AppleFile appleFile, DataRecord dataRecord)
+  public Pnt0000 (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

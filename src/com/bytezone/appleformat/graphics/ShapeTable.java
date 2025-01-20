@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -33,7 +33,7 @@ public class ShapeTable extends Graphics
   private final int maxShapeHeight;
 
   // ---------------------------------------------------------------------------------//
-  public ShapeTable (AppleFile appleFile, DataRecord dataRecord)
+  public ShapeTable (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

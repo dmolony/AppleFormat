@@ -62,7 +62,7 @@ import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFile.ForkType;
 import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.AppleForkedFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileNuFX;
@@ -140,16 +140,16 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile getFormattedDosFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    DataRecord dataRecord = appleFile.getDataRecord ();
+    Buffer dataRecord = appleFile.getFileBuffer ();
     byte[] buffer = dataRecord.data ();
 
     return switch (appleFile.getFileType ())
     {
       case 0 -> checkDosText (appleFile, buffer);
       case 1 -> new IntegerBasicProgram (appleFile,
-          new DataRecord (buffer, 2, Utility.getShort (buffer, 0)));
+          new Buffer (buffer, 2, Utility.getShort (buffer, 0)));
       case 2, 32 -> new ApplesoftBasicProgram (appleFile,
-          new DataRecord (buffer, 2, Utility.getShort (buffer, 0)));
+          new Buffer (buffer, 2, Utility.getShort (buffer, 0)));
       case 4, 16, 64 -> checkDosBinary (appleFile, buffer);
       //      default -> new DataFile (appleFile, buffer);
       default -> new DataFile (appleFile);
@@ -175,7 +175,7 @@ public class FormattedAppleFileFactory
 
     int address = Utility.getShort (buffer, 0);
     int length = Utility.getShort (buffer, 2);
-    DataRecord dataRecord = new DataRecord (buffer, 4, length);
+    Buffer dataRecord = new Buffer (buffer, 4, length);
 
     if (ShapeTable.isShapeTable (buffer, 4, length))
       return new ShapeTable (appleFile, dataRecord);
@@ -202,15 +202,15 @@ public class FormattedAppleFileFactory
     byte[] buffer;
     int aux;
 
-    DataRecord dataRecord;
+    Buffer dataRecord;
 
     if (appleFile instanceof ForkProdos fork)
     {
       eof = fork.getFileLength ();
       //      buffer = fork.read ();
-      buffer = fork.getDataRecord ().data ();
+      buffer = fork.getFileBuffer ().data ();
       aux = fork.getParentFile ().getAuxType ();
-      dataRecord = new DataRecord (buffer, 0, eof);
+      dataRecord = new Buffer (buffer, 0, eof);
 
       if (fork.getForkType () == ForkType.RESOURCE)
         return new ResourceFile (appleFile, dataRecord, aux);
@@ -219,8 +219,8 @@ public class FormattedAppleFileFactory
     {
       eof = appleFile.getFileLength ();
       //      buffer = appleFile.read ();
-      buffer = appleFile.getDataRecord ().data ();
-      dataRecord = new DataRecord (buffer, 0, eof);
+      buffer = appleFile.getFileBuffer ().data ();
+      dataRecord = new Buffer (buffer, 0, eof);
       aux = ((FileProdos) appleFile).getAuxType ();
     }
 
@@ -288,7 +288,7 @@ public class FormattedAppleFileFactory
   // 0000  Animation (Pic0000)
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkGraphics (AppleFile appleFile, DataRecord dataRecord,
+  private FormattedAppleFile checkGraphics (AppleFile appleFile, Buffer dataRecord,
       int aux)
   // ---------------------------------------------------------------------------------//
   {
@@ -305,7 +305,7 @@ public class FormattedAppleFileFactory
 
           case 0x0001:
             byte[] data = Utility.unpackBytes (buffer);
-            DataRecord dataRecord2 = new DataRecord (data, 0, data.length);
+            Buffer dataRecord2 = new Buffer (data, 0, data.length);
             return new Pic0000 (appleFile, dataRecord2);
 
           case 0x0002:
@@ -314,8 +314,7 @@ public class FormattedAppleFileFactory
           case 0x0003:
             System.out.printf ("*** Found PNT aux 0003 : %s%n", appleFile.getFileName ());
             byte[] unpackedBuffer = Utility.unpackBytes (buffer);
-            DataRecord dataRecord3 =
-                new DataRecord (unpackedBuffer, 0, unpackedBuffer.length);
+            Buffer dataRecord3 = new Buffer (unpackedBuffer, 0, unpackedBuffer.length);
             return new Pic0001 (appleFile, dataRecord3);
 
           case 0x0004:
@@ -380,15 +379,15 @@ public class FormattedAppleFileFactory
   // or converted to other graphics formats.
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkProdosBinary (AppleFile appleFile,
-      DataRecord dataRecord, int aux)
+  private FormattedAppleFile checkProdosBinary (AppleFile appleFile, Buffer dataRecord,
+      int aux)
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = dataRecord.data ();
     int eof = dataRecord.length ();
 
     if (ShapeTable.isShapeTable (buffer, 0, eof))
-      return new ShapeTable (appleFile, new DataRecord (buffer, 0, eof));
+      return new ShapeTable (appleFile, new Buffer (buffer, 0, eof));
 
     if (isAPP (buffer))
       return new AppleGraphics3201 (appleFile);
@@ -404,7 +403,7 @@ public class FormattedAppleFileFactory
         return new AppleGraphicsA2FC (appleFile);
 
       if (eof > 0x1F00 && eof <= 0x4000)
-        return new AppleGraphics (appleFile, new DataRecord (buffer, 0, eof));
+        return new AppleGraphics (appleFile, new Buffer (buffer, 0, eof));
     }
 
     if (name.endsWith (".3200") && eof != 38400 && isAPP (buffer))
@@ -419,12 +418,11 @@ public class FormattedAppleFileFactory
     if (name.endsWith (".3201") && aux == 0)
       return new AppleGraphics3201 (appleFile);
 
-    return new AssemblerProgram (appleFile, new DataRecord (buffer, 0, eof), aux);
+    return new AssemblerProgram (appleFile, new Buffer (buffer, 0, eof), aux);
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkNon (AppleFile appleFile, DataRecord dataRecord,
-      int aux)
+  private FormattedAppleFile checkNon (AppleFile appleFile, Buffer dataRecord, int aux)
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = dataRecord.data ();
@@ -470,7 +468,7 @@ public class FormattedAppleFileFactory
   // ---------------------------------------------------------------------------------//
   {
     //    byte[] buffer = appleFile.read ();
-    DataRecord dataRecord = appleFile.getDataRecord ();
+    Buffer dataRecord = appleFile.getFileBuffer ();
     //    byte[] buffer = dataRecord.data ();
     int fileType = appleFile.getFileType ();
     //    int length = appleFile.getEof ();
@@ -513,13 +511,13 @@ public class FormattedAppleFileFactory
     byte[] buffer = null;
     int length = 0;
     int aux = 0;
-    DataRecord dataRecord;
+    Buffer dataRecord;
 
     if (appleFile instanceof ForkNuFX fork)
     {
       fork.getFileSystemId ();
       //      buffer = fork.read ();
-      dataRecord = fork.getDataRecord ();
+      dataRecord = fork.getFileBuffer ();
       buffer = dataRecord.data ();
       length = fork.getFileLength ();
       //      auxType = ???
@@ -529,7 +527,7 @@ public class FormattedAppleFileFactory
       FileNuFX file = (FileNuFX) appleFile;
       fileSystemId = file.getFileSystemId ();
       //      buffer = file.read ();
-      dataRecord = file.getDataRecord ();
+      dataRecord = file.getFileBuffer ();
       buffer = dataRecord.data ();
       length = file.getFileLength ();
       aux = file.getAuxType ();
@@ -538,7 +536,7 @@ public class FormattedAppleFileFactory
     int fileType = appleFile.getFileType ();
 
     if (buffer == null)
-      return new DataFile (appleFile, new DataRecord (buffer, 0, 0));
+      return new DataFile (appleFile, new Buffer (buffer, 0, 0));
 
     switch (fileSystemId)
     {
@@ -549,7 +547,7 @@ public class FormattedAppleFileFactory
           case 0x06 -> checkProdosBinary (appleFile, dataRecord, aux);
           case 0xFC -> new ApplesoftBasicProgram (appleFile);
           case 0xFA -> new IntegerBasicProgram (appleFile);
-          default -> new DataFile (appleFile, new DataRecord (buffer, 0, buffer.length));
+          default -> new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
         };
 
       case 2:                                     // Dos 3.3
@@ -557,11 +555,11 @@ public class FormattedAppleFileFactory
       case 4:                                     // Pascal
       case 8:                                     // CPM
         System.out.printf ("NuFX file system: %d not written%n", fileSystemId);
-        return new DataFile (appleFile, new DataRecord (buffer, 0, buffer.length));
+        return new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
 
       default:
         System.out.printf ("NuFX unknown file system: %d%n", fileSystemId);
-        return new DataFile (appleFile, new DataRecord (buffer, 0, buffer.length));
+        return new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
     }
   }
 

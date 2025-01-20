@@ -2,7 +2,7 @@ package com.bytezone.appleformat.fonts;
 
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
@@ -18,7 +18,7 @@ public class CharacterRom extends CharacterList
   String description;
 
   // ---------------------------------------------------------------------------------//
-  public CharacterRom (AppleFile file, DataRecord dataRecord)
+  public CharacterRom (AppleFile file, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (file, dataRecord);

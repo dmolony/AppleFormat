@@ -14,7 +14,7 @@ import com.bytezone.appleformat.PreferencesFactory;
 import com.bytezone.appleformat.basic.ApplesoftConstants;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
@@ -36,7 +36,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   int length;
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (AppleFile appleFile, DataRecord dataRecord, int address)
+  public AssemblerProgram (AppleFile appleFile, Buffer dataRecord, int address)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);
@@ -61,7 +61,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (AppleFile appleFile, DataRecord dataRecord, int address,
+  public AssemblerProgram (AppleFile appleFile, Buffer dataRecord, int address,
       int executeOffset)
   // ---------------------------------------------------------------------------------//
   {

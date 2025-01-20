@@ -23,7 +23,7 @@ import com.bytezone.appleformat.basic.ApplesoftBasicPreferences;
 import com.bytezone.appleformat.graphics.GraphicsPreferences;
 import com.bytezone.appleformat.text.TextPreferences;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class PreferencesFactory
@@ -77,7 +77,7 @@ public class PreferencesFactory
   // ---------------------------------------------------------------------------------//
   {
     //    byte[] buffer = appleFile.read ();
-    DataRecord dataRecord = appleFile.getDataRecord ();
+    Buffer dataRecord = appleFile.getFileBuffer ();
     byte[] buffer = dataRecord.data ();
 
     int address = Utility.getShort (buffer, 0);

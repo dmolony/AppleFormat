@@ -1,7 +1,7 @@
 package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.ApplePreferences;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.Image;
 
@@ -44,7 +44,7 @@ public class FileContainer implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public DataRecord getDataRecord ()
+  public Buffer getDataRecord ()
   // ---------------------------------------------------------------------------------//
   {
     return formattedAppleFile.getDataRecord ();

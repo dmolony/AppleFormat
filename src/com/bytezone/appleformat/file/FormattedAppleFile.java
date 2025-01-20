@@ -1,7 +1,7 @@
 package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.ApplePreferences;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.Image;
 
@@ -15,7 +15,7 @@ public interface FormattedAppleFile
 
   public Image getImage ();
 
-  public DataRecord getDataRecord ();
+  public Buffer getDataRecord ();
 
   public ApplePreferences getPreferences ();
 }

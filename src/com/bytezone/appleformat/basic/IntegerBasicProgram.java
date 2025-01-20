@@ -5,7 +5,7 @@ import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class IntegerBasicProgram extends AbstractFormattedAppleFile
@@ -40,7 +40,7 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public IntegerBasicProgram (AppleFile appleFile, DataRecord dataRecord)
+  public IntegerBasicProgram (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);
@@ -100,7 +100,7 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
       int address = Utility.intValue (buffer[ptr + 2], buffer[ptr + 3]);
       int remainingBytes = max - ptr - 5;
       AssemblerProgram ap = new AssemblerProgram (appleFile,
-          new DataRecord (buffer, ptr + 4, remainingBytes), address);
+          new Buffer (buffer, ptr + 4, remainingBytes), address);
       pgm.append ("\n" + ap.getText () + "\n");
     }
 

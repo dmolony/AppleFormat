@@ -1,7 +1,7 @@
 package com.bytezone.appleformat.graphics;
 
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -28,7 +28,7 @@ public class AppleGraphics extends Graphics
   }
 
   // ---------------------------------------------------------------------------------//
-  public AppleGraphics (AppleFile appleFile, DataRecord dataRecord)
+  public AppleGraphics (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

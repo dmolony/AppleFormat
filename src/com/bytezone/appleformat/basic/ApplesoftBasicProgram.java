@@ -7,7 +7,7 @@ import com.bytezone.appleformat.PreferencesFactory;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
@@ -36,7 +36,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public ApplesoftBasicProgram (AppleFile appleFile, DataRecord dataRecord)
+  public ApplesoftBasicProgram (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

@@ -8,7 +8,7 @@ import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.AppleForkedFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -25,7 +25,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final AppleForkedFile forkedFile;
 
   protected final String name;
-  protected DataRecord dataRecord;      // would be final except for FaddenHiResImage
+  protected Buffer dataRecord;      // would be final except for FaddenHiResImage
 
   private Image image;
   private String text;
@@ -54,13 +54,13 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public AbstractFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, appleFile.getDataRecord ());
+    this (appleFile, appleFile.getFileBuffer ());
     //    System.out.println ("AF");
   }
 
   // Resource fork
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (AppleFile appleFile, DataRecord dataRecord)
+  public AbstractFormattedAppleFile (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;
@@ -106,15 +106,15 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
       //      System.out.printf ("AC -> AF - %s%n", af.getFileName ());
 
       int eof = af.getFileLength ();
-      DataRecord temp = af.getDataRecord ();
+      Buffer temp = af.getFileBuffer ();
 
-      dataRecord = temp.length () == eof ? temp
-          : new DataRecord (temp.data (), temp.offset (), eof);
+      dataRecord =
+          temp.length () == eof ? temp : new Buffer (temp.data (), temp.offset (), eof);
     }
     else if (container instanceof AppleFileSystem afs)
     {
       appleFile = null;
-      dataRecord = afs.getDataRecord ();
+      dataRecord = afs.getDiskBuffer ();
       //      System.out.printf ("AC -> AFS - %s%n", afs.getFileName ());
     }
     else
@@ -211,7 +211,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public DataRecord getDataRecord ()
+  public Buffer getDataRecord ()
   // ---------------------------------------------------------------------------------//
   {
     return dataRecord;

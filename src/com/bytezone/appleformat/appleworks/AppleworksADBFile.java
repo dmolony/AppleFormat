@@ -6,7 +6,7 @@ import java.util.List;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class AppleworksADBFile extends AbstractFormattedAppleFile
@@ -47,7 +47,7 @@ public class AppleworksADBFile extends AbstractFormattedAppleFile
   private final Record standardRecord;
 
   // ---------------------------------------------------------------------------------//
-  public AppleworksADBFile (AppleFile appleFile, DataRecord dataRecord)
+  public AppleworksADBFile (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

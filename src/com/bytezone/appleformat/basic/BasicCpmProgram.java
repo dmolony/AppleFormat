@@ -4,7 +4,7 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class BasicCpmProgram extends AbstractFormattedAppleFile
@@ -48,7 +48,7 @@ public class BasicCpmProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public BasicCpmProgram (AppleFile appleFile, DataRecord dataRecord)
+  public BasicCpmProgram (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

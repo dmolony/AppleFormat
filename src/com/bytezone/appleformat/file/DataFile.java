@@ -1,7 +1,7 @@
 package com.bytezone.appleformat.file;
 
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.Image;
 
@@ -20,7 +20,7 @@ public class DataFile extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public DataFile (AppleFile appleFile, DataRecord dataRecord)
+  public DataFile (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     //    this (appleFile, appleFile.read ());

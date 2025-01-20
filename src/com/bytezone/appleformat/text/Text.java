@@ -3,7 +3,7 @@ package com.bytezone.appleformat.text;
 import com.bytezone.appleformat.PreferencesFactory;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class Text extends AbstractFormattedAppleFile
@@ -24,7 +24,7 @@ public class Text extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public Text (AppleFile appleFile, DataRecord dataRecord)
+  public Text (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

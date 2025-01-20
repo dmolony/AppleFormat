@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.DataRecord;
+import com.bytezone.filesystem.Buffer;
 import com.bytezone.filesystem.FilePascalProcedure;
 
 // -----------------------------------------------------------------------------------//
@@ -58,7 +58,7 @@ public class PascalProcedure extends AbstractFormattedAppleFile
     int ptr = fpp.getCodeStart ();
     int max = fpp.getCodeEnd ();
 
-    DataRecord dataRecord = fpp.getDataRecord ();
+    Buffer dataRecord = fpp.getFileBuffer ();
     byte[] buffer = dataRecord.data ();
 
     while (ptr < max)
