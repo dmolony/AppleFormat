@@ -23,7 +23,7 @@ public class ForkProdosBlock extends AbstractFormattedAppleBlock
     AppleFile appleFile = appleBlock.getFileOwner ();
     assert appleFile.isForkedFile ();
 
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
     StringBuilder text =
         getHeader ("Prodos Extended Key Block : " + appleFile.getFileName ());
 

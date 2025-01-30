@@ -23,7 +23,7 @@ public class IndexProdosBlock extends AbstractFormattedAppleBlock
   // ---------------------------------------------------------------------------------//
   {
     AppleFile appleFile = appleBlock.getFileOwner ();
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
     String subType = appleBlock.getBlockSubType ();
     String subTypeText = subType.equals ("M-INDEX") ? "Master " : "";
     String fileName = appleFile.getFileName ();

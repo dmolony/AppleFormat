@@ -39,7 +39,7 @@ public class CatalogProdosBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
     FsProdos fs = (FsProdos) appleBlock.getFileSystem ();
 
     StringBuilder text = getHeader ("Prodos Catalog Sector");

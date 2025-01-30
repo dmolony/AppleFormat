@@ -20,20 +20,18 @@ public class VolumeBitmapBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
     FsProdos fs = (FsProdos) appleBlock.getFileSystem ();
 
     StringBuilder text = getHeader ("Volume Bitmap");
 
     int ptr = 0;
-    int bitmapBlockNo = appleBlock.getBlockNo () - fs.getBitmapBlockNo ();
+    int bitmapBlockNo = appleBlock.getBlockNo () - fs.getFirstBitmapBlockNo ();
     int address = bitmapBlockNo * 0x1000;
 
     int maxBytes = (fs.getTotalBlocks () - 1) / 8 + 1;
     int max = Math.min (maxBytes - bitmapBlockNo * 512, 512);
-    //    System.out.printf ("Max: %d%n", max);
 
-    //    while (ptr < 512)
     while (ptr < max)
     {
       int val = buffer[ptr] & 0xFF;

@@ -22,7 +22,7 @@ public class CatalogCpm extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
 
     StringBuilder text = getHeader ("CPM Catalog Sector");
 

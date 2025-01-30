@@ -21,7 +21,7 @@ public class TsListBlock extends AbstractFormattedAppleBlock
   // ---------------------------------------------------------------------------------//
   {
     FileSystemType fileSystemType = appleBlock.getFileSystem ().getFileSystemType ();
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
 
     StringBuilder text = getHeader (fileSystemType + " Track/Sector List : "
         + appleBlock.getFileOwner ().getFileName ());

@@ -101,8 +101,9 @@ public class FormattedAppleFileFactory
 
     try
     {
-      if (appleFile instanceof AppleContainer container     // what about prodos folders?
-          && appleFile.getFileType () == 0)                 // ignore actual files
+      if (appleFile instanceof AppleContainer container    //
+          && (appleFile.getFileType () == 0                // ??
+              | appleFile.getFileType () == 15))           // directory file
         return new Catalog (container);
 
       if (appleFile.hasEmbeddedFileSystem ())
@@ -151,7 +152,6 @@ public class FormattedAppleFileFactory
       case 2, 32 -> new ApplesoftBasicProgram (appleFile,
           new Buffer (buffer, 2, Utility.getShort (buffer, 0)));
       case 4, 16, 64 -> checkDosBinary (appleFile, buffer);
-      //      default -> new DataFile (appleFile, buffer);
       default -> new DataFile (appleFile);
     };
   }
@@ -198,51 +198,46 @@ public class FormattedAppleFileFactory
       throws FontValidationException
   // ---------------------------------------------------------------------------------//
   {
-    int eof = 0;
-    byte[] buffer;
+    int eof;
     int aux;
 
-    Buffer dataRecord;
+    Buffer dataBuffer;
 
     if (appleFile instanceof ForkProdos fork)
     {
       eof = fork.getFileLength ();
-      //      buffer = fork.read ();
-      buffer = fork.getFileBuffer ().data ();
       aux = fork.getParentFile ().getAuxType ();
-      dataRecord = new Buffer (buffer, 0, eof);
+      dataBuffer = new Buffer (fork.getFileBuffer ().data (), 0, eof);
 
       if (fork.getForkType () == ForkType.RESOURCE)
-        return new ResourceFile (appleFile, dataRecord, aux);
+        return new ResourceFile (appleFile, dataBuffer, aux);
     }
     else
     {
       eof = appleFile.getFileLength ();
-      //      buffer = appleFile.read ();
-      buffer = appleFile.getFileBuffer ().data ();
-      dataRecord = new Buffer (buffer, 0, eof);
       aux = ((FileProdos) appleFile).getAuxType ();
+      dataBuffer = new Buffer (appleFile.getFileBuffer ().data (), 0, eof);
     }
 
     return switch (appleFile.getFileType ())
     {
-      case FILE_TYPE_TEXT -> new Text (appleFile, dataRecord);
-      case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataRecord, aux);
-      case FILE_TYPE_PNT -> checkGraphics (appleFile, dataRecord, aux);
-      case FILE_TYPE_PIC -> checkGraphics (appleFile, dataRecord, aux);
-      case FILE_TYPE_ANI -> checkGraphics (appleFile, dataRecord, aux);
-      case FILE_TYPE_FOT -> checkGraphics (appleFile, dataRecord, aux);
-      case FILE_TYPE_FNT -> new FontFile (appleFile, dataRecord, aux);
-      case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, dataRecord);
-      case FILE_TYPE_APPLESOFT_BASIC -> new ApplesoftBasicProgram (appleFile, dataRecord);
-      case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, dataRecord);
-      case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile, dataRecord);
-      case FILE_TYPE_AWP -> new AppleworksWPFile (appleFile, dataRecord);
-      case FILE_TYPE_ADB -> new AppleworksADBFile (appleFile, dataRecord);
-      case FILE_TYPE_ICN -> new IconFile (appleFile, dataRecord);
-      case FILE_TYPE_NON -> checkNon (appleFile, dataRecord, aux);
-      case FILE_TYPE_BAT -> new Text (appleFile, dataRecord);
-      default -> new DataFileProdos (appleFile, dataRecord, aux);
+      case FILE_TYPE_TEXT -> new Text (appleFile, dataBuffer);
+      case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, aux);
+      case FILE_TYPE_PNT -> checkGraphics (appleFile, dataBuffer, aux);
+      case FILE_TYPE_PIC -> checkGraphics (appleFile, dataBuffer, aux);
+      case FILE_TYPE_ANI -> checkGraphics (appleFile, dataBuffer, aux);
+      case FILE_TYPE_FOT -> checkGraphics (appleFile, dataBuffer, aux);
+      case FILE_TYPE_FNT -> new FontFile (appleFile, dataBuffer, aux);
+      case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, dataBuffer);
+      case FILE_TYPE_APPLESOFT_BASIC -> new ApplesoftBasicProgram (appleFile, dataBuffer);
+      case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, dataBuffer);
+      case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile, dataBuffer);
+      case FILE_TYPE_AWP -> new AppleworksWPFile (appleFile, dataBuffer);
+      case FILE_TYPE_ADB -> new AppleworksADBFile (appleFile, dataBuffer);
+      case FILE_TYPE_ICN -> new IconFile (appleFile, dataBuffer);
+      case FILE_TYPE_NON -> checkNon (appleFile, dataBuffer, aux);
+      case FILE_TYPE_BAT -> new Text (appleFile, dataBuffer);
+      default -> new DataFileProdos (appleFile, dataBuffer, aux);
     };
   }
 
@@ -288,11 +283,11 @@ public class FormattedAppleFileFactory
   // 0000  Animation (Pic0000)
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkGraphics (AppleFile appleFile, Buffer dataRecord,
+  private FormattedAppleFile checkGraphics (AppleFile appleFile, Buffer dataBuffer,
       int aux)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
 
     switch (appleFile.getFileType ())
     {
@@ -370,7 +365,7 @@ public class FormattedAppleFileFactory
         return new Animation (appleFile);
     }
 
-    return new DataFileProdos (appleFile, dataRecord, aux);
+    return new DataFileProdos (appleFile, dataBuffer, aux);
   }
 
   // Another notable exception is the Fotofile (FOT) format inherited by ProDOS
@@ -509,27 +504,22 @@ public class FormattedAppleFileFactory
   {
     int fileSystemId = 0;
     byte[] buffer = null;
-    int length = 0;
     int aux = 0;
     Buffer dataRecord;
 
     if (appleFile instanceof ForkNuFX fork)
     {
       fork.getFileSystemId ();
-      //      buffer = fork.read ();
       dataRecord = fork.getFileBuffer ();
       buffer = dataRecord.data ();
-      length = fork.getFileLength ();
-      //      auxType = ???
+      // aux??
     }
     else
     {
       FileNuFX file = (FileNuFX) appleFile;
       fileSystemId = file.getFileSystemId ();
-      //      buffer = file.read ();
       dataRecord = file.getFileBuffer ();
       buffer = dataRecord.data ();
-      length = file.getFileLength ();
       aux = file.getAuxType ();
     }
 

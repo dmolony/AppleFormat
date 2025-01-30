@@ -25,7 +25,7 @@ public class VtocBlock extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
 
     int maxTracks = buffer[52] & 0xFF;
     int maxSectors = buffer[53] & 0xFF;

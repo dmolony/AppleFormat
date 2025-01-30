@@ -20,7 +20,7 @@ public class CatalogDos4Block extends CatalogDosBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
     FsDos fs = (FsDos) appleBlock.getFileSystem ();
 
     StringBuilder text = getHeader (fs.getFileSystemType () + " Catalog Sector");

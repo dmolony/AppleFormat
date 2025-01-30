@@ -19,7 +19,7 @@ public class CatalogLbr extends AbstractFormattedAppleBlock
   public String getText ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = appleBlock.read ();
+    byte[] buffer = appleBlock.getBuffer ();
     //    FsLbr fs = (FsLbr) appleBlock.getFileSystem ();
 
     StringBuilder text = getHeader ("LBR Catalog Sector");
