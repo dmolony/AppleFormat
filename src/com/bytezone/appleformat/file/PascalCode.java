@@ -1,7 +1,6 @@
 package com.bytezone.appleformat.file;
 
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.FilePascalCode;
 
 public class PascalCode extends AbstractFormattedAppleFile
 {
@@ -17,7 +16,8 @@ public class PascalCode extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    return ((FilePascalCode) appleFile).getCatalogText ();
+    return "Pascal Code File";
+    //    return ((FilePascalCode) appleFile).getCatalogText ();
   }
 
   // ---------------------------------------------------------------------------------//

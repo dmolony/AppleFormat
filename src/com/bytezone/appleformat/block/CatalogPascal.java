@@ -61,7 +61,10 @@ public class CatalogPascal extends AbstractFormattedAppleBlock
     while (ptr < buffer.length && totalFiles > 0)
     {
       if (buffer[ptr + 6] == 0)                           // no name
-        break;
+      {
+        ptr += CATALOG_ENTRY_SIZE;
+        continue;
+      }
 
       text.append ("\n");
 

@@ -10,6 +10,7 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BINARY;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FONT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FOT;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_GWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ICN;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_NON;
@@ -201,7 +202,7 @@ public class FormattedAppleFileFactory
     int eof;
     int aux;
 
-    Buffer dataBuffer;
+    Buffer dataBuffer;      // build a new Buffer with the correct eof
 
     if (appleFile instanceof ForkProdos fork)
     {
@@ -222,6 +223,7 @@ public class FormattedAppleFileFactory
     return switch (appleFile.getFileType ())
     {
       case FILE_TYPE_TEXT -> new Text (appleFile, dataBuffer);
+      case FILE_TYPE_GWP -> new Text (appleFile, dataBuffer);
       case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, aux);
       case FILE_TYPE_PNT -> checkGraphics (appleFile, dataBuffer, aux);
       case FILE_TYPE_PIC -> checkGraphics (appleFile, dataBuffer, aux);

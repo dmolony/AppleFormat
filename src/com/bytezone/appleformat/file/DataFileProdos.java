@@ -33,13 +33,13 @@ public class DataFileProdos extends AbstractFormattedAppleFile
 
     text.append (
         String.format ("File name .............. %-15s%n", appleFile.getFileName ()));
-    text.append (String.format ("File type .............. %02X  %s%n",
+    text.append (String.format ("File type .............. %02X         %<3d  %s%n",
         appleFile.getFileType (), appleFile.getFileTypeText ()));
     text.append (String.format ("Aux .................... %04X%n", aux));
-    text.append (
-        String.format ("Blocks ................. %,9d%n", appleFile.getTotalBlocks ()));
-    text.append (
-        String.format ("EOF .................... %,9d%n", appleFile.getFileLength ()));
+    text.append (String.format ("Blocks ................. %04X %<,9d%n",
+        appleFile.getTotalBlocks ()));
+    text.append (String.format ("EOF .................... %04X %<,9d%n",
+        appleFile.getFileLength ()));
 
     return Utility.rtrim (text);
   }
