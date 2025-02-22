@@ -6,6 +6,7 @@ import java.util.Comparator;
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.Utility;
 
+// https://www.pagetable.com/?p=39
 // -----------------------------------------------------------------------------------//
 public class AssemblerStatement
 // -----------------------------------------------------------------------------------//
@@ -66,7 +67,8 @@ public class AssemblerStatement
           lastMnemonic = as.mnemonic;
           System.out.println ();
         }
-        System.out.printf ("%3s  %-15s  %s%n", as.mnemonic, AssemblerConstants.mode[as.mode], as);
+        System.out.printf ("%3s  %-15s  %s%n", as.mnemonic,
+            AssemblerConstants.mode[as.mode], as);
       }
   }
 
@@ -384,10 +386,11 @@ public class AssemblerStatement
   // ---------------------------------------------------------------------------------//
   {
     if (offset == 0)
-      return String.format ("%06X  %d  %3s %-10s %02X", address, size, mnemonic, operand, value);
+      return String.format ("%06X  %d  %3s %-10s %02X", address, size, mnemonic, operand,
+          value);
 
     String offsetText = String.format ("$%04X", address + offset + 2);
-    return String.format ("%06X  %d  %3s %-10s %02X", address, size, mnemonic, operand + offsetText,
-        value);
+    return String.format ("%06X  %d  %3s %-10s %02X", address, size, mnemonic,
+        operand + offsetText, value);
   }
 }

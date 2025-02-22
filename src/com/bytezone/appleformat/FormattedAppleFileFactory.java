@@ -96,10 +96,6 @@ public class FormattedAppleFileFactory
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    //    System.out.printf ("File system type %s%n", appleFile.getFileSystemType ());
-    //    System.out.printf ("File type %d%n", appleFile.getFileType ());
-    //    System.out.println ("------------");
-
     try
     {
       if (appleFile instanceof AppleContainer container    //
@@ -470,6 +466,10 @@ public class FormattedAppleFileFactory
     int fileType = appleFile.getFileType ();
     //    int length = appleFile.getEof ();
     int auxType = appleFile.getAuxType ();
+
+    //    System.out.println (appleFile);
+    //    System.out.println (appleFile.getOsType ());
+    //    System.out.println (appleFile.getFileType ());
 
     switch (appleFile.getOsType ())
     {
