@@ -24,6 +24,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   private static String PREFS_BLANK_AFTER_RETURN = "BlankAfterReturn";
   private static String PREFS_FORMAT_REM = "FormatRem";
   private static String PREFS_DELETE_EXTRA_SPACE = "DeleteExtraSpace";
+  private static String PREFS_WRAP_PRINT = "WrapPrint";
 
   public int displayFormat;              // 0 = No format, 1 = User, 2 = 40 col
 
@@ -43,7 +44,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public boolean showConstants;
   public boolean showDuplicateSymbols;
 
-  public int wrapPrintAt = 80;
+  public int wrapPrintAt = 40;
   public int wrapRemAt = 80;
   public int wrapDataAt = 80;
 
@@ -74,6 +75,8 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     showConstants = preferences.getBoolean (PREFS_SHOW_CONSTANTS, defaultValue);
     showGosubGoto = preferences.getBoolean (PREFS_SHOW_GOSUB, defaultValue);
     showCalls = preferences.getBoolean (PREFS_SHOW_CALLS, defaultValue);
+
+    wrapPrintAt = preferences.getInt (PREFS_WRAP_PRINT, 40);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -98,6 +101,8 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     preferences.putBoolean (PREFS_SHOW_CONSTANTS, showConstants);
     preferences.putBoolean (PREFS_SHOW_GOSUB, showGosubGoto);
     preferences.putBoolean (PREFS_SHOW_CALLS, showCalls);
+
+    preferences.putInt (PREFS_WRAP_PRINT, wrapPrintAt);
   }
 
   // ---------------------------------------------------------------------------------//

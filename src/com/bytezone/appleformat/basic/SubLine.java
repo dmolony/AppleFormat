@@ -196,7 +196,8 @@ public class SubLine implements ApplesoftConstants
   private void addString (int stringPtr, int ptr)
   // ---------------------------------------------------------------------------------//
   {
-    stringsText.add (new String (buffer, stringPtr - 1, ptr - stringPtr + 1));
+    String text = new String (buffer, stringPtr - 1, ptr - stringPtr + 1);
+    stringsText.add (text);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -708,6 +709,31 @@ public class SubLine implements ApplesoftConstants
   }
 
   // ---------------------------------------------------------------------------------//
+  List<String> split (String text, int length)
+  // ---------------------------------------------------------------------------------//
+  {
+    // remove start quote
+    if (text.startsWith ("\""))
+      text = text.substring (1);
+
+    // remove end quote
+    if (text.endsWith ("\""))
+      text = text.substring (0, text.length () - 1);
+
+    List<String> lines = new ArrayList<> ();
+
+    while (text.length () > length)
+    {
+      lines.add (text.substring (0, length) + "\n");
+      text = text.substring (length);
+    }
+
+    lines.add (text);
+
+    return lines;
+  }
+
+  // ---------------------------------------------------------------------------------//
   StringBuilder toStringBuilder ()
   // ---------------------------------------------------------------------------------//
   {
@@ -715,6 +741,7 @@ public class SubLine implements ApplesoftConstants
 
     ApplesoftBasicPreferences basicPreferences = PreferencesFactory.basicPreferences;
     boolean showThen = basicPreferences.showThen && basicPreferences.displayFormat == 1;
+    int wrapPrintAt = basicPreferences.wrapPrintAt;
 
     // All sublines end with 0 or : except IF lines that are split into two
     int max = startPtr + length - 1;
@@ -724,9 +751,20 @@ public class SubLine implements ApplesoftConstants
     if (isImpliedGoto () && !showThen)
       line.append ("GOTO ");
 
-    for (int p = startPtr; p <= max; p++)
+    boolean wrappingPrint = false;
+    List<String> lines = null;
+
+    if (is (TOKEN_PRINT) && stringsText.size () == 1 && wrapPrintAt > 0)
     {
-      byte b = buffer[p];
+      lines = split (stringsText.get (0), wrapPrintAt);
+      if (lines.size () > 1)
+        wrappingPrint = true;
+    }
+
+    for (int ptr = startPtr; ptr <= max; ptr++)
+    {
+      byte b = buffer[ptr];
+
       if (isToken (b))
       {
         if (line.length () > 0 && line.charAt (line.length () - 1) != ' ')
@@ -734,12 +772,32 @@ public class SubLine implements ApplesoftConstants
         int val = b & 0x7F;
         if (b != TOKEN_THEN || showThen)
           line.append (ApplesoftConstants.tokens[val] + " ");
+        continue;
       }
-      //      else if (Utility.isControlCharacter (b))
-      //        line.append (ApplesoftBasicProgram.basicPreferences.showCaret
-      //            ? "^" + (char) (b + 64) : "?");
-      else if (!isControlCharacter (b))
-        line.append ((char) b);
+
+      if (isControlCharacter (b))
+        b += 64;
+
+      line.append ((char) b);
+
+      if (b == ASCII_QUOTE && wrappingPrint)
+      {
+        int len = line.length () + 7;       // amount to indent
+        String indent = "                                ".substring (0, len);
+
+        for (String s : lines)
+        {
+          line.append (s);
+          if (s.endsWith ("\n"))
+            line.append (indent);
+        }
+
+        // skip to end of quote
+        while (++ptr < max && buffer[ptr] != ASCII_QUOTE)
+          ;
+        line.append ((char) b);       // end quote
+        wrappingPrint = false;
+      }
     }
 
     return line;
