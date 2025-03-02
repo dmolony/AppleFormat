@@ -71,7 +71,7 @@ public class BasicCpmProgram extends AbstractFormattedAppleFile
     //    if (basicPreferences.showHeader)
     //      text.append ("Name : " + name + "\n\n");
 
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
     //    int ptr = dataRecord.offset () + 5;
 
     //    while (buffer[ptr] != 0)
@@ -82,8 +82,8 @@ public class BasicCpmProgram extends AbstractFormattedAppleFile
 
     //    ptr = 1;
 
-    int ptr = dataRecord.offset () + 1;
-    while (ptr < dataRecord.max ())
+    int ptr = dataBuffer.offset () + 1;
+    while (ptr < dataBuffer.max ())
     {
       int nextAddress = Utility.getShort (buffer, ptr);
 
@@ -212,12 +212,12 @@ public class BasicCpmProgram extends AbstractFormattedAppleFile
   {
     StringBuilder text = new StringBuilder ();
 
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
 
-    int ptr = dataRecord.offset () + 1;
+    int ptr = dataBuffer.offset () + 1;
     int lastPtr;
 
-    while (ptr < dataRecord.max ())
+    while (ptr < dataBuffer.max ())
     {
       int nextAddress = Utility.getShort (buffer, ptr);
       if (nextAddress == 0)

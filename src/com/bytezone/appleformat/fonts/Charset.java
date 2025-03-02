@@ -18,13 +18,13 @@ public class Charset extends CharacterList
   {
     super (file);
 
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     int ptr = offset;
 
-    while (ptr < dataRecord.max ())
+    while (ptr < dataBuffer.max ())
     {
       characters.add (new CharsetCharacter (buffer, ptr));
       ptr += sizeY;

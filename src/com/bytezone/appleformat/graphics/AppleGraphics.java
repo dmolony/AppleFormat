@@ -47,9 +47,9 @@ public class AppleGraphics extends Graphics
   protected Image createMonochromeImage ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     int rows = length <= 8192 ? 192 : 384;
     int pages = rows / 192;
@@ -91,9 +91,9 @@ public class AppleGraphics extends Graphics
   protected Image createColourImage ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     int rows = length <= 8192 ? 192 : 384;
 
@@ -121,9 +121,9 @@ public class AppleGraphics extends Graphics
   private void fillLine (int base)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     Palette palette = paletteFactory.getCurrentPalette ();
     Color[] colours = palette.getColours ();

@@ -27,9 +27,9 @@ public class Pic0002 extends Graphics
   {
     super (appleFile);
 
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     // 00000 - 31999  pixel data 32,000 bytes
     // 32000 - 38400  200 color tables
@@ -74,9 +74,9 @@ public class Pic0002 extends Graphics
   {
     ColorTable colorTable = colorTables[row];
 
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     int col = 0;
     int ptr = offset + row * 160;
@@ -125,9 +125,9 @@ public class Pic0002 extends Graphics
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     FileProdos file = (FileProdos) appleFile;
     int aux = file.getAuxType ();

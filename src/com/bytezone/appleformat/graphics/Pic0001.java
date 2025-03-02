@@ -38,9 +38,9 @@ public class Pic0001 extends Graphics
   private void setup ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int ptr = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int ptr = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     int mode = Utility.getShort (buffer, ptr);
     int rect1 = Utility.getLong (buffer, ptr + 2);

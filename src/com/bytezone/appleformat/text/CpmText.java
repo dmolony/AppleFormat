@@ -20,7 +20,7 @@ public class CpmText extends Text
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
 
     int ptr = 0;
     while (ptr < buffer.length && buffer[ptr] != (byte) 0x1A)

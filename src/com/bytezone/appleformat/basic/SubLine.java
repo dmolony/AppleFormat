@@ -783,7 +783,7 @@ public class SubLine implements ApplesoftConstants
       if (b == ASCII_QUOTE && wrappingPrint)
       {
         int len = line.length () + 7;       // amount to indent
-        String indent = "                                ".substring (0, len);
+        String indent = "                                       ".substring (0, len);
 
         for (String s : lines)
         {

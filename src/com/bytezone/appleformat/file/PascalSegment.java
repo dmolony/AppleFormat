@@ -17,7 +17,7 @@ public class PascalSegment extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    if (dataRecord.length () == 0)
+    if (dataBuffer.length () == 0)
       return "This file has no data\n\n" + appleFile.getErrorMessage ();
 
     return ((FilePascalSegment) appleFile).getCatalogText ();

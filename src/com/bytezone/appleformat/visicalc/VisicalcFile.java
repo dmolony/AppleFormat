@@ -23,7 +23,7 @@ public class VisicalcFile extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     if (sheet == null)
-      sheet = new Sheet (dataRecord.data ());
+      sheet = new Sheet (dataBuffer.data ());
 
     StringBuilder text = new StringBuilder ();
 

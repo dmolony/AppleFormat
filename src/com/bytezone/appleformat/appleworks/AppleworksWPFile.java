@@ -35,7 +35,7 @@ public class AppleworksWPFile extends AbstractFormattedAppleFile
     StringBuilder text = new StringBuilder (header.toString ());
     text.append ("\n");
 
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
 
     while (true)
     {

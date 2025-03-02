@@ -55,7 +55,9 @@ import com.bytezone.appleformat.graphics.Pnt0002;
 import com.bytezone.appleformat.graphics.Pnt8005;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.CpmText;
+import com.bytezone.appleformat.text.DosText;
 import com.bytezone.appleformat.text.PascalText;
+import com.bytezone.appleformat.text.ProdosText;
 import com.bytezone.appleformat.text.Text;
 import com.bytezone.appleformat.visicalc.VisicalcFile;
 import com.bytezone.filesystem.AppleContainer;
@@ -66,6 +68,7 @@ import com.bytezone.filesystem.AppleForkedFile;
 import com.bytezone.filesystem.Buffer;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
+import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.ForkNuFX;
@@ -111,8 +114,8 @@ public class FormattedAppleFileFactory
 
       return switch (appleFile.getFileSystemType ())
       {
-        case DOS3 -> getFormattedDosFile (appleFile);
-        case DOS4 -> getFormattedDosFile (appleFile);
+        case DOS3 -> getFormattedDosFile ((FileDos) appleFile);
+        case DOS4 -> getFormattedDosFile ((FileDos) appleFile);
         case PRODOS -> getFormattedProdosFile (appleFile);
         case PASCAL -> getFormattedPascalFile (appleFile);
         case CPM -> getFormattedCpmFile ((FileCpm) appleFile);
@@ -135,7 +138,7 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile getFormattedDosFile (AppleFile appleFile)
+  private FormattedAppleFile getFormattedDosFile (FileDos appleFile)
   // ---------------------------------------------------------------------------------//
   {
     Buffer dataRecord = appleFile.getFileBuffer ();
@@ -154,13 +157,13 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkDosText (AppleFile appleFile, byte[] buffer)
+  private FormattedAppleFile checkDosText (FileDos appleFile, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
     if (VisicalcFile.isVisicalcFile (buffer))
       return new VisicalcFile (appleFile);
 
-    return new Text (appleFile);
+    return new DosText (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -203,7 +206,7 @@ public class FormattedAppleFileFactory
     if (appleFile instanceof ForkProdos fork)
     {
       eof = fork.getFileLength ();
-      aux = fork.getParentFile ().getAuxType ();
+      aux = fork.getAuxType ();
       dataBuffer = new Buffer (fork.getFileBuffer ().data (), 0, eof);
 
       if (fork.getForkType () == ForkType.RESOURCE)
@@ -218,7 +221,7 @@ public class FormattedAppleFileFactory
 
     return switch (appleFile.getFileType ())
     {
-      case FILE_TYPE_TEXT -> new Text (appleFile, dataBuffer);
+      case FILE_TYPE_TEXT -> checkText (appleFile, dataBuffer, aux);
       case FILE_TYPE_GWP -> new Text (appleFile, dataBuffer);
       case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, aux);
       case FILE_TYPE_PNT -> checkGraphics (appleFile, dataBuffer, aux);
@@ -237,6 +240,17 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_BAT -> new Text (appleFile, dataBuffer);
       default -> new DataFileProdos (appleFile, dataBuffer, aux);
     };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkText (AppleFile appleFile, Buffer dataBuffer, int aux)
+  // ---------------------------------------------------------------------------------//
+  {
+    if (aux > 0)          // record length
+      return new ProdosText (((FileProdos) appleFile), dataBuffer, aux);
+
+    return new Text (appleFile, dataBuffer);
+
   }
 
   // https://nicole.express/2024/phasing-in-and-out-of-existence.html

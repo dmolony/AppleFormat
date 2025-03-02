@@ -26,7 +26,7 @@ public abstract class BasicFormatter implements ApplesoftConstants
   {
     this.program = program;
     this.basicPreferences = basicPreferences;
-    Buffer dataRecord = program.getDataRecord ();
+    Buffer dataRecord = program.getDataBuffer ();
     this.buffer = dataRecord.data ();
     this.offset = dataRecord.offset ();
     this.sourceLines = program.getSourceLines ();

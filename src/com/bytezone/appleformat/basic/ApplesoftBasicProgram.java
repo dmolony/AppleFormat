@@ -50,8 +50,8 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
   {
     preferences = basicPreferences;
 
-    int ptr = dataRecord.offset ();
-    byte[] buffer = dataRecord.data ();
+    int ptr = dataBuffer.offset ();
+    byte[] buffer = dataBuffer.data ();
 
     while (buffer[ptr + 1] != 0)    // msb of link field
     {

@@ -42,9 +42,9 @@ public class AppleGraphicsA2FC extends Graphics
   {
     super (appleFile);
 
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     if (name.endsWith (".PAC"))
     {

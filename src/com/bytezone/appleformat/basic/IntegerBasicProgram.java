@@ -34,9 +34,9 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
   {
     super (appleFile);
 
-    buffer = dataRecord.data ();
-    offset = dataRecord.offset ();
-    length = dataRecord.length ();
+    buffer = dataBuffer.data ();
+    offset = dataBuffer.offset ();
+    length = dataBuffer.length ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -61,8 +61,8 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
     //    pgm.append (String.format ("Length  : $%04X (%<,d)%n%n", length));
 
     //    byte[] buffer = dataRecord.data ();
-    int ptr = dataRecord.offset ();
-    int max = dataRecord.max ();
+    int ptr = dataBuffer.offset ();
+    int max = dataBuffer.max ();
 
     boolean looksLikeAssembler = checkForAssembler ();      // this can probably go
     boolean looksLikeSCAssembler = checkForSCAssembler ();
@@ -131,8 +131,8 @@ public class IntegerBasicProgram extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     //    byte[] buffer = dataRecord.data ();
-    int ptr = dataRecord.offset ();
-    int max = dataRecord.max ();
+    int ptr = dataBuffer.offset ();
+    int max = dataBuffer.max ();
 
     while (ptr < max)
     {

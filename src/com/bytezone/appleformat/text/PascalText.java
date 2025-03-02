@@ -17,27 +17,6 @@ public class PascalText extends Text
   }
 
   // ---------------------------------------------------------------------------------//
-  //  public PascalText (AppleFile appleFile, DataRecord dataRecord)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    super (appleFile, dataRecord);
-  //  }
-
-  // ---------------------------------------------------------------------------------//
-  //  public PascalText (AppleFile file, byte[] buffer)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    super (file, buffer, 0, buffer.length);
-  //  }
-  //
-  //  // ---------------------------------------------------------------------------------//
-  //  public PascalText (AppleFile file, byte[] buffer, int offset, int length)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    super (file, buffer, offset, length);
-  //  }
-
-  // ---------------------------------------------------------------------------------//
   @Override
   public String buildText ()
   // ---------------------------------------------------------------------------------//
@@ -47,10 +26,10 @@ public class PascalText extends Text
 
     StringBuilder text = new StringBuilder ();
 
-    byte[] buffer = dataRecord.data ();
-    int ptr = dataRecord.offset () + PAGE_SIZE;         // skip text editor header
+    byte[] buffer = dataBuffer.data ();
+    int ptr = dataBuffer.offset () + PAGE_SIZE;         // skip text editor header
 
-    while (ptr < dataRecord.max ())
+    while (ptr < dataBuffer.max ())
     {
       if (buffer[ptr] == 0x00)                          // padding to page boundary
       {

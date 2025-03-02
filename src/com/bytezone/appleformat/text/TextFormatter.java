@@ -19,9 +19,9 @@ public class TextFormatter
   {
     this.text = text;
     //    this.buffer = text.getBuffer ();
-    buffer = text.getDataRecord ().data ();
-    offset = text.getDataRecord ().offset ();
-    length = text.getDataRecord ().length ();
+    buffer = text.getDataBuffer ().data ();
+    offset = text.getDataBuffer ().offset ();
+    length = text.getDataBuffer ().length ();
   }
 
   // ---------------------------------------------------------------------------------//

@@ -44,9 +44,9 @@ public class Pnt0000 extends Graphics
   private void setup ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     // 00000 - 00032  1 Color table
     // 00033 - 00545  empty

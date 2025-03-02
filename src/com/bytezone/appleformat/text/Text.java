@@ -34,31 +34,6 @@ public class Text extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  //  public Text (AppleFile appleFile, byte[] buffer)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    this (appleFile, buffer, 0, buffer.length);
-  //  }
-  //
-  //  // ---------------------------------------------------------------------------------//
-  //  public Text (AppleFile appleFile, byte[] buffer, int offset, int length)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    super (appleFile, buffer, offset, length);
-  //
-  //    textFormatter = new TextFormatter (this);
-  //    preferences = FormattedAppleFileFactory.textPreferences;
-  //  }
-
-  // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public byte[] getBuffer ()
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    return dataRecord.data ();        // this shouldn't exist
-  //  }
-
-  // ---------------------------------------------------------------------------------//
   @Override
   public String buildText ()
   // ---------------------------------------------------------------------------------//

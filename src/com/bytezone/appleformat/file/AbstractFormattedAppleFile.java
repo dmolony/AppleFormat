@@ -25,7 +25,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected final AppleForkedFile forkedFile;
 
   protected final String name;
-  protected Buffer dataRecord;      // would be final except for FaddenHiResImage
+  protected Buffer dataBuffer;      // would be final except for FaddenHiResImage
 
   private Image image;
   private String text;
@@ -45,7 +45,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     //    System.out.println ("local folder - " + localFile.getName ());
 
     name = localFile.getName ();
-    dataRecord = null;
+    dataBuffer = null;
   }
 
   // Pascal proc (inside segment)
@@ -60,7 +60,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   // Resource fork
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (AppleFile appleFile, Buffer dataRecord)
+  public AbstractFormattedAppleFile (AppleFile appleFile, Buffer dataBuffer)
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;
@@ -70,7 +70,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     container = null;
 
     name = appleFile.getFileName ();
-    this.dataRecord = Objects.requireNonNull (dataRecord);
+    this.dataBuffer = Objects.requireNonNull (dataBuffer);
   }
 
   // Prodos file with forks
@@ -85,7 +85,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     //    System.out.printf ("FF - %s%n", ((AppleFile) forkedFile).getFileName ());
 
     name = "";
-    dataRecord = null;
+    dataBuffer = null;
   }
 
   // Disk file - file system
@@ -108,19 +108,19 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
       int eof = af.getFileLength ();
       Buffer temp = af.getFileBuffer ();
 
-      dataRecord =
+      dataBuffer =
           temp.length () == eof ? temp : new Buffer (temp.data (), temp.offset (), eof);
     }
     else if (container instanceof AppleFileSystem afs)
     {
       appleFile = null;
-      dataRecord = afs.getDiskBuffer ();
+      dataBuffer = afs.getDiskBuffer ();
       //      System.out.printf ("AC -> AFS - %s%n", afs.getFileName ());
     }
     else
     {
       appleFile = null;
-      dataRecord = null;
+      dataBuffer = null;
       //      System.out.printf ("AC -> null - %s%n", "??");
     }
 
@@ -211,10 +211,10 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Buffer getDataRecord ()
+  public Buffer getDataBuffer ()
   // ---------------------------------------------------------------------------------//
   {
-    return dataRecord;
+    return dataBuffer;
   }
 
   // ---------------------------------------------------------------------------------//

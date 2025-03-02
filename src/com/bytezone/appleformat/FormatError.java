@@ -47,7 +47,7 @@ public class FormatError implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Buffer getDataRecord ()
+  public Buffer getDataBuffer ()
   // ---------------------------------------------------------------------------------//
   {
     return null;

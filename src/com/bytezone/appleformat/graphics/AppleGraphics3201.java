@@ -25,9 +25,9 @@ public class AppleGraphics3201 extends Graphics
   {
     super (appleFile);
 
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     //     0 -     3  APP/0
     //     4 - 06403  200 color tables
@@ -109,7 +109,7 @@ public class AppleGraphics3201 extends Graphics
     text.append (String.format ("File type  : $%02X    %s%n", file.getFileType (),
         file.getFileTypeText ()));
     text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
-    text.append (String.format ("File size  : %,d%n", dataRecord.length ()));
+    text.append (String.format ("File size  : %,d%n", dataBuffer.length ()));
     text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
     //    if (!failureReason.isEmpty ())
     //      text.append (String.format ("Failure    : %s%n", failureReason));

@@ -48,9 +48,9 @@ public class Pic0000 extends Graphics
   private void setup ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     //      0 - 31,999  pixel data 32,000 bytes
     // 32,000 - 32,199  200 control bytes (one per scan line)
@@ -114,9 +114,9 @@ public class Pic0000 extends Graphics
   void mode320Line (PixelWriter pixelWriter, int row, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     int col = 0;
     int ptr = offset + row * 160;
@@ -141,9 +141,9 @@ public class Pic0000 extends Graphics
   void mode640Line (PixelWriter pixelWriter, int row, ColorTable colorTable)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     int col = 0;
     int ptr = offset + row * 160;
@@ -201,7 +201,7 @@ public class Pic0000 extends Graphics
     if (!auxText.isEmpty ())
       text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
 
-    text.append (String.format ("File size  : %,d%n", dataRecord.data ().length));
+    text.append (String.format ("File size  : %,d%n", dataBuffer.data ().length));
     text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
     if (!failureReason.isEmpty ())
       text.append (String.format ("Failure    : %s%n", failureReason));

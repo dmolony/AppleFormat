@@ -290,7 +290,7 @@ public class QuickDrawFont extends CharacterList
       return text.toString ();
     }
 
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
     //    int offset = dataRecord.offset ();
     //    int length = dataRecord.length ();
 

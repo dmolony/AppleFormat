@@ -44,10 +44,10 @@ public class FileContainer implements FormattedAppleFile
 
   // ---------------------------------------------------------------------------------//
   @Override
-  public Buffer getDataRecord ()
+  public Buffer getDataBuffer ()
   // ---------------------------------------------------------------------------------//
   {
-    return formattedAppleFile.getDataRecord ();
+    return formattedAppleFile.getDataBuffer ();
   }
 
   // ---------------------------------------------------------------------------------//

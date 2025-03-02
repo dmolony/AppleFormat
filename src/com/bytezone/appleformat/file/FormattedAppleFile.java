@@ -15,7 +15,7 @@ public interface FormattedAppleFile
 
   public Image getImage ();
 
-  public Buffer getDataRecord ();
+  public Buffer getDataBuffer ();
 
   public ApplePreferences getPreferences ();
 }

@@ -30,15 +30,15 @@ public class Pnt0002 extends Graphics
   {
     super (appleFile);
 
-    byte[] buffer = dataRecord.data ();
-    int ptr = dataRecord.offset ();
+    byte[] buffer = dataBuffer.data ();
+    int ptr = dataBuffer.offset ();
     //    int maxLen = appleFile.getFileLength ();
 
-    while (ptr < dataRecord.max ())
+    while (ptr < dataBuffer.max ())
     {
       int len = Utility.getLong (buffer, ptr);
 
-      if (len == 0 || len >= ptr + dataRecord.max ())
+      if (len == 0 || len >= ptr + dataBuffer.max ())
       {
         System.out.printf ("Pnt0002 Block length %s: %d%n", appleFile.getFileName (),
             len);
@@ -110,9 +110,9 @@ public class Pnt0002 extends Graphics
   private Image createMonochromeImage ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     WritableImage image = new WritableImage (320, 200);
     PixelWriter pw = image.getPixelWriter ();

@@ -14,10 +14,10 @@ public class FaddenHiResImage extends AppleGraphics
   {
     super (appleFile);
 
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
     byte[] outBuffer = new byte[0x2000];
 
-    int ptr = dataRecord.offset ();
+    int ptr = dataBuffer.offset ();
     int outPtr = 0;
 
     assert buffer[ptr++] == 0x66;
@@ -51,7 +51,7 @@ public class FaddenHiResImage extends AppleGraphics
       while (matchLen-- > 0)
         outBuffer[outPtr++] = outBuffer[offset2++];
 
-      this.dataRecord = new Buffer (outBuffer, 0, outBuffer.length);
+      this.dataBuffer = new Buffer (outBuffer, 0, outBuffer.length);
     }
   }
 }

@@ -30,11 +30,11 @@ public class Pnt8005 extends Graphics
   {
     super (appleFile);
 
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
-    int ptr = dataRecord.max () - 17;
+    int ptr = dataBuffer.max () - 17;
 
     imageType = Utility.getShort (buffer, ptr);
     imageHeight = Utility.getShort (buffer, ptr + 2);

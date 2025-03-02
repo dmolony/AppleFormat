@@ -20,7 +20,7 @@ public class Animation extends Pic0000
   {
     super (appleFile);
 
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
 
     //    int len = HexFormatter.getLong (buffer, 0x8000);
     delay = Utility.getLong (buffer, 0x8004);
@@ -56,7 +56,7 @@ public class Animation extends Pic0000
   public void nextFrame ()
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = dataBuffer.data ();
 
     int ptr = framePointers.get (frameNumber++);
     frameNumber %= framePointers.size ();
