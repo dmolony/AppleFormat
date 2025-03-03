@@ -45,6 +45,7 @@ import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
 import com.bytezone.appleformat.graphics.AppleGraphicsA2FC;
 import com.bytezone.appleformat.graphics.AppleImage;
+import com.bytezone.appleformat.graphics.DosCharacterSet;
 import com.bytezone.appleformat.graphics.FaddenHiResImage;
 import com.bytezone.appleformat.graphics.IconFile;
 import com.bytezone.appleformat.graphics.Pic0000;
@@ -176,6 +177,9 @@ public class FormattedAppleFileFactory
     int address = Utility.getShort (buffer, 0);
     int length = Utility.getShort (buffer, 2);
     Buffer dataRecord = new Buffer (buffer, 4, length);
+
+    if (appleFile.getFileName ().endsWith (".SET"))
+      return new DosCharacterSet (appleFile, dataRecord);
 
     if (ShapeTable.isShapeTable (buffer, 4, length))
       return new ShapeTable (appleFile, dataRecord);
