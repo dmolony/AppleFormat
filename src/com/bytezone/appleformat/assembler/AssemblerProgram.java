@@ -44,7 +44,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     buffer = dataRecord.data ();
     offset = dataRecord.offset ();
     length = dataRecord.length ();
-    assert offset + length < buffer.length;
+
+    assert offset + length <= buffer.length;
 
     preferences = PreferencesFactory.assemblerPreferences;
 
@@ -72,7 +73,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     buffer = dataRecord.data ();
     offset = dataRecord.offset ();
     length = dataRecord.length ();
-    assert offset + length < buffer.length;
+
+    assert offset + length <= buffer.length;
   }
 
   // ---------------------------------------------------------------------------------//

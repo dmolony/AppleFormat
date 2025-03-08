@@ -37,6 +37,7 @@ import com.bytezone.appleformat.file.PascalCode;
 import com.bytezone.appleformat.file.PascalProcedure;
 import com.bytezone.appleformat.file.PascalSegment;
 import com.bytezone.appleformat.file.ResourceFile;
+import com.bytezone.appleformat.fonts.DosCharacterSet;
 import com.bytezone.appleformat.fonts.FontFile;
 import com.bytezone.appleformat.fonts.FontValidationException;
 import com.bytezone.appleformat.fonts.QuickDrawFont;
@@ -45,7 +46,6 @@ import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.AppleGraphics3201;
 import com.bytezone.appleformat.graphics.AppleGraphicsA2FC;
 import com.bytezone.appleformat.graphics.AppleImage;
-import com.bytezone.appleformat.graphics.DosCharacterSet;
 import com.bytezone.appleformat.graphics.FaddenHiResImage;
 import com.bytezone.appleformat.graphics.IconFile;
 import com.bytezone.appleformat.graphics.Pic0000;
@@ -429,7 +429,15 @@ public class FormattedAppleFileFactory
     if (name.endsWith (".3201") && aux == 0)
       return new AppleGraphics3201 (appleFile);
 
-    return new AssemblerProgram (appleFile, new Buffer (buffer, 0, eof), aux);
+    try
+    {
+      return new AssemblerProgram (appleFile, new Buffer (buffer, 0, eof), aux);
+    }
+    catch (Exception e)
+    {
+      System.out.println ("bad");
+      return new DataFile (appleFile, dataRecord);
+    }
   }
 
   // ---------------------------------------------------------------------------------//
