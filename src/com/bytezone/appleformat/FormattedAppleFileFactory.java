@@ -150,11 +150,32 @@ public class FormattedAppleFileFactory
       case 0 -> checkDosText (appleFile, buffer);
       case 1 -> new IntegerBasicProgram (appleFile,
           new Buffer (buffer, 2, Utility.getShort (buffer, 0)));
-      case 2, 32 -> new ApplesoftBasicProgram (appleFile,
-          new Buffer (buffer, 2, Utility.getShort (buffer, 0)));
+      case 2, 32 -> checkApplesoft (appleFile, buffer);
       case 4, 16, 64 -> checkDosBinary (appleFile, buffer);
       default -> new DataFile (appleFile);
     };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkApplesoft (FileDos fileDos, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    Buffer dataBuffer = new Buffer (buffer, 2, Utility.getShort (buffer, 0));
+
+    ApplesoftBasicProgram basicProgram = new ApplesoftBasicProgram (fileDos, dataBuffer);
+    int endPtr = basicProgram.getEndPtr ();
+
+    if (endPtr < buffer.length)
+    {
+      int address = Utility.getApplesoftLoadAddress (buffer);
+      Buffer dataBuffer2 = new Buffer (buffer, endPtr, buffer.length - endPtr);
+      AssemblerProgram assemblerProgram =
+          new AssemblerProgram (fileDos, dataBuffer2, address + endPtr);
+
+      basicProgram.append (assemblerProgram);
+    }
+
+    return basicProgram;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -220,6 +241,11 @@ public class FormattedAppleFileFactory
     {
       eof = appleFile.getFileLength ();
       aux = ((FileProdos) appleFile).getAuxType ();
+
+      // avoid the DataBuffer if using TextBlocks
+      if (aux > 0 && appleFile.getFileType () == ProdosConstants.FILE_TYPE_TEXT)
+        return new ProdosText ((FileProdos) appleFile, aux);
+
       dataBuffer = new Buffer (appleFile.getFileBuffer ().data (), 0, eof);
     }
 
@@ -250,8 +276,8 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile checkText (AppleFile appleFile, Buffer dataBuffer, int aux)
   // ---------------------------------------------------------------------------------//
   {
-    if (aux > 0)          // record length
-      return new ProdosText (((FileProdos) appleFile), dataBuffer, aux);
+    //    if (aux > 0)          // record length
+    //      return new ProdosText ((FileProdos) appleFile, aux);
 
     return new Text (appleFile, dataBuffer);
 

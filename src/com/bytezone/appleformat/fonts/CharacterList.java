@@ -34,10 +34,10 @@ abstract class CharacterList extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public CharacterList (AppleFile file, Buffer dataRecord)
+  public CharacterList (AppleFile file, Buffer dataBuffer)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, dataRecord);
+    super (file, dataBuffer);
   }
 
   // ---------------------------------------------------------------------------------//

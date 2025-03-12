@@ -1,15 +1,19 @@
 package com.bytezone.appleformat.file;
 
+import java.util.List;
+
 import com.bytezone.appleformat.ApplePreferences;
 import com.bytezone.filesystem.Buffer;
 
 import javafx.scene.image.Image;
 
+// what is this used for?
 // -----------------------------------------------------------------------------------//
 public class FileContainer implements FormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   protected final FormattedAppleFile formattedAppleFile;
+  protected FormattedAppleFile extraFile;
 
   // ---------------------------------------------------------------------------------//
   public FileContainer (FormattedAppleFile formattedAppleFile)
@@ -24,6 +28,14 @@ public class FileContainer implements FormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return formattedAppleFile.getText ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public List<String> getHex (int maxLines)
+  // ---------------------------------------------------------------------------------//
+  {
+    return formattedAppleFile.getHex (maxLines);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -51,34 +63,18 @@ public class FileContainer implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public byte[] getBuffer ()
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    return formattedAppleFile.getBuffer ();
-  //  }
-
-  // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public int getOffset ()
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    return formattedAppleFile.getOffset ();
-  //  }
-
-  // ---------------------------------------------------------------------------------//
-  //  @Override
-  //  public int getLength ()
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    return formattedAppleFile.getLength ();
-  //  }
-
-  // ---------------------------------------------------------------------------------//
   @Override
   public ApplePreferences getPreferences ()
   // ---------------------------------------------------------------------------------//
   {
     return null;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public void append (FormattedAppleFile formattedAppleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    this.extraFile = formattedAppleFile;
   }
 }

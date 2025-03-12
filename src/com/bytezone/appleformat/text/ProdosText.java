@@ -1,12 +1,10 @@
 package com.bytezone.appleformat.text;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.bytezone.filesystem.AppleBlock;
-import com.bytezone.filesystem.Buffer;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.FsProdos;
+import com.bytezone.filesystem.TextBlock;
 import com.bytezone.utility.Utility;
 
 // Prodos text files
@@ -26,53 +24,16 @@ public class ProdosText extends Text
 
   boolean showTextOffsets = true;
   FsProdos fs = (FsProdos) appleFile.getParentFileSystem ();
-  List<TextBlock> textBlocks = new ArrayList<> ();
+  //  List<TextBlock> textBlocks = new ArrayList<> ();
   int aux;
 
-  // note dataBuffer is not needed
   // ---------------------------------------------------------------------------------//
-  public ProdosText (FileProdos appleFile, Buffer dataBuffer, int aux)
+  public ProdosText (FileProdos appleFile, int aux)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile);
+    super (appleFile, appleFile.getTextBlocks ());
 
     this.aux = aux;
-    if (aux == 0)
-      return;
-
-    // collect contiguous blocks into TextBlocks
-    List<AppleBlock> dataBlocks = new ArrayList<> ();
-    int logicalBlockNo = 0;
-    int startBlock = -1;
-
-    for (AppleBlock block : appleFile.getDataBlocks ())
-    {
-      if (block == null)
-      {
-        if (dataBlocks.size () > 0)
-        {
-          TextBlock textBlock =
-              new TextBlock (fs, new ArrayList<> (dataBlocks), startBlock, aux);
-          textBlocks.add (textBlock);
-          dataBlocks.clear ();
-        }
-      }
-      else
-      {
-        if (dataBlocks.size () == 0)
-          startBlock = logicalBlockNo;
-        dataBlocks.add (block);
-      }
-
-      ++logicalBlockNo;
-    }
-
-    if (dataBlocks.size () > 0)
-    {
-      TextBlock textBlock = new TextBlock (fs, new ArrayList<> (dataBlocks), startBlock,
-          appleFile.getAuxType ());
-      textBlocks.add (textBlock);
-    }
   }
 
   // ---------------------------------------------------------------------------------//
@@ -81,6 +42,9 @@ public class ProdosText extends Text
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
+
+    text.append (appleFile.getCatalogLine ());
+    text.append ("\n\n");
 
     if (showTextOffsets)
     {
@@ -94,9 +58,30 @@ public class ProdosText extends Text
     }
 
     for (TextBlock textBlock : textBlocks)
-      text.append (textBlock);
+      text.append (textBlock.getText ());
 
     return Utility.rtrim (text);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  protected List<String> buildHex ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+    int count = 0;
+
+    for (TextBlock textBlock : textBlocks)
+    {
+      text.append (String.format ("Text Block #%d%n%n", count++));
+      byte[] buffer = textBlock.getBuffer ();
+      text.append (
+          Utility.format (buffer, 0, buffer.length, true, textBlock.getStartByte ()));
+      text.append ("\n\n");
+    }
+
+    List<String> lines = List.of (text.toString ().split ("\n"));
+    return lines;
   }
 
   // ---------------------------------------------------------------------------------//

@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.text;
 
 import com.bytezone.appleformat.PreferencesFactory;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class TextFormatter
@@ -13,15 +14,21 @@ public class TextFormatter
   int offset;
   int length;
 
+  Buffer dataBuffer;
+
   // ---------------------------------------------------------------------------------//
   public TextFormatter (Text text)
   // ---------------------------------------------------------------------------------//
   {
     this.text = text;
     //    this.buffer = text.getBuffer ();
-    buffer = text.getDataBuffer ().data ();
-    offset = text.getDataBuffer ().offset ();
-    length = text.getDataBuffer ().length ();
+    dataBuffer = text.getDataBuffer ();
+    if (dataBuffer != null)
+    {
+      buffer = text.getDataBuffer ().data ();
+      offset = text.getDataBuffer ().offset ();
+      length = text.getDataBuffer ().length ();
+    }
   }
 
   // ---------------------------------------------------------------------------------//

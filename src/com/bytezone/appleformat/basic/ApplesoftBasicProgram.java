@@ -86,6 +86,12 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
     else
       appleBasicFormatter.append (text);
 
+    if (extraFile != null)
+    {
+      text.append ("\nPossible extra assembler code:\n\n");
+      text.append (extraFile.getText ());
+    }
+
     return Utility.rtrim (text);
   }
 
@@ -122,7 +128,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  int getEndPtr ()
+  public int getEndPtr ()
   // ---------------------------------------------------------------------------------//
   {
     return endPtr;

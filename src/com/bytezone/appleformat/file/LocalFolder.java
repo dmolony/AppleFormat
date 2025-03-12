@@ -2,6 +2,7 @@ package com.bytezone.appleformat.file;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import javafx.scene.image.Image;
 
@@ -44,5 +45,13 @@ public class LocalFolder extends AbstractFormattedAppleFile
         text.append (String.format ("%,12d  %s %n", file.length (), file.getName ()));
 
     return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  protected List<String> buildHex ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return List.of ("No hex");
   }
 }

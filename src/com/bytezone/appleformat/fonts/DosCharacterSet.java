@@ -115,32 +115,6 @@ public class DosCharacterSet extends CharacterList
       this.ptr = ptr;
     }
 
-    @Override
-    public String toString ()
-    {
-      StringBuilder text = new StringBuilder ();
-      int ptr2 = ptr;
-
-      for (int j = 0; j < 8; j++)                 // 8 rows of 7 pixels
-      {
-        int val = buffer[ptr2++] & 0xFF;
-        text.append (String.format ("%02X  ", val));
-
-        if ((val & 0x80) != 0)                    // half pixel shift
-          text.append (" ");
-
-        for (int bit = 0; bit < 7; bit++)         // 7 displayable pixels
-        {
-          text.append (String.format ("%s ", (val & 0x01) != 0 ? "o" : " "));
-          val >>>= 1;
-        }
-        text.append ("\n");                       // end of row
-      }
-      text.append ("\n");                         // blank line between characters
-
-      return text.toString ();
-    }
-
     // -------------------------------------------------------------------------------//
     void draw (PixelWriter pixelWriter, int x, int y)
     // -------------------------------------------------------------------------------//
@@ -172,6 +146,32 @@ public class DosCharacterSet extends CharacterList
         x = left;
         y += 2;
       }
+    }
+
+    @Override
+    public String toString ()
+    {
+      StringBuilder text = new StringBuilder ();
+      int ptr2 = ptr;
+
+      for (int j = 0; j < 8; j++)                 // 8 rows of 7 pixels
+      {
+        int val = buffer[ptr2++] & 0xFF;
+        text.append (String.format ("%02X  ", val));
+
+        if ((val & 0x80) != 0)                    // half pixel shift
+          text.append (" ");
+
+        for (int bit = 0; bit < 7; bit++)         // 7 displayable pixels
+        {
+          text.append (String.format ("%s ", (val & 0x01) != 0 ? "o" : " "));
+          val >>>= 1;
+        }
+        text.append ("\n");                       // end of row
+      }
+      text.append ("\n");                         // blank line between characters
+
+      return text.toString ();
     }
   }
 }

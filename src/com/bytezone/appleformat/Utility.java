@@ -11,6 +11,7 @@ import java.math.MathContext;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.CRC32;
@@ -22,6 +23,9 @@ import javafx.scene.paint.Color;
 public final class Utility
 // -----------------------------------------------------------------------------------//
 {
+  private static String[] hex =
+      { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
+
   public static final byte ASCII_BACKSPACE = 0x08;
   public static final byte ASCII_LF = 0x0A;
   public static final byte ASCII_CR = 0x0D;
@@ -111,6 +115,153 @@ public final class Utility
       ++indent;
     }
     return indent;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static List<String> getHexDumpLines (byte[] b, int displayOffset)
+  // ---------------------------------------------------------------------------------//
+  {
+    return getHexDumpLines (b, 0, b.length, displayOffset);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static List<String> getHexDumpLines (byte[] b, int offset, int length)
+  // ---------------------------------------------------------------------------------//
+  {
+    return getHexDumpLines (b, offset, length, 0);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static List<String> getHexDumpLines (byte[] b, int offset, int length,
+      int displayOffset)
+  // ---------------------------------------------------------------------------------//
+  {
+    final int lineSize = 16;
+
+    List<String> lines = new ArrayList<> ();
+    final StringBuilder hexLine = new StringBuilder ();
+    final StringBuilder textLine = new StringBuilder ();
+
+    for (int ptr = offset, max = offset + length; ptr < max; ptr += lineSize)
+    {
+      hexLine.setLength (0);
+      textLine.setLength (0);
+
+      for (int linePtr = 0; linePtr < lineSize; linePtr++)
+      {
+        int z = ptr + linePtr;
+        if (z >= max)
+          break;
+
+        hexLine.append (String.format ("%02X ", b[z]));
+
+        int c = b[z] & 0x7F;
+
+        if (c > 127)
+          c -= c < 160 ? 64 : 128;
+
+        if (c < 32 || c == 127)         // non-printable
+          textLine.append (".");
+        else                            // standard ascii
+          textLine.append ((char) c);
+      }
+
+      lines.add (String.format ("%06X  %-48s %s", displayOffset + ptr,
+          hexLine.toString (), textLine.toString ()));
+    }
+
+    return lines;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static String format (byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    return format (buffer, 0, buffer.length, true, 0);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static String format (byte[] buffer, int offset)
+  // ---------------------------------------------------------------------------------//
+  {
+    return format (buffer, offset, buffer.length - offset, true, 0);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static String format (byte[] buffer, int offset, int length)
+  // ---------------------------------------------------------------------------------//
+  {
+    return format (buffer, offset, length, true, 0);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static String format (byte[] buffer, int offset, int length, boolean header,
+      int startingAddress)
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder line = new StringBuilder ();
+    int[] freq = new int[256];
+    boolean startedOnBoundary = offset % 0x100 == 0;
+
+    if (header)
+    {
+      line.append ("      ");
+      for (int i = 0; i < 16; i++)
+        line.append ("  " + hex[i]);
+      if (offset == 0)
+        line.append ("\n");
+    }
+
+    for (int i = offset; i < offset + length; i += 16)
+    {
+      if (line.length () > 0 && i > 0)
+        line.append ("\n");
+      if (i > offset && startedOnBoundary && (i % 0x200) == 0)
+        line.append ("\n");
+
+      // print offset
+      line.append (String.format ("%05X : ", (startingAddress + i - offset)));
+
+      // print hex values
+      StringBuffer trans = new StringBuffer ();
+      StringBuffer hexLine = new StringBuffer ();
+
+      int max = Math.min (i + 16, offset + length);
+      max = Math.min (max, buffer.length);
+      for (int j = i; j < max; j++)
+      {
+        int c = buffer[j] & 0xFF;
+        freq[c]++;
+        hexLine.append (String.format ("%02X ", c));
+
+        if (c > 127)
+          c -= c < 160 ? 64 : 128;
+
+        if (c < 32 || c == 127)         // non-printable
+          trans.append (".");
+        else                            // standard ascii
+          trans.append ((char) c);
+      }
+      while (hexLine.length () < 48)
+        hexLine.append (" ");
+
+      line.append (hexLine.toString () + ": " + trans.toString ());
+    }
+
+    if (false)
+    {
+      line.append ("\n\n");
+      int totalBits = 0;
+      for (int i = 0; i < freq.length; i++)
+        if (freq[i] > 0)
+        {
+          totalBits += (Integer.bitCount (i) * freq[i]);
+          line.append (
+              String.format ("%02X  %3d   %d%n", i, freq[i], Integer.bitCount (i)));
+        }
+      line.append (String.format ("%nTotal bits : %d%n", totalBits));
+    }
+    return line.toString ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -810,6 +961,19 @@ public final class Utility
     }
 
     return newPtr - savePtr;                        // bytes unpacked
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static int getApplesoftLoadAddress (byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    int nextLine = Utility.getShort (buffer, 2);
+    int ptr = 6;            // skip load address, next line number, this line number
+
+    while (ptr < buffer.length && buffer[ptr] != 0)
+      ++ptr;
+
+    return nextLine - ptr + 1;
   }
 
   // ---------------------------------------------------------------------------------//

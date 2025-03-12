@@ -1,9 +1,12 @@
 package com.bytezone.appleformat.text;
 
+import java.util.List;
+
 import com.bytezone.appleformat.PreferencesFactory;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.Buffer;
+import com.bytezone.filesystem.TextBlock;
 
 // -----------------------------------------------------------------------------------//
 public class Text extends AbstractFormattedAppleFile
@@ -28,6 +31,16 @@ public class Text extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);
+
+    textFormatter = new TextFormatter (this);
+    preferences = PreferencesFactory.textPreferences;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public Text (AppleFile appleFile, List<TextBlock> textBlocks)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (appleFile, textBlocks);
 
     textFormatter = new TextFormatter (this);
     preferences = PreferencesFactory.textPreferences;
