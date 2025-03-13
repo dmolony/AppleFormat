@@ -37,7 +37,7 @@ public class Text extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public Text (AppleFile appleFile, List<TextBlock> textBlocks)
+  public Text (AppleFile appleFile, List<? extends TextBlock> textBlocks)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, textBlocks);

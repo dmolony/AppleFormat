@@ -2,19 +2,12 @@ package com.bytezone.appleformat.text;
 
 import java.util.List;
 
-import com.bytezone.filesystem.FileProdos;
+import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.TextBlock;
 import com.bytezone.utility.Utility;
 
-// Prodos text files
-// - seedling         1 block             512 bytes
-// - sapling        256 blocks        131,072 bytes 
-// - tree        65,536 blocks     33,554,432 bytes
-// 
-// aux = record length
-// eof = file length
 // -----------------------------------------------------------------------------------//
-public class ProdosText extends Text
+public class DosText2 extends Text
 // -----------------------------------------------------------------------------------//
 {
   private static String underline = "------------------------------------------"
@@ -22,15 +15,12 @@ public class ProdosText extends Text
   private static String fullUnderline = "----------  --------  " + underline;
 
   boolean showTextOffsets = true;
-  int aux;
 
   // ---------------------------------------------------------------------------------//
-  public ProdosText (FileProdos appleFile, List<? extends TextBlock> textBlocks, int aux)
+  public DosText2 (FileDos appleFile, List<? extends TextBlock> textBlocks)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, textBlocks);
-
-    this.aux = aux;
   }
 
   // ---------------------------------------------------------------------------------//

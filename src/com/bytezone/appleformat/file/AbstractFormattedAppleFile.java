@@ -30,7 +30,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 
   protected final String name;
   protected Buffer dataBuffer;
-  protected List<TextBlock> textBlocks;
+  protected List<? extends TextBlock> textBlocks;
 
   private Image image;
   private String text;
@@ -81,7 +81,8 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AbstractFormattedAppleFile (AppleFile appleFile, List<TextBlock> textBlocks)
+  public AbstractFormattedAppleFile (AppleFile appleFile,
+      List<? extends TextBlock> textBlocks)
   // ---------------------------------------------------------------------------------//
   {
     localFile = null;

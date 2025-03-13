@@ -19,6 +19,7 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
 
 import java.io.File;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import com.bytezone.appleformat.appleworks.AppleworksADBFile;
@@ -57,6 +58,7 @@ import com.bytezone.appleformat.graphics.Pnt8005;
 import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.CpmText;
 import com.bytezone.appleformat.text.DosText;
+import com.bytezone.appleformat.text.DosText2;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.ProdosText;
 import com.bytezone.appleformat.text.Text;
@@ -74,6 +76,8 @@ import com.bytezone.filesystem.FileNuFX;
 import com.bytezone.filesystem.FileProdos;
 import com.bytezone.filesystem.ForkNuFX;
 import com.bytezone.filesystem.ForkProdos;
+import com.bytezone.filesystem.FsDos;
+import com.bytezone.filesystem.TextBlock;
 
 // -----------------------------------------------------------------------------------//
 public class FormattedAppleFileFactory
@@ -160,17 +164,22 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile checkApplesoft (FileDos fileDos, byte[] buffer)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer dataBuffer = new Buffer (buffer, 2, Utility.getShort (buffer, 0));
+    int loadLength = Utility.getShort (buffer, 0);
+    Buffer dataBufferBasic = new Buffer (buffer, 2, loadLength);
 
-    ApplesoftBasicProgram basicProgram = new ApplesoftBasicProgram (fileDos, dataBuffer);
+    ApplesoftBasicProgram basicProgram =
+        new ApplesoftBasicProgram (fileDos, dataBufferBasic);
+
+    // check for excessive space at the end of the basic program
     int endPtr = basicProgram.getEndPtr ();
+    int unusedSpace = loadLength - endPtr;
 
-    if (endPtr < buffer.length)
+    if (unusedSpace > 2)
     {
       int address = Utility.getApplesoftLoadAddress (buffer);
-      Buffer dataBuffer2 = new Buffer (buffer, endPtr, buffer.length - endPtr);
+      Buffer dataBufferAsm = new Buffer (buffer, endPtr, unusedSpace);
       AssemblerProgram assemblerProgram =
-          new AssemblerProgram (fileDos, dataBuffer2, address + endPtr);
+          new AssemblerProgram (fileDos, dataBufferAsm, address + endPtr + 2);
 
       basicProgram.append (assemblerProgram);
     }
@@ -184,6 +193,13 @@ public class FormattedAppleFileFactory
   {
     if (VisicalcFile.isVisicalcFile (buffer))
       return new VisicalcFile (appleFile);
+
+    // avoid the DataBuffer if using TextBlocks
+    if (appleFile.getFileType () == FsDos.FILE_TYPE_TEXT)
+    {
+      List<? extends TextBlock> textBlocks = appleFile.getTextBlocks ();
+      return new DosText2 (appleFile, textBlocks);
+    }
 
     return new DosText (appleFile);
   }
@@ -244,7 +260,10 @@ public class FormattedAppleFileFactory
 
       // avoid the DataBuffer if using TextBlocks
       if (aux > 0 && appleFile.getFileType () == ProdosConstants.FILE_TYPE_TEXT)
-        return new ProdosText ((FileProdos) appleFile, aux);
+      {
+        List<? extends TextBlock> textBlocks = ((FileProdos) appleFile).getTextBlocks ();
+        return new ProdosText ((FileProdos) appleFile, textBlocks, aux);
+      }
 
       dataBuffer = new Buffer (appleFile.getFileBuffer ().data (), 0, eof);
     }
