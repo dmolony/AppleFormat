@@ -52,40 +52,20 @@ public class DosText2 extends Text
       int recordLength = ((TextBlockDos) textBlock).getProbableRecordLength ();
 
       for (TextRecord record : textBlock)
-      {
-        int offset = record.offset () + textBlock.getStartByte ();
-        int recordNo = recordLength == 0 ? 0 : offset / recordLength;
+        if (showTextOffsets)
+        {
+          int offset = record.offset () + textBlock.getStartByte ();
+          int recordNo = recordLength == 0 ? 0 : offset / recordLength;
 
-        text.append (
-            String.format (" %9d %9d  %s", offset, recordNo, getData (buffer, record)));
-        text.append ("\n");
-      }
+          text.append (String.format (" %,9d %,9d  %s%n", offset, recordNo,
+              getRecordData (buffer, record, (byte) 0x7F)));
+        }
+        else
+          text.append (
+              String.format ("%s%n", getRecordData (buffer, record, (byte) 0x7F)));
     }
 
     return Utility.rtrim (text);
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private String getData (byte[] buffer, TextRecord record)
-  // ---------------------------------------------------------------------------------//
-  {
-    StringBuilder text = new StringBuilder ();
-
-    int ptr = record.offset ();
-    int length = record.length ();
-    while (length-- > 0)
-    {
-      int value = buffer[ptr++] & 0x7F;
-      if (value == 0x0D)
-      {
-        text.append ((char) 0x2C);
-        text.append ((char) 0x20);
-      }
-      else
-        text.append ((char) value);
-    }
-
-    return text.toString ();
   }
 
   // ---------------------------------------------------------------------------------//

@@ -7,6 +7,7 @@ import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.Buffer;
 import com.bytezone.filesystem.TextBlock;
+import com.bytezone.filesystem.TextBlock.TextRecord;
 
 // -----------------------------------------------------------------------------------//
 public class Text extends AbstractFormattedAppleFile
@@ -61,5 +62,35 @@ public class Text extends AbstractFormattedAppleFile
     }
 
     return output;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  protected String getRecordData (byte[] buffer, TextRecord record, byte mask)
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    int ptr = record.offset ();
+    int length = record.length ();
+
+    while (length-- > 0)
+    {
+      int value = buffer[ptr++] & mask;
+      if (value == 0x0D)
+      {
+        text.append ((char) 0x2C);      // comma
+        text.append ((char) 0x20);      // space
+      }
+      else
+        text.append ((char) value);
+    }
+
+    if (text.length () > 1)
+    {
+      text.deleteCharAt (text.length () - 1);
+      text.deleteCharAt (text.length () - 1);
+    }
+
+    return text.toString ();
   }
 }
