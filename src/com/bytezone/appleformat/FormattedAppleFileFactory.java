@@ -16,6 +16,7 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_NON;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PNT;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_SRC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
 
 import java.io.File;
@@ -195,7 +196,8 @@ public class FormattedAppleFileFactory
       return new VisicalcFile (appleFile);
 
     // avoid the DataBuffer if using TextBlocks
-    if (appleFile.getFileType () == FsDos.FILE_TYPE_TEXT)
+    if (appleFile.getFileType () == FsDos.FILE_TYPE_TEXT
+        && appleFile.getProbableRecordLength () > 0)
     {
       List<? extends TextBlock> textBlocks = appleFile.getTextBlocks ();
       return new DosText2 (appleFile, textBlocks);
@@ -259,7 +261,8 @@ public class FormattedAppleFileFactory
       aux = ((FileProdos) appleFile).getAuxType ();
 
       // avoid the DataBuffer if using TextBlocks
-      if (aux > 0 && appleFile.getFileType () == ProdosConstants.FILE_TYPE_TEXT)
+      if (aux > 0 && appleFile.getFileType () == ProdosConstants.FILE_TYPE_TEXT
+          && checkExclusions (aux, appleFile.getFileName ()))
       {
         List<? extends TextBlock> textBlocks = ((FileProdos) appleFile).getTextBlocks ();
         return new ProdosText ((FileProdos) appleFile, textBlocks, aux);
@@ -287,8 +290,21 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_ICN -> new IconFile (appleFile, dataBuffer);
       case FILE_TYPE_NON -> checkNon (appleFile, dataBuffer, aux);
       case FILE_TYPE_BAT -> new Text (appleFile, dataBuffer);
+      case FILE_TYPE_SRC -> new Text (appleFile, dataBuffer);
       default -> new DataFileProdos (appleFile, dataBuffer, aux);
     };
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private boolean checkExclusions (int aux, String fileName)
+  // ---------------------------------------------------------------------------------//
+  {
+    if (aux == 3 && fileName.endsWith (".ASM"))
+      return false;
+    if (aux == 8192 && fileName.endsWith (".S"))
+      return false;
+
+    return true;
   }
 
   // ---------------------------------------------------------------------------------//

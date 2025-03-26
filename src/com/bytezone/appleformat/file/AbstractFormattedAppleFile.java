@@ -80,6 +80,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     this.dataBuffer = Objects.requireNonNull (dataBuffer);
   }
 
+  // text file using records
   // ---------------------------------------------------------------------------------//
   public AbstractFormattedAppleFile (AppleFile appleFile,
       List<? extends TextBlock> textBlocks)

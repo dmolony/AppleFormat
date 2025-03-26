@@ -26,6 +26,9 @@ public interface ProdosConstants
   static int FILE_TYPE_LDF = 0xBC;
   static int FILE_TYPE_GS_BASIC = 0xAB;
   static int FILE_TYPE_GSOS_FILE_SYSTEM_TRANSLATOR = 0xBD;
+  static int FILE_TYPE_SRC = 0xB0;
+  static int FILE_TYPE_OBJ = 0xB1;
+  static int FILE_TYPE_LIB = 0xB2;
   static int FILE_TYPE_PNT = 0xC0;
   static int FILE_TYPE_PIC = 0xC1;
   static int FILE_TYPE_ANI = 0xC2;

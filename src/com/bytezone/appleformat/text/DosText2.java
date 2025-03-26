@@ -5,7 +5,6 @@ import java.util.List;
 import com.bytezone.filesystem.FileDos;
 import com.bytezone.filesystem.TextBlock;
 import com.bytezone.filesystem.TextBlock.TextRecord;
-import com.bytezone.filesystem.TextBlockDos;
 import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
@@ -46,10 +45,11 @@ public class DosText2 extends Text
       text.append (underline);
     }
 
+    int recordLength = ((FileDos) appleFile).getProbableRecordLength ();
+
     for (TextBlock textBlock : textBlocks)
     {
       byte[] buffer = textBlock.getBuffer ();
-      int recordLength = ((TextBlockDos) textBlock).getProbableRecordLength ();
 
       for (TextRecord record : textBlock)
         if (showTextOffsets)
