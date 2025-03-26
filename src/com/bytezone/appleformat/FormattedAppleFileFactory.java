@@ -60,6 +60,7 @@ import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.CpmText;
 import com.bytezone.appleformat.text.DosText;
 import com.bytezone.appleformat.text.DosText2;
+import com.bytezone.appleformat.text.MerlinText;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.ProdosText;
 import com.bytezone.appleformat.text.Text;
@@ -250,6 +251,15 @@ public class FormattedAppleFileFactory
     {
       eof = fork.getFileLength ();
       aux = fork.getAuxType ();
+
+      // avoid the DataBuffer if using TextBlocks
+      if (aux > 0 && fork.getFileType () == ProdosConstants.FILE_TYPE_TEXT
+          && checkExclusions (aux, fork.getFileName ()))
+      {
+        List<? extends TextBlock> textBlocks = fork.getTextBlocks ();
+        return new ProdosText ((FileProdos) appleFile, textBlocks, aux);  // cast error?
+      }
+
       dataBuffer = new Buffer (fork.getFileBuffer ().data (), 0, eof);
 
       if (fork.getForkType () == ForkType.RESOURCE)
@@ -296,6 +306,20 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkText (AppleFile appleFile, Buffer dataBuffer, int aux)
+  // ---------------------------------------------------------------------------------//
+  {
+    String fileName = appleFile.getFileName ();
+
+    if (fileName.endsWith (".S"))
+      return new MerlinText (appleFile, dataBuffer);
+    if (fileName.endsWith (".SRC"))
+      return new MerlinText (appleFile, dataBuffer);
+
+    return new Text (appleFile, dataBuffer);
+  }
+
+  // ---------------------------------------------------------------------------------//
   private boolean checkExclusions (int aux, String fileName)
   // ---------------------------------------------------------------------------------//
   {
@@ -305,17 +329,6 @@ public class FormattedAppleFileFactory
       return false;
 
     return true;
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkText (AppleFile appleFile, Buffer dataBuffer, int aux)
-  // ---------------------------------------------------------------------------------//
-  {
-    //    if (aux > 0)          // record length
-    //      return new ProdosText ((FileProdos) appleFile, aux);
-
-    return new Text (appleFile, dataBuffer);
-
   }
 
   // https://nicole.express/2024/phasing-in-and-out-of-existence.html
