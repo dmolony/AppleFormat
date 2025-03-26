@@ -8,14 +8,6 @@ import com.bytezone.utility.Utility;
 public class DosText extends Text
 // -----------------------------------------------------------------------------------//
 {
-  //  private static String underline = "------------------------------------------"
-  //      + "------------------------------------\n";
-
-  //  boolean showTextOffsets = true;
-  //  int gcd;
-  //  int records;
-  //  int textGaps;
-
   // ---------------------------------------------------------------------------------//
   public DosText (FileDos appleFile)
   // ---------------------------------------------------------------------------------//
@@ -55,9 +47,6 @@ public class DosText extends Text
 
     text.append (
         String.format ("File length ................ %,9d%n", dataBuffer.length ()));
-    //    text.append (String.format ("Greatest Common Divisor .... %,9d%n", gcd));
-    //    text.append (String.format ("Records .................... %,9d%n", records));
-    //    text.append (String.format ("Text gaps .................. %,9d%n", textGaps));
 
     return Utility.rtrim (text);
   }

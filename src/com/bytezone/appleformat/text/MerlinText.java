@@ -28,13 +28,16 @@ public class MerlinText extends Text
     byte[] buffer = dataBuffer.data ();
     int max = dataBuffer.max ();
 
-    while (ptr < max)
+    while (ptr < max && buffer[ptr] != 0x00)
     {
       AssemblerLine line = new AssemblerLine (buffer, ptr, max);
       text.append (line.textLine);
       text.append ("\n");
       ptr += line.bufferLength;
     }
+
+    if (ptr < max)
+      text.append (String.format ("%n%n..... plus %,d more bytes", max - ptr));
 
     return Utility.rtrim (text);
   }

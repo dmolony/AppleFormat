@@ -85,6 +85,13 @@ import com.bytezone.filesystem.TextBlock;
 public class FormattedAppleFileFactory
 // -----------------------------------------------------------------------------------//
 {
+  static final int RETURN = 0x0D;
+  static final int SEMI_COLON = 0x3B;
+  static final int ASTERISK = 0x2A;
+  static final int SPACE = 0x20;
+  static final int DOUBLE_QUOTE = 0x22;
+  static final int SINGLE_QUOTE = 0x27;
+
   PreferencesFactory preferencesFactory;
 
   // ---------------------------------------------------------------------------------//
@@ -311,7 +318,10 @@ public class FormattedAppleFileFactory
   {
     String fileName = appleFile.getFileName ();
 
-    if (fileName.endsWith (".S"))
+    //    int consecutiveSpaces = countConsecutiveSpaces (dataBuffer);
+    //    System.out.println (consecutiveSpaces);
+
+    if (fileName.endsWith (".S") && aux == 0 && countConsecutiveSpaces (dataBuffer) < 4)
       return new MerlinText (appleFile, dataBuffer);
     if (fileName.endsWith (".SRC"))
       return new MerlinText (appleFile, dataBuffer);
@@ -320,10 +330,54 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
+  private int countConsecutiveSpaces (Buffer dataBuffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    int maxCount = 0;
+    int count = 0;
+
+    int ptr = dataBuffer.offset ();
+    byte[] buffer = dataBuffer.data ();
+    int max = dataBuffer.max ();
+
+    while (ptr < max)
+    {
+      int value = buffer[ptr++] & 0x7F;
+      //      System.out.printf ("%3d  %02X  %2d  %2d%n", ptr, value, count, maxCount);
+
+      if (value == RETURN)
+      {
+        count = 0;
+        continue;
+      }
+
+      // ignore any line that contains *;"'
+      if (value == ASTERISK || value == SINGLE_QUOTE || value == DOUBLE_QUOTE
+          || value == SEMI_COLON)
+      {
+        while (++ptr < max && (buffer[ptr] & 0x7F) != RETURN)
+          ;
+        continue;
+      }
+
+      if (value == SPACE)
+      {
+        count++;
+        if (count > maxCount)
+          maxCount = count;
+      }
+      else
+        count = 0;
+    }
+
+    return maxCount;
+  }
+
+  // ---------------------------------------------------------------------------------//
   private boolean checkExclusions (int aux, String fileName)
   // ---------------------------------------------------------------------------------//
   {
-    if (aux == 3 && fileName.endsWith (".ASM"))
+    if (aux == 3 && (fileName.endsWith (".ASM") || fileName.endsWith (".S")))
       return false;
     if (aux == 8192 && fileName.endsWith (".S"))
       return false;
