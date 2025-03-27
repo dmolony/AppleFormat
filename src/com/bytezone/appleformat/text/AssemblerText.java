@@ -5,13 +5,13 @@ import com.bytezone.filesystem.Buffer;
 import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
-public class MerlinText extends Text
+public class AssemblerText extends Text
 // -----------------------------------------------------------------------------------//
 {
   static int[] tabStops = { 10, 15, 30 };
 
   // ---------------------------------------------------------------------------------//
-  public MerlinText (AppleFile appleFile, Buffer dataRecord)
+  public AssemblerText (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);

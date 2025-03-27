@@ -2,7 +2,7 @@ package com.bytezone.appleformat;
 
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ADB;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ANI;
-import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_BASIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ASP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_AWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BAT;
@@ -60,7 +60,7 @@ import com.bytezone.appleformat.graphics.ShapeTable;
 import com.bytezone.appleformat.text.CpmText;
 import com.bytezone.appleformat.text.DosText;
 import com.bytezone.appleformat.text.DosText2;
-import com.bytezone.appleformat.text.MerlinText;
+import com.bytezone.appleformat.text.AssemblerText;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.ProdosText;
 import com.bytezone.appleformat.text.Text;
@@ -211,6 +211,9 @@ public class FormattedAppleFileFactory
       return new DosText2 (appleFile, textBlocks);
     }
 
+    if (appleFile.getFileName ().endsWith (".S"))
+      return new AssemblerText (appleFile, appleFile.getFileBuffer ());
+
     return new DosText (appleFile);
   }
 
@@ -299,7 +302,7 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_FOT -> checkGraphics (appleFile, dataBuffer, aux);
       case FILE_TYPE_FNT -> new FontFile (appleFile, dataBuffer, aux);
       case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, dataBuffer);
-      case FILE_TYPE_APPLESOFT_BASIC -> new ApplesoftBasicProgram (appleFile, dataBuffer);
+      case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile, dataBuffer);
       case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, dataBuffer);
       case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile, dataBuffer);
       case FILE_TYPE_AWP -> new AppleworksWPFile (appleFile, dataBuffer);
@@ -322,9 +325,9 @@ public class FormattedAppleFileFactory
     //    System.out.println (consecutiveSpaces);
 
     if (fileName.endsWith (".S") && aux == 0 && countConsecutiveSpaces (dataBuffer) < 4)
-      return new MerlinText (appleFile, dataBuffer);
+      return new AssemblerText (appleFile, dataBuffer);
     if (fileName.endsWith (".SRC"))
-      return new MerlinText (appleFile, dataBuffer);
+      return new AssemblerText (appleFile, dataBuffer);
 
     return new Text (appleFile, dataBuffer);
   }
@@ -563,7 +566,7 @@ public class FormattedAppleFileFactory
     }
     catch (Exception e)
     {
-      System.out.println ("bad");
+      System.out.println ("bad " + appleFile.getFileName ());
       return new DataFile (appleFile, dataRecord);
     }
   }
@@ -614,43 +617,33 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile getFormattedBin2File (FileBinary2 appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    //    byte[] buffer = appleFile.read ();
     Buffer dataRecord = appleFile.getFileBuffer ();
-    //    byte[] buffer = dataRecord.data ();
     int fileType = appleFile.getFileType ();
-    //    int length = appleFile.getEof ();
     int auxType = appleFile.getAuxType ();
-
-    //    System.out.println (appleFile);
-    //    System.out.println (appleFile.getOsType ());
-    //    System.out.println (appleFile.getFileType ());
 
     switch (appleFile.getOsType ())
     {
       case 0:                                           // Prodos
         return switch (fileType)
         {
-          case 0x04 -> new Text (appleFile);
-          case 0x06 -> checkProdosBinary (appleFile, dataRecord, auxType);
-          case 0xFC -> new ApplesoftBasicProgram (appleFile);
-          case 0xFA -> new IntegerBasicProgram (appleFile);
+          case FILE_TYPE_TEXT -> checkText (appleFile, dataRecord, auxType);
+          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataRecord, auxType);
+          case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
+          case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
           default -> new DataFile (appleFile);
         };
 
       case 1:                                           // Dos 3.3
       case 2:                                           // Dos 3.2 or 3.1
         System.out.printf ("Bin2 file system: %d not written%n", appleFile.getOsType ());
-        //        return new DataFile (appleFile, buffer);
         return new DataFile (appleFile);
 
       case 3:                                           // Pascal
         System.out.printf ("Bin2 file system: %d not written%n", appleFile.getOsType ());
-        //        return new DataFile (appleFile, buffer);
         return new DataFile (appleFile);
     }
 
     System.out.printf ("Bin2 unknown file system: %d%n", appleFile.getOsType ());
-    //    return new DataFile (appleFile, buffer);
     return new DataFile (appleFile);
   }
 
@@ -689,10 +682,10 @@ public class FormattedAppleFileFactory
       case 1:                                     // Prodos/Sos
         return switch (fileType)
         {
-          case 0x04 -> new Text (appleFile);
-          case 0x06 -> checkProdosBinary (appleFile, dataRecord, aux);
-          case 0xFC -> new ApplesoftBasicProgram (appleFile);
-          case 0xFA -> new IntegerBasicProgram (appleFile);
+          case FILE_TYPE_TEXT -> checkText (appleFile, dataRecord, aux);
+          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataRecord, aux);
+          case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
+          case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
           default -> new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
         };
 

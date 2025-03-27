@@ -43,8 +43,8 @@ public interface ProdosConstants
   static int FILE_TYPE_BAT = 0xF5;
   static int FILE_TYPE_INTEGER_BASIC = 0xFA;
   static int FILE_TYPE_INTEGER_BASIC_VARS = 0xFB;
-  static int FILE_TYPE_APPLESOFT_BASIC = 0xFC;
-  static int FILE_TYPE_APPLESOFT_BASIC_VARS = 0xFD;
+  static int FILE_TYPE_APPLESOFT = 0xFC;
+  static int FILE_TYPE_APPLESOFT_VARS = 0xFD;
   static int FILE_TYPE_RELOCATABLE = 0xFE;
   static int FILE_TYPE_SYS = 0xFF;
 

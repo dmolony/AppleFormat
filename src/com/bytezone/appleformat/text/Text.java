@@ -72,6 +72,7 @@ public class Text extends AbstractFormattedAppleFile
 
     int ptr = record.offset ();
     int length = record.length ();
+    int totSeparators = 0;
 
     while (length-- > 0)
     {
@@ -80,16 +81,17 @@ public class Text extends AbstractFormattedAppleFile
       {
         text.append ((char) 0x2C);      // comma
         text.append ((char) 0x20);      // space
+        totSeparators += 2;
       }
       else
+      {
         text.append ((char) value);
+        totSeparators = 0;
+      }
     }
 
-    if (text.length () > 1)
-    {
+    for (int i = 0; i < totSeparators; i++)
       text.deleteCharAt (text.length () - 1);
-      text.deleteCharAt (text.length () - 1);
-    }
 
     return text.toString ();
   }

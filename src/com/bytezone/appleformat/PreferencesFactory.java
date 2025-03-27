@@ -2,7 +2,7 @@ package com.bytezone.appleformat;
 
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ADB;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ANI;
-import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_BASIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ASP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_AWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BAT;
@@ -103,7 +103,7 @@ public class PreferencesFactory
       case FILE_TYPE_ANI -> graphicsPreferences;
       case FILE_TYPE_FNT -> graphicsPreferences;
       case FILE_TYPE_FONT -> graphicsPreferences;
-      case FILE_TYPE_APPLESOFT_BASIC -> basicPreferences;
+      case FILE_TYPE_APPLESOFT -> basicPreferences;
       case FILE_TYPE_INTEGER_BASIC -> null;
       case FILE_TYPE_ASP -> null;
       case FILE_TYPE_AWP -> textPreferences;
