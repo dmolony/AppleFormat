@@ -57,10 +57,10 @@ import com.bytezone.appleformat.graphics.Pnt0000;
 import com.bytezone.appleformat.graphics.Pnt0002;
 import com.bytezone.appleformat.graphics.Pnt8005;
 import com.bytezone.appleformat.graphics.ShapeTable;
+import com.bytezone.appleformat.text.AssemblerText;
 import com.bytezone.appleformat.text.CpmText;
 import com.bytezone.appleformat.text.DosText;
 import com.bytezone.appleformat.text.DosText2;
-import com.bytezone.appleformat.text.AssemblerText;
 import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.appleformat.text.ProdosText;
 import com.bytezone.appleformat.text.Text;
@@ -212,9 +212,25 @@ public class FormattedAppleFileFactory
     }
 
     if (appleFile.getFileName ().endsWith (".S"))
-      return new AssemblerText (appleFile, appleFile.getFileBuffer ());
+      return new AssemblerText (appleFile, getExactBuffer (appleFile));
 
     return new DosText (appleFile);
+  }
+
+  // create a new Buffer without any trailing zeros
+  // ---------------------------------------------------------------------------------//
+  private Buffer getExactBuffer (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    Buffer fileBuffer = appleFile.getFileBuffer ();
+    byte[] buffer = fileBuffer.data ();
+    int offset = fileBuffer.offset ();
+    int ptr = fileBuffer.max ();            // last byte + 1
+
+    while (buffer[--ptr] == 0)
+      ;
+
+    return new Buffer (buffer, offset, ptr - offset);
   }
 
   // ---------------------------------------------------------------------------------//
