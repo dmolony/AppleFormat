@@ -227,7 +227,7 @@ public class FormattedAppleFileFactory
     int offset = fileBuffer.offset ();
     int ptr = fileBuffer.max ();            // last byte + 1
 
-    while (buffer[--ptr] == 0)
+    while (ptr > offset && buffer[--ptr] == 0)
       ;
 
     return new Buffer (buffer, offset, ptr - offset);
@@ -270,6 +270,7 @@ public class FormattedAppleFileFactory
   {
     int eof;
     int aux;
+    int totalTextBlocks;
 
     Buffer dataBuffer;      // build a new Buffer with the correct eof
 
@@ -277,10 +278,11 @@ public class FormattedAppleFileFactory
     {
       eof = fork.getFileLength ();
       aux = fork.getAuxType ();
+      totalTextBlocks = fork.getTotalTextBlocks ();
 
       // avoid the DataBuffer if using TextBlocks
       if (aux > 0 && fork.getFileType () == ProdosConstants.FILE_TYPE_TEXT
-          && checkExclusions (aux, fork.getFileName ()))
+          && totalTextBlocks > 0 && checkExclusions (aux, fork.getFileName ()))
       {
         List<? extends TextBlock> textBlocks = fork.getTextBlocks ();
         return new ProdosText ((FileProdos) appleFile, textBlocks, aux);  // cast error?
@@ -295,10 +297,11 @@ public class FormattedAppleFileFactory
     {
       eof = appleFile.getFileLength ();
       aux = ((FileProdos) appleFile).getAuxType ();
+      totalTextBlocks = ((FileProdos) appleFile).getTotalTextBlocks ();
 
       // avoid the DataBuffer if using TextBlocks
       if (aux > 0 && appleFile.getFileType () == ProdosConstants.FILE_TYPE_TEXT
-          && checkExclusions (aux, appleFile.getFileName ()))
+          && totalTextBlocks > 0 && checkExclusions (aux, appleFile.getFileName ()))
       {
         List<? extends TextBlock> textBlocks = ((FileProdos) appleFile).getTextBlocks ();
         return new ProdosText ((FileProdos) appleFile, textBlocks, aux);
@@ -337,10 +340,7 @@ public class FormattedAppleFileFactory
   {
     String fileName = appleFile.getFileName ();
 
-    //    int consecutiveSpaces = countConsecutiveSpaces (dataBuffer);
-    //    System.out.println (consecutiveSpaces);
-
-    if (fileName.endsWith (".S") && aux == 0 && countConsecutiveSpaces (dataBuffer) < 4)
+    if (fileName.endsWith (".S") && countConsecutiveSpaces (dataBuffer) < 4)
       return new AssemblerText (appleFile, dataBuffer);
     if (fileName.endsWith (".SRC"))
       return new AssemblerText (appleFile, dataBuffer);
@@ -399,6 +399,8 @@ public class FormattedAppleFileFactory
     if (aux == 3 && (fileName.endsWith (".ASM") || fileName.endsWith (".S")))
       return false;
     if (aux == 8192 && fileName.endsWith (".S"))
+      return false;
+    if (aux > 1000)
       return false;
 
     return true;
