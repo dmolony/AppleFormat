@@ -7,9 +7,11 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ASP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_AWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BAT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BINARY;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_CMD;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FONT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FOT;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_GS_BASIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_GWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ICN;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
@@ -17,6 +19,8 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_NON;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PIC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_SRC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_SYS;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TDF;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
 
 import java.io.File;
@@ -29,6 +33,7 @@ import com.bytezone.appleformat.appleworks.AppleworksWPFile;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.BasicCpmProgram;
+import com.bytezone.appleformat.basic.BasicProgramGS;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.file.Catalog;
 import com.bytezone.appleformat.file.DataFile;
@@ -39,6 +44,8 @@ import com.bytezone.appleformat.file.PascalCode;
 import com.bytezone.appleformat.file.PascalProcedure;
 import com.bytezone.appleformat.file.PascalSegment;
 import com.bytezone.appleformat.file.ResourceFile;
+import com.bytezone.appleformat.file.TdfFile;
+import com.bytezone.appleformat.file.UnknownFile;
 import com.bytezone.appleformat.fonts.DosCharacterSet;
 import com.bytezone.appleformat.fonts.FontFile;
 import com.bytezone.appleformat.fonts.FontValidationException;
@@ -314,6 +321,8 @@ public class FormattedAppleFileFactory
     {
       case FILE_TYPE_TEXT -> checkText (appleFile, dataBuffer, aux);
       case FILE_TYPE_GWP -> new Text (appleFile, dataBuffer);
+      case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataBuffer, aux);
+      case FILE_TYPE_CMD -> new AssemblerProgram (appleFile, dataBuffer, aux);
       case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, aux);
       case FILE_TYPE_PNT -> checkGraphics (appleFile, dataBuffer, aux);
       case FILE_TYPE_PIC -> checkGraphics (appleFile, dataBuffer, aux);
@@ -321,6 +330,8 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_FOT -> checkGraphics (appleFile, dataBuffer, aux);
       case FILE_TYPE_FNT -> new FontFile (appleFile, dataBuffer, aux);
       case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, dataBuffer);
+      case FILE_TYPE_GS_BASIC -> new BasicProgramGS (appleFile, dataBuffer);
+      case FILE_TYPE_TDF -> new TdfFile (appleFile, dataBuffer, aux);
       case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile, dataBuffer);
       case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, dataBuffer);
       case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile, dataBuffer);
@@ -330,7 +341,7 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_NON -> checkNon (appleFile, dataBuffer, aux);
       case FILE_TYPE_BAT -> new Text (appleFile, dataBuffer);
       case FILE_TYPE_SRC -> new Text (appleFile, dataBuffer);
-      default -> new DataFileProdos (appleFile, dataBuffer, aux);
+      default -> new UnknownFile (appleFile, dataBuffer, aux);
     };
   }
 

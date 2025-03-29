@@ -25,6 +25,7 @@ public interface ProdosConstants
   static int FILE_TYPE_IIGS_DEVICE_DRIVER = 0xBB;
   static int FILE_TYPE_LDF = 0xBC;
   static int FILE_TYPE_GS_BASIC = 0xAB;
+  static int FILE_TYPE_TDF = 0xAC;
   static int FILE_TYPE_GSOS_FILE_SYSTEM_TRANSLATOR = 0xBD;
   static int FILE_TYPE_SRC = 0xB0;
   static int FILE_TYPE_OBJ = 0xB1;
@@ -39,6 +40,7 @@ public interface ProdosConstants
   static int FILE_TYPE_LBR = 0xE0;
   static int FILE_TYPE_APPLETALK = 0xE2;
   static int FILE_TYPE_PASCAL_VOLUME = 0xEF;
+  static int FILE_TYPE_CMD = 0xF0;
   static int FILE_TYPE_OVL = 0xF1;
   static int FILE_TYPE_BAT = 0xF5;
   static int FILE_TYPE_INTEGER_BASIC = 0xFA;
