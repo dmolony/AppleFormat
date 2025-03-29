@@ -589,6 +589,9 @@ public class FormattedAppleFileFactory
     if (name.endsWith (".3201") && aux == 0)
       return new AppleGraphics3201 (appleFile);
 
+    if (eof == 32768)
+      return new Pic0000 (appleFile);
+
     try
     {
       return new AssemblerProgram (appleFile, new Buffer (buffer, 0, eof), aux);
