@@ -29,11 +29,14 @@ public final class Utility
   public static final byte ASCII_BACKSPACE = 0x08;
   public static final byte ASCII_LF = 0x0A;
   public static final byte ASCII_CR = 0x0D;
-  public static final byte ASCII_QUOTE = 0x22;
+  public static final byte ASCII_SPACE = 0x20;
+  public static final byte ASCII_DOUBLE_QUOTE = 0x22;
   public static final byte ASCII_DOLLAR = 0x24;
   public static final byte ASCII_PERCENT = 0x25;
+  public static final byte ASCII_SINGLE_QUOTE = 0x27;
   public static final byte ASCII_LEFT_BRACKET = 0x28;
   public static final byte ASCII_RIGHT_BRACKET = 0x29;
+  public static final byte ASCII_ASTERISK = 0x2A;
   public static final byte ASCII_COMMA = 0x2C;
   public static final byte ASCII_MINUS = 0x2D;
   public static final byte ASCII_DOT = 0x2E;

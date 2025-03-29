@@ -41,7 +41,7 @@ public class SourceLine implements ApplesoftConstants
 
       if (inString)
       {
-        if (b == Utility.ASCII_QUOTE)             // terminate string
+        if (b == Utility.ASCII_DOUBLE_QUOTE)             // terminate string
           inString = false;
         continue;
       }
@@ -75,7 +75,7 @@ public class SourceLine implements ApplesoftConstants
           }
           break;
 
-        case Utility.ASCII_QUOTE:
+        case Utility.ASCII_DOUBLE_QUOTE:
           inString = true;
           break;
       }

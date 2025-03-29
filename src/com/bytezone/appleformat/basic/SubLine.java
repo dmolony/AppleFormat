@@ -9,7 +9,7 @@ import static com.bytezone.appleformat.Utility.ASCII_LEFT_BRACKET;
 import static com.bytezone.appleformat.Utility.ASCII_LF;
 import static com.bytezone.appleformat.Utility.ASCII_MINUS;
 import static com.bytezone.appleformat.Utility.ASCII_PERCENT;
-import static com.bytezone.appleformat.Utility.ASCII_QUOTE;
+import static com.bytezone.appleformat.Utility.ASCII_DOUBLE_QUOTE;
 import static com.bytezone.appleformat.Utility.ASCII_RIGHT_BRACKET;
 import static com.bytezone.appleformat.Utility.getIndent;
 import static com.bytezone.appleformat.Utility.isControlCharacter;
@@ -135,7 +135,7 @@ public class SubLine implements ApplesoftConstants
 
       if (inQuote)
       {
-        if (b == ASCII_QUOTE)      // ignore strings
+        if (b == ASCII_DOUBLE_QUOTE)      // ignore strings
         {
           inQuote = false;
           addString (stringPtr, ptr);
@@ -143,7 +143,7 @@ public class SubLine implements ApplesoftConstants
         continue;
       }
 
-      if (b == ASCII_QUOTE)
+      if (b == ASCII_DOUBLE_QUOTE)
       {
         inQuote = true;
         stringPtr = ptr;
@@ -780,7 +780,7 @@ public class SubLine implements ApplesoftConstants
 
       line.append ((char) b);
 
-      if (b == ASCII_QUOTE && wrappingPrint)
+      if (b == ASCII_DOUBLE_QUOTE && wrappingPrint)
       {
         int len = line.length () + 7;       // amount to indent
         String indent = "                                       ".substring (0, len);
@@ -793,7 +793,7 @@ public class SubLine implements ApplesoftConstants
         }
 
         // skip to end of quote
-        while (++ptr < max && buffer[ptr] != ASCII_QUOTE)
+        while (++ptr < max && buffer[ptr] != ASCII_DOUBLE_QUOTE)
           ;
         line.append ((char) b);       // end quote
         wrappingPrint = false;

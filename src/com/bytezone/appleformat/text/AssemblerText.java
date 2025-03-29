@@ -31,9 +31,11 @@ public class AssemblerText extends Text
     while (ptr < max && buffer[ptr] != 0x00)
     {
       AssemblerLine line = new AssemblerLine (buffer, ptr, max);
-      text.append (line.textLine);
+
+      text.append (line.text ());
       text.append ("\n");
-      ptr += line.bufferLength;
+
+      ptr += line.bufferLength ();
     }
 
     if (ptr < max)
