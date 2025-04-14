@@ -40,7 +40,7 @@ public class LocalFolder extends AbstractFormattedAppleFile
 
     for (File file : files)
       if (file.isDirectory ())
-        text.append (String.format ("              %s %n", file.getName ()));
+        text.append (String.format ("              %s \n", file.getName ()));
       else
       {
         String fileName = file.getName ();
