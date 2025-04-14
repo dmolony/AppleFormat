@@ -41,8 +41,12 @@ public class LocalFolder extends AbstractFormattedAppleFile
     for (File file : files)
       if (file.isDirectory ())
         text.append (String.format ("              %s %n", file.getName ()));
-      else if (!file.isHidden ())
-        text.append (String.format ("%,12d  %s %n", file.length (), file.getName ()));
+      else
+      {
+        String fileName = file.getName ();
+        if (!file.isHidden () && !fileName.startsWith ("."))
+          text.append (String.format ("%,12d  %s \n", file.length (), fileName));
+      }
 
     return text.toString ();
   }

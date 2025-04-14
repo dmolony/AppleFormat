@@ -250,9 +250,13 @@ public class FormattedAppleFileFactory
     int address = Utility.getShort (buffer, 0);
     int length = Utility.getShort (buffer, 2);
     Buffer dataRecord = new Buffer (buffer, 4, length);
+    String fileName = appleFile.getFileName ();
 
-    if (appleFile.getFileName ().endsWith (".SET"))
+    if (fileName.endsWith (".SET"))
       return new DosCharacterSet (appleFile, dataRecord);
+
+    //    if (fileName.endsWith (".L") && appleFile.getFileType () == 64)
+    //      return new AssemblerText (appleFile, dataRecord);
 
     if (ShapeTable.isShapeTable (buffer, 4, length))
       return new ShapeTable (appleFile, dataRecord);
