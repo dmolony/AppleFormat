@@ -722,7 +722,9 @@ public class FormattedAppleFileFactory
           case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataRecord, aux);
           case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
           case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
-          default -> new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
+          case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataRecord, aux);
+          //          default -> new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
+          default -> new UnknownFile (appleFile, dataRecord, aux);
         };
 
       case 2:                                     // Dos 3.3
