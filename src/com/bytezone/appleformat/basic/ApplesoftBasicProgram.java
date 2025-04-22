@@ -77,7 +77,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
 
     if (sourceLines.size () == 0)
     {
-      text.append ("\n\nThis page intentionally left blank");
+      text.append ("\nNo source");
       return text.toString ();
     }
 

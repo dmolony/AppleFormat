@@ -678,6 +678,7 @@ public final class Utility
       //      else
       //        text.append (".");
     }
+
     return text.toString ();
   }
 

@@ -78,7 +78,7 @@ public class DosText2 extends Text
 
     for (TextBlock textBlock : textBlocks)
     {
-      text.append (String.format ("Text Block #%d%n%n", count++));
+      text.append (String.format ("Text Block #%d\n\n", count++));
       byte[] buffer = textBlock.getBuffer ();
       text.append (
           Utility.format (buffer, 0, buffer.length, true, textBlock.getStartByte ()));

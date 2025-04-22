@@ -13,7 +13,6 @@ public class VisicalcFile extends AbstractFormattedAppleFile
   public VisicalcFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    //    super (appleFile, buffer);
     super (appleFile);
   }
 
