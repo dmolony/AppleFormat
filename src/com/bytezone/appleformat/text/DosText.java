@@ -16,13 +16,20 @@ public class DosText extends Text
   }
 
   // ---------------------------------------------------------------------------------//
+  public DosText (FileDos appleFile, Buffer fileBuffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    super (appleFile, fileBuffer);
+  }
+
+  // ---------------------------------------------------------------------------------//
   @Override
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
 
-    Buffer fileBuffer = appleFile.getFileBuffer ();
+    Buffer fileBuffer = getDataBuffer ();
     int ptr = fileBuffer.offset ();
     byte[] buffer = fileBuffer.data ();
     int max = fileBuffer.max ();

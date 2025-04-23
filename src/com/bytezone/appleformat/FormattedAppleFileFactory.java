@@ -3,6 +3,7 @@ package com.bytezone.appleformat;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ADB;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ANI;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT_VARS;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ASP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_AWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BAT;
@@ -45,6 +46,7 @@ import com.bytezone.appleformat.file.PascalCode;
 import com.bytezone.appleformat.file.PascalProcedure;
 import com.bytezone.appleformat.file.PascalSegment;
 import com.bytezone.appleformat.file.ResourceFile;
+import com.bytezone.appleformat.file.StoredVariables;
 import com.bytezone.appleformat.file.TdfFile;
 import com.bytezone.appleformat.file.UnknownFile;
 import com.bytezone.appleformat.fonts.DosCharacterSet;
@@ -117,6 +119,10 @@ public class FormattedAppleFileFactory
     return new LocalFolder (localFile);
   }
 
+  // NB - whenever an AppleFile's getFileBuffer() is called a Buffer is returned
+  //      based on all of its data blocks but with length() equal to its EOF. If
+  //      there is no EOF set, then length() is set to buffer.length().
+  //      Random-access files will use TextBlocks instead.
   // ---------------------------------------------------------------------------------//
   public FormattedAppleFile getFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
@@ -199,8 +205,7 @@ public class FormattedAppleFileFactory
 
     // check for excessive space at the end of the basic program
     int endPtr = basicProgram.getEndPtr ();
-    //    int unusedSpace = loadLength - endPtr;
-    int unusedSpace = fileDos.getFileLength () - endPtr;
+    int unusedSpace = fileDos.getFileLength () - endPtr - 1;
 
     if (unusedSpace > 2)
     {
@@ -216,39 +221,33 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkDosText (FileDos appleFile)
+  private FormattedAppleFile checkDosText (FileDos fileDos)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = appleFile.getFileBuffer ().data ();
-
-    if (VisicalcFile.isVisicalcFile (buffer))
-      return new VisicalcFile (appleFile);
-
-    List<String> parameters = checkZardax (appleFile);      // not exhaustive
-    if (parameters.size () > 0)
-      return new DosText (appleFile);
-
     // avoid the DataBuffer if using TextBlocks
-    if (appleFile.getFileType () == FsDos.FILE_TYPE_TEXT
-        && appleFile.getProbableRecordLength () > 0)
-    {
-      List<? extends TextBlock> textBlocks = appleFile.getTextBlocks ();
-      return new DosText2 (appleFile, textBlocks);
-    }
+    if (fileDos.isRandomAccess ())
+      return new DosText2 (fileDos, fileDos.getTextBlocks ());
 
-    if (appleFile.getFileName ().endsWith (".S"))
-      return new AssemblerText (appleFile, getExactBuffer (appleFile));
+    if (VisicalcFile.isVisicalcFile (fileDos))
+      return new VisicalcFile (fileDos);
 
-    return new DosText (appleFile);
+    List<String> parameters = checkZardax (fileDos);      // not exhaustive
+    if (parameters.size () > 0)
+      return new DosText (fileDos);                       // eventually ZardaxText
+
+    if (fileDos.getFileName ().endsWith (".S"))
+      return new AssemblerText (fileDos);
+
+    return new DosText (fileDos);
   }
 
   // for now this is just to stop some of the zardax files being treated as 
   // random-access files
   // ---------------------------------------------------------------------------------//
-  private List<String> checkZardax (FileDos appleFile)
+  private List<String> checkZardax (FileDos fileDos)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer fileBuffer = appleFile.getFileBuffer ();
+    Buffer fileBuffer = fileDos.getFileBuffer ();
     byte[] buffer = fileBuffer.data ();
     int ptr = fileBuffer.offset ();
     int max = fileBuffer.max ();
@@ -260,14 +259,8 @@ public class FormattedAppleFileFactory
     while (ptr < max)
     {
       if (buffer[ptr] == (byte) 0xDF)
-      {
-        String parameter = getZardaxFormat (buffer, ptr).toUpperCase ();
+        parameters.add (getZardaxFormat (buffer, ptr).toUpperCase ());
 
-        // there will be many others
-        if (parameter.startsWith ("LM") || parameter.startsWith ("RM")
-            || parameter.startsWith ("PL") || parameter.startsWith ("JU"))
-          parameters.add (parameter);
-      }
       ++ptr;
     }
 
@@ -289,24 +282,8 @@ public class FormattedAppleFileFactory
     return value == 0 ? name : name + value;
   }
 
-  // create a new Buffer without any trailing zeros
   // ---------------------------------------------------------------------------------//
-  private Buffer getExactBuffer (AppleFile appleFile)
-  // ---------------------------------------------------------------------------------//
-  {
-    Buffer fileBuffer = appleFile.getFileBuffer ();
-    byte[] buffer = fileBuffer.data ();
-    int offset = fileBuffer.offset ();
-    int ptr = fileBuffer.max ();            // last byte + 1
-
-    while (ptr > offset && buffer[--ptr] == 0)
-      ;
-
-    return new Buffer (buffer, offset, ptr - offset);
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkDosBinary (AppleFile appleFile)
+  private FormattedAppleFile checkDosBinary (FileDos appleFile)
   // ---------------------------------------------------------------------------------//
   {
     Buffer fullBuffer = appleFile.getFileBuffer ();
@@ -322,6 +299,10 @@ public class FormattedAppleFileFactory
 
     if (fileName.endsWith (".SET"))
       return new DosCharacterSet (appleFile, dataRecord);
+    if (fileName.endsWith (".S"))
+      return new AssemblerText (appleFile, dataRecord);
+    if (fileName.endsWith (".SOURCE"))
+      return new AssemblerText (appleFile, dataRecord);     // wrong but better
 
     //    if (fileName.endsWith (".L") && appleFile.getFileType () == 64)
     //      return new AssemblerText (appleFile, dataRecord);
@@ -386,7 +367,8 @@ public class FormattedAppleFileFactory
         return new ProdosText ((FileProdos) appleFile, textBlocks, aux);
       }
 
-      dataBuffer = new Buffer (appleFile.getFileBuffer ().data (), 0, eof);
+      //      dataBuffer = new Buffer (appleFile.getFileBuffer ().data (), 0, eof);
+      dataBuffer = appleFile.getFileBuffer ();
     }
 
     return switch (appleFile.getFileType ())
@@ -413,6 +395,7 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_NON -> checkNon (appleFile, dataBuffer, aux);
       case FILE_TYPE_BAT -> new Text (appleFile, dataBuffer);
       case FILE_TYPE_SRC -> new Text (appleFile, dataBuffer);
+      case FILE_TYPE_APPLESOFT_VARS -> new StoredVariables (appleFile);
       default -> new UnknownFile (appleFile, dataBuffer, aux);
     };
   }

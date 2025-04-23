@@ -2,6 +2,7 @@ package com.bytezone.appleformat.visicalc;
 
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.Buffer;
 
 // -----------------------------------------------------------------------------------//
 public class VisicalcFile extends AbstractFormattedAppleFile
@@ -33,14 +34,20 @@ public class VisicalcFile extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public static boolean isVisicalcFile (byte[] buffer)
+  public static boolean isVisicalcFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    int firstByte = buffer[0] & 0xFF;
+    Buffer fileBuffer = appleFile.getFileBuffer ();
+    byte[] buffer = fileBuffer.data ();
+    int ptr = fileBuffer.offset ();
+    int max = fileBuffer.max ();
+
+    int firstByte = buffer[ptr] & 0xFF;
     if (firstByte != 0xBE && firstByte != 0xAF)
       return false;
 
-    int last = buffer.length - 1;
+    //    int last = buffer.length - 1;
+    int last = max - 1;
 
     while (buffer[last] == 0)
       last--;
