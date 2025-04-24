@@ -13,6 +13,9 @@ public class StoredVariables extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
+
+    // test the offset code
+    //    dataBuffer = Utility.getTestBuffer (dataBuffer);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -89,13 +92,13 @@ public class StoredVariables extends AbstractFormattedAppleFile
   {
     char c1, c2, suffix;
 
-    if ((b1 & 0x80) > 0)              // integer
+    if ((b1 & 0x80) != 0)              // integer
     {
       c1 = (char) (b1 & 0x7F);
       c2 = (char) (b2 & 0x7F);
       suffix = '%';
     }
-    else if ((b2 & 0x80) > 0)         // string
+    else if ((b2 & 0x80) != 0)         // string
     {
       c1 = (char) b1;
       c2 = (char) (b2 & 0x7F);
@@ -139,22 +142,23 @@ public class StoredVariables extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     byte[] buffer = dataBuffer.data ();
-    //    int ptr = dataBuffer.offset ();
-    int max = dataBuffer.max ();
 
     while (ptr < totalLength + 5)
     {
       String variableName = getVariableName (buffer[ptr], buffer[ptr + 1]);
       text.append ("\n");
+
       int offset = Utility.getShort (buffer, ptr + 2);
       int dimensions = buffer[ptr + 4] & 0xFF;
       int[] dimensionSizes = new int[dimensions];
       int totalElements = 0;
+
       for (int i = 0; i < dimensions; i++)
       {
         int p = i * 2 + 5 + ptr;
-        int elements = Utility.intValue (buffer[p + 1], buffer[p]);   // backwards!
+        int elements = Utility.intValue (buffer[p + 1], buffer[p]);       // backwards!
         dimensionSizes[dimensions - i - 1] = elements - 1;
+
         if (totalElements == 0)
           totalElements = elements;
         else
@@ -166,15 +170,17 @@ public class StoredVariables extends AbstractFormattedAppleFile
 
       int p = ptr + headerSize;
       int[] values = new int[dimensions];
+
       for (int i = 0; i < values.length; i++)
         values[i] = 0;
+
       out: while (true)
       {
         text.append (variableName + " " + getDimensionText (values) + " = ");
         if (elementSize == 2)
         {
-          int intValue = Utility.intValue (buffer[p + 1], buffer[p]);     // backwards
-          if ((buffer[p] & 0x80) > 0)
+          int intValue = Utility.intValue (buffer[p + 1], buffer[p]);     // backwards!
+          if ((buffer[p] & 0x80) != 0)
             intValue -= 65536;
           text.append (intValue + "\n");
         }
@@ -194,8 +200,10 @@ public class StoredVariables extends AbstractFormattedAppleFile
             text.append (Utility.floatValue (buffer, p));
           text.append ("\n");
         }
+
         p += elementSize;
         int cp = 0;
+
         while (++values[cp] > dimensionSizes[cp])
         {
           values[cp++] = 0;
@@ -203,6 +211,7 @@ public class StoredVariables extends AbstractFormattedAppleFile
             break out;
         }
       }
+
       ptr += offset;
     }
   }
@@ -228,7 +237,6 @@ public class StoredVariables extends AbstractFormattedAppleFile
 
     byte[] buffer = dataBuffer.data ();
     int ptr = dataBuffer.offset ();
-    int max = dataBuffer.max ();
 
     text.append ("File length  : " + HexFormatter.format4 (dataBuffer.length ()));
     int totalLength = Utility.getShort (buffer, ptr);
@@ -243,11 +251,13 @@ public class StoredVariables extends AbstractFormattedAppleFile
 
     ptr += 5;
     text.append ("Simple variables : \n\n");
+
     while (ptr < varLength + 5)
     {
       text.append (HexFormatter.format (buffer, ptr, 7, false, 0) + "\n");
       ptr += 7;
     }
+
     text.append ("\nArrays : \n\n");
     while (ptr < totalLength + 5)
     {
@@ -255,6 +265,7 @@ public class StoredVariables extends AbstractFormattedAppleFile
       int dimensions = buffer[ptr + 4] & 0xFF;
       int[] dimensionSizes = new int[dimensions];
       int totalElements = 0;
+
       for (int i = 0; i < dimensions; i++)
       {
         int p = i * 2 + 5 + ptr;
@@ -265,6 +276,7 @@ public class StoredVariables extends AbstractFormattedAppleFile
         else
           totalElements *= elements;
       }
+
       int headerSize = 5 + dimensions * 2;
       text.append (HexFormatter.format (buffer, ptr, headerSize, false, 0) + "\n\n");
       text.append (
@@ -272,6 +284,7 @@ public class StoredVariables extends AbstractFormattedAppleFile
               + "\n\n");
       ptr += offset;
     }
+
     text.append ("Strings : \n\n");
     int length = buffer.length - ptr;
     text.append (HexFormatter.format (buffer, ptr, length, false, 0) + "\n\n");

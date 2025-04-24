@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+import com.bytezone.filesystem.Buffer;
+
 import javafx.scene.paint.Color;
 
 // -----------------------------------------------------------------------------------//
@@ -978,6 +980,17 @@ public final class Utility
       ++ptr;
 
     return nextLine - ptr + 1;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public static Buffer getTestBuffer (Buffer original)
+  // ---------------------------------------------------------------------------------//
+  {
+    int length = original.length ();
+    byte[] b2 = new byte[length + 10];
+    System.arraycopy (original.data (), original.offset (), b2, 10, length);
+
+    return new Buffer (b2, 10, length);
   }
 
   // ---------------------------------------------------------------------------------//
