@@ -27,19 +27,13 @@ public class StoredVariables extends AbstractFormattedAppleFile
 
     byte[] buffer = dataBuffer.data ();
     int ptr = dataBuffer.offset ();
+    int strPtr = dataBuffer.max ();
 
     String strValue = null;
     int intValue = 0;
-    //		double doubleValue = 0.0;
-    int strPtr = dataBuffer.max ();
 
-    text.append ("File length  : " + HexFormatter.format4 (dataBuffer.max ()));
     int totalLength = Utility.getShort (buffer, ptr);
-    text.append ("\nTotal length : " + HexFormatter.format4 (totalLength));
-
     int varLength = Utility.getShort (buffer, ptr + 2);
-    text.append ("\nVar length   : " + HexFormatter.format4 (varLength));
-    text.append ("\n\n");
 
     // list simple variables
 
@@ -51,30 +45,31 @@ public class StoredVariables extends AbstractFormattedAppleFile
       text.append (variableName);
 
       char suffix = variableName.charAt (variableName.length () - 1);
-      if (suffix == '$')
+      switch (suffix)
       {
-        int strLength = buffer[ptr + 2] & 0xFF;
-        strPtr -= strLength;
-        strValue = HexFormatter.getString (buffer, strPtr, strLength);
-        text.append (" = " + strValue);
-      }
-      else if (suffix == '%')
-      {
-        intValue = Utility.intValue (buffer[ptr + 3], buffer[ptr + 2]);   // backwards!
-        if ((buffer[ptr + 2] & 0x80) != 0)
-          intValue -= 65536;
-        text.append (" = " + intValue);
-      }
-      else
-      {
-        if (hasValue (ptr + 2))
-        {
-          String value = Utility.floatValue (buffer, ptr + 2) + "";
-          if (value.endsWith (".0"))
-            text.append (" = " + value.substring (0, value.length () - 2));
-          else
-            text.append (" = " + value);
-        }
+        case '$':
+          int strLength = buffer[ptr + 2] & 0xFF;
+          strPtr -= strLength;
+          strValue = HexFormatter.getString (buffer, strPtr, strLength);
+          text.append (" = " + strValue);
+          break;
+
+        case '%':
+          intValue = Utility.intValue (buffer[ptr + 3], buffer[ptr + 2]);   // backwards!
+          if ((buffer[ptr + 2] & 0x80) != 0)
+            intValue -= 65536;
+          text.append (" = " + intValue);
+          break;
+
+        default:
+          if (hasValue (ptr + 2))
+          {
+            String value = Utility.floatValue (buffer, ptr + 2) + "";
+            if (value.endsWith (".0"))
+              text.append (" = " + value.substring (0, value.length () - 2));
+            else
+              text.append (" = " + value);
+          }
       }
 
       text.append ("\n");
@@ -82,6 +77,27 @@ public class StoredVariables extends AbstractFormattedAppleFile
     }
 
     listArrays (text, ptr, totalLength, strPtr);
+
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  protected String buildExtras ()
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    byte[] buffer = dataBuffer.data ();
+    int ptr = dataBuffer.offset ();
+
+    text.append ("File length  : " + HexFormatter.format4 (dataBuffer.max ()));
+    int totalLength = Utility.getShort (buffer, ptr);
+    text.append ("\nTotal length : " + HexFormatter.format4 (totalLength));
+
+    int varLength = Utility.getShort (buffer, ptr + 2);
+    text.append ("\nVar length   : " + HexFormatter.format4 (varLength));
+    text.append ("\n\n");
 
     return text.toString ();
   }
@@ -119,22 +135,6 @@ public class StoredVariables extends AbstractFormattedAppleFile
       variableName.append (suffix);
 
     return variableName.toString ();
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private String getDimensionText (int[] values)
-  // ---------------------------------------------------------------------------------//
-  {
-    StringBuilder text = new StringBuilder ("(");
-
-    for (int i = 0; i < values.length; i++)
-    {
-      text.append (values[i]);
-      if (i < values.length - 1)
-        text.append (',');
-    }
-
-    return text.append (')').toString ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -200,6 +200,8 @@ public class StoredVariables extends AbstractFormattedAppleFile
             text.append (Utility.floatValue (buffer, p));
           text.append ("\n");
         }
+        else
+          System.out.printf ("element size: %d%n", elementSize);
 
         p += elementSize;
         int cp = 0;
@@ -214,6 +216,22 @@ public class StoredVariables extends AbstractFormattedAppleFile
 
       ptr += offset;
     }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private String getDimensionText (int[] values)
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ("(");
+
+    for (int i = 0; i < values.length; i++)
+    {
+      text.append (values[i]);
+      if (i < values.length - 1)
+        text.append (',');
+    }
+
+    return text.append (')').toString ();
   }
 
   // ---------------------------------------------------------------------------------//
