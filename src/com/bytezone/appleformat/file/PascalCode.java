@@ -21,10 +21,10 @@ public class PascalCode extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  @Override
-  protected String buildExtras ()
-  // ---------------------------------------------------------------------------------//
-  {
-    return "No additional bollocks";
-  }
+  //  @Override
+  //  protected String buildExtras ()
+  //  // ---------------------------------------------------------------------------------//
+  //  {
+  //    return "No additional bollocks";
+  //  }
 }
