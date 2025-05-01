@@ -2,7 +2,7 @@ package com.bytezone.appleformat.text;
 
 import java.util.List;
 
-import com.bytezone.filesystem.FileProdos;
+import com.bytezone.filesystem.ForkProdos;
 import com.bytezone.filesystem.TextBlock;
 import com.bytezone.filesystem.TextBlock.TextRecord;
 import com.bytezone.utility.Utility;
@@ -19,7 +19,7 @@ public class ProdosText extends Text
   int recordLength;
 
   // ---------------------------------------------------------------------------------//
-  public ProdosText (FileProdos appleFile, List<? extends TextBlock> textBlocks, int aux)
+  public ProdosText (ForkProdos appleFile, List<? extends TextBlock> textBlocks, int aux)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, textBlocks);

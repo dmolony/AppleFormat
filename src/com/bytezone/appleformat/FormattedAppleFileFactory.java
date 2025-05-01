@@ -328,48 +328,24 @@ public class FormattedAppleFileFactory
       throws FontValidationException
   // ---------------------------------------------------------------------------------//
   {
-    int eof;
-    int aux;
-    int totalTextBlocks;
+    if (appleFile instanceof FileProdos fp)
+      appleFile = fp.getForks ().get (0);             // data fork
 
-    Buffer dataBuffer;      // build a new Buffer with the correct eof
+    assert appleFile instanceof ForkProdos;
 
-    if (appleFile instanceof ForkProdos fork)
+    int aux = ((ForkProdos) appleFile).getAuxType ();
+
+    // avoid the DataBuffer if using TextBlocks
+    if (appleFile.isRandomAccess ())
     {
-      eof = fork.getFileLength ();
-      aux = fork.getAuxType ();
-      totalTextBlocks = fork.getTotalTextBlocks ();
-
-      // avoid the DataBuffer if using TextBlocks
-      if (aux > 0 && fork.getFileType () == ProdosConstants.FILE_TYPE_TEXT
-          && totalTextBlocks > 0 && checkExclusions (aux, fork.getFileName ()))
-      {
-        List<? extends TextBlock> textBlocks = fork.getTextBlocks ();
-        return new ProdosText ((FileProdos) appleFile, textBlocks, aux);  // cast error?
-      }
-
-      dataBuffer = new Buffer (fork.getFileBuffer ().data (), 0, eof);
-
-      if (fork.getForkType () == ForkType.RESOURCE)
-        return new ResourceFile (appleFile, dataBuffer, aux);
+      List<? extends TextBlock> textBlocks = ((ForkProdos) appleFile).getTextBlocks ();
+      return new ProdosText ((ForkProdos) appleFile, textBlocks, aux);
     }
-    else
-    {
-      eof = appleFile.getFileLength ();
-      aux = ((FileProdos) appleFile).getAuxType ();
-      totalTextBlocks = ((FileProdos) appleFile).getTotalTextBlocks ();
 
-      // avoid the DataBuffer if using TextBlocks
-      if (aux > 0 && appleFile.getFileType () == ProdosConstants.FILE_TYPE_TEXT
-          && totalTextBlocks > 0 && checkExclusions (aux, appleFile.getFileName ()))
-      {
-        List<? extends TextBlock> textBlocks = ((FileProdos) appleFile).getTextBlocks ();
-        return new ProdosText ((FileProdos) appleFile, textBlocks, aux);
-      }
+    Buffer dataBuffer = appleFile.getFileBuffer ();
 
-      //      dataBuffer = new Buffer (appleFile.getFileBuffer ().data (), 0, eof);
-      dataBuffer = appleFile.getFileBuffer ();
-    }
+    if (((ForkProdos) appleFile).getForkType () == ForkType.RESOURCE)
+      return new ResourceFile (appleFile, dataBuffer, aux);
 
     return switch (appleFile.getFileType ())
     {
