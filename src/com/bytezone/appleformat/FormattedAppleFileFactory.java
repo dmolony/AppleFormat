@@ -721,7 +721,7 @@ public class FormattedAppleFileFactory
 
     if (appleFile instanceof ForkNuFX fork)
     {
-      fork.getFileSystemId ();
+      fileSystemId = fork.getFileSystemId ();
       dataRecord = fork.getFileBuffer ();
       buffer = dataRecord.data ();
       // aux??
@@ -750,7 +750,7 @@ public class FormattedAppleFileFactory
           case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
           case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
           case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataRecord, aux);
-          //          default -> new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
+          case FILE_TYPE_GWP -> new Text (appleFile, dataRecord);
           default -> new UnknownFile (appleFile, dataRecord, aux);
         };
 
