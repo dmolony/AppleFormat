@@ -724,7 +724,7 @@ public class FormattedAppleFileFactory
       fileSystemId = fork.getFileSystemId ();
       dataRecord = fork.getFileBuffer ();
       buffer = dataRecord.data ();
-      // aux??
+      aux = fork.getAuxType ();
     }
     else
     {
@@ -759,11 +759,11 @@ public class FormattedAppleFileFactory
       case 4:                                     // Pascal
       case 8:                                     // CPM
         System.out.printf ("NuFX file system: %d not written%n", fileSystemId);
-        return new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
+        return new UnknownFile (appleFile, new Buffer (buffer, 0, buffer.length), aux);
 
       default:
         System.out.printf ("NuFX unknown file system: %d%n", fileSystemId);
-        return new DataFile (appleFile, new Buffer (buffer, 0, buffer.length));
+        return new UnknownFile (appleFile, new Buffer (buffer, 0, buffer.length), aux);
     }
   }
 

@@ -43,8 +43,8 @@ public class AppleGraphicsA2FC extends Graphics
     super (appleFile);
 
     byte[] buffer = dataBuffer.data ();
-    int offset = dataBuffer.offset ();
-    int length = dataBuffer.length ();
+    //    int offset = dataBuffer.offset ();
+    //    int length = dataBuffer.length ();
 
     if (name.endsWith (".PAC"))
     {
@@ -140,7 +140,7 @@ public class AppleGraphicsA2FC extends Graphics
     //      text.append (HexFormatter.format (packedBuffer));
     //    }
 
-    text.append ("\n\nAuxilliary buffer:\n\n");
+    text.append ("Auxilliary buffer:\n\n");
     text.append (HexFormatter.format (auxBuffer));
 
     text.append ("\n\nPrimary buffer:\n\n");
