@@ -5,11 +5,11 @@ import static com.bytezone.appleformat.Utility.ASCII_COLON;
 import static com.bytezone.appleformat.Utility.ASCII_COMMA;
 import static com.bytezone.appleformat.Utility.ASCII_CR;
 import static com.bytezone.appleformat.Utility.ASCII_DOLLAR;
+import static com.bytezone.appleformat.Utility.ASCII_DOUBLE_QUOTE;
 import static com.bytezone.appleformat.Utility.ASCII_LEFT_BRACKET;
 import static com.bytezone.appleformat.Utility.ASCII_LF;
 import static com.bytezone.appleformat.Utility.ASCII_MINUS;
 import static com.bytezone.appleformat.Utility.ASCII_PERCENT;
-import static com.bytezone.appleformat.Utility.ASCII_DOUBLE_QUOTE;
 import static com.bytezone.appleformat.Utility.ASCII_RIGHT_BRACKET;
 import static com.bytezone.appleformat.Utility.getIndent;
 import static com.bytezone.appleformat.Utility.isControlCharacter;
@@ -741,6 +741,7 @@ public class SubLine implements ApplesoftConstants
 
     ApplesoftBasicPreferences basicPreferences = PreferencesFactory.basicPreferences;
     boolean showThen = basicPreferences.showThen && basicPreferences.displayFormat == 1;
+    boolean hideLet = basicPreferences.hideLet && basicPreferences.displayFormat == 1;
     int wrapPrintAt = basicPreferences.wrapPrintAt;
 
     // All sublines end with 0 or : except IF lines that are split into two
@@ -767,11 +768,18 @@ public class SubLine implements ApplesoftConstants
 
       if (isToken (b))
       {
+        if (b == TOKEN_LET && hideLet)
+          continue;
+
         if (line.length () > 0 && line.charAt (line.length () - 1) != ' ')
           line.append (' ');
+
+        if (b == TOKEN_THEN && !showThen)
+          continue;
+
         int val = b & 0x7F;
-        if (b != TOKEN_THEN || showThen)
-          line.append (ApplesoftConstants.tokens[val] + " ");
+
+        line.append (ApplesoftConstants.tokens[val] + " ");
         continue;
       }
 

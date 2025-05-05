@@ -25,6 +25,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   private static String PREFS_FORMAT_REM = "FormatRem";
   private static String PREFS_DELETE_EXTRA_SPACE = "DeleteExtraSpace";
   private static String PREFS_WRAP_PRINT = "WrapPrint";
+  private static String PREFS_HIDE_LET = "HideLet";
 
   public int displayFormat;              // 0 = No format, 1 = User, 2 = 40 col
 
@@ -43,6 +44,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public boolean showFunctions;
   public boolean showConstants;
   public boolean showDuplicateSymbols;
+  public boolean hideLet;
 
   public int wrapPrintAt = 40;
   public int wrapRemAt = 80;
@@ -77,6 +79,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     showCalls = preferences.getBoolean (PREFS_SHOW_CALLS, defaultValue);
 
     wrapPrintAt = preferences.getInt (PREFS_WRAP_PRINT, 40);
+    hideLet = preferences.getBoolean (PREFS_HIDE_LET, defaultValue);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -103,6 +106,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     preferences.putBoolean (PREFS_SHOW_CALLS, showCalls);
 
     preferences.putInt (PREFS_WRAP_PRINT, wrapPrintAt);
+    preferences.putBoolean (PREFS_HIDE_LET, hideLet);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -133,6 +137,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     text.append (String.format ("Wrap PRINT at ............ %d%n", wrapPrintAt));
     text.append (String.format ("Wrap REM at .............. %d%n", wrapRemAt));
     text.append (String.format ("Wrap DATA at ............. %d%n", wrapDataAt));
+    text.append (String.format ("Hide LET ................. %s%n", hideLet));
 
     return Utility.rtrim (text);
   }
