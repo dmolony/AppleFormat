@@ -742,6 +742,7 @@ public class SubLine implements ApplesoftConstants
     ApplesoftBasicPreferences basicPreferences = PreferencesFactory.basicPreferences;
     boolean showThen = basicPreferences.showThen && basicPreferences.displayFormat == 1;
     boolean hideLet = basicPreferences.hideLet && basicPreferences.displayFormat == 1;
+    boolean wrapPrint = basicPreferences.wrapPrint && basicPreferences.displayFormat == 1;
     int wrapPrintAt = basicPreferences.wrapPrintAt;
     //    wrapPrintAt = 0;
 
@@ -756,7 +757,7 @@ public class SubLine implements ApplesoftConstants
     boolean wrappingPrint = false;
     List<String> lines = null;
 
-    if (is (TOKEN_PRINT) && stringsText.size () == 1 && wrapPrintAt > 0
+    if (is (TOKEN_PRINT) && wrapPrint && stringsText.size () == 1 && wrapPrintAt > 0
         && !contains (ASCII_CR, startPtr, max))
     {
       lines = split (stringsText.get (0), wrapPrintAt);

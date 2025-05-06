@@ -25,6 +25,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   private static String PREFS_FORMAT_REM = "FormatRem";
   private static String PREFS_DELETE_EXTRA_SPACE = "DeleteExtraSpace";
   private static String PREFS_WRAP_PRINT = "WrapPrint";
+  private static String PREFS_WRAP_PRINT_AT = "WrapPrintAt";
   private static String PREFS_HIDE_LET = "HideLet";
 
   public int displayFormat;              // 0 = No format, 1 = User, 2 = 40 col
@@ -45,6 +46,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public boolean showConstants;
   public boolean showDuplicateSymbols;
   public boolean hideLet;
+  public boolean wrapPrint;
 
   public int wrapPrintAt = 40;
   public int wrapRemAt = 80;
@@ -78,8 +80,9 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     showGosubGoto = preferences.getBoolean (PREFS_SHOW_GOSUB, defaultValue);
     showCalls = preferences.getBoolean (PREFS_SHOW_CALLS, defaultValue);
 
-    wrapPrintAt = preferences.getInt (PREFS_WRAP_PRINT, 40);
+    wrapPrintAt = preferences.getInt (PREFS_WRAP_PRINT_AT, 40);
     hideLet = preferences.getBoolean (PREFS_HIDE_LET, defaultValue);
+    wrapPrint = preferences.getBoolean (PREFS_WRAP_PRINT, defaultValue);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -105,8 +108,9 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     preferences.putBoolean (PREFS_SHOW_GOSUB, showGosubGoto);
     preferences.putBoolean (PREFS_SHOW_CALLS, showCalls);
 
-    preferences.putInt (PREFS_WRAP_PRINT, wrapPrintAt);
+    preferences.putInt (PREFS_WRAP_PRINT_AT, wrapPrintAt);
     preferences.putBoolean (PREFS_HIDE_LET, hideLet);
+    preferences.putBoolean (PREFS_WRAP_PRINT, wrapPrint);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -134,6 +138,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     text.append (String.format ("Show GOTO/GOSUB .......... %s%n", showGosubGoto));
     text.append (String.format ("Show CALL ................ %s%n", showCalls));
 
+    text.append (String.format ("Wrap PRINT ............... %s%n", wrapPrint));
     text.append (String.format ("Wrap PRINT at ............ %d%n", wrapPrintAt));
     text.append (String.format ("Wrap REM at .............. %d%n", wrapRemAt));
     text.append (String.format ("Wrap DATA at ............. %d%n", wrapDataAt));
