@@ -581,7 +581,7 @@ public class SubLine implements ApplesoftConstants
 
     if (isFirst ())
     {
-      if (containsBackspaces (ptr, max))    // probably going to erase the line number
+      if (contains (ASCII_BACKSPACE, ptr, max))       // probably to erase the line number
       {
         // apple format uses left-justified line numbers so the length varies
         text.setLength (0);
@@ -622,11 +622,11 @@ public class SubLine implements ApplesoftConstants
   }
 
   // ---------------------------------------------------------------------------------//
-  private boolean containsBackspaces (int ptr, int max)
+  private boolean contains (byte searchValue, int ptr, int max)
   // ---------------------------------------------------------------------------------//
   {
     while (ptr < max)
-      if (buffer[ptr++] == ASCII_BACKSPACE)
+      if (buffer[ptr++] == searchValue)
         return true;
 
     return false;
@@ -743,6 +743,7 @@ public class SubLine implements ApplesoftConstants
     boolean showThen = basicPreferences.showThen && basicPreferences.displayFormat == 1;
     boolean hideLet = basicPreferences.hideLet && basicPreferences.displayFormat == 1;
     int wrapPrintAt = basicPreferences.wrapPrintAt;
+    //    wrapPrintAt = 0;
 
     // All sublines end with 0 or : except IF lines that are split into two
     int max = startPtr + length - 1;
@@ -755,7 +756,8 @@ public class SubLine implements ApplesoftConstants
     boolean wrappingPrint = false;
     List<String> lines = null;
 
-    if (is (TOKEN_PRINT) && stringsText.size () == 1 && wrapPrintAt > 0)
+    if (is (TOKEN_PRINT) && stringsText.size () == 1 && wrapPrintAt > 0
+        && !contains (ASCII_CR, startPtr, max))
     {
       lines = split (stringsText.get (0), wrapPrintAt);
       if (lines.size () > 1)
