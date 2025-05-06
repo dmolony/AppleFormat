@@ -1,5 +1,7 @@
 package com.bytezone.appleformat.basic;
 
+import static com.bytezone.utility.Utility.formatMeta;
+
 import java.util.prefs.Preferences;
 
 import com.bytezone.appleformat.ApplePreferences;
@@ -120,29 +122,29 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   {
     StringBuilder text = new StringBuilder (super.toString ());
 
-    text.append (String.format ("Display format ........... %d%n", displayFormat));
-    text.append (String.format ("Split REM ................ %s%n", splitRem));
-    text.append (String.format ("Split DIM ................ %s%n", splitDim));
-    text.append (String.format ("Align assign ............. %s%n", alignAssign));
+    formatMeta (text, "Display format", 2, displayFormat);
+    formatMeta (text, "Split REM", splitRem);
+    formatMeta (text, "Split DIM", splitDim);
+    formatMeta (text, "Align assign", alignAssign);
 
-    text.append (String.format ("Show caret ............... %s%n", showCaret));
-    text.append (String.format ("Show THEN ................ %s%n", showThen));
-    text.append (String.format ("Blank after RETURN ....... %s%n", blankAfterReturn));
-    text.append (String.format ("Format REM ............... %s%n", formatRem));
-    text.append (String.format ("Delete extra DATA space .. %s%n", deleteExtraDataSpace));
+    formatMeta (text, "Show caret", showCaret);
+    formatMeta (text, "Show THEN", showThen);
+    formatMeta (text, "Blank after RETURN", blankAfterReturn);
+    formatMeta (text, "Format REM", formatRem);
+    formatMeta (text, "Delete extra DATA space", deleteExtraDataSpace);
 
-    text.append (String.format ("Show symbols ............. %s%n", showSymbols));
-    text.append (String.format ("Show duplicate symbols ... %s%n", showDuplicateSymbols));
-    text.append (String.format ("Show functions ........... %s%n", showFunctions));
-    text.append (String.format ("Show constants ........... %s%n", showConstants));
-    text.append (String.format ("Show GOTO/GOSUB .......... %s%n", showGosubGoto));
-    text.append (String.format ("Show CALL ................ %s%n", showCalls));
+    formatMeta (text, "Show symbols", showSymbols);
+    formatMeta (text, "Show duplicate symbols", showDuplicateSymbols);
+    formatMeta (text, "Show functions", showFunctions);
+    formatMeta (text, "Show constants", showConstants);
+    formatMeta (text, "Show GOTO/GOSUB", showGosubGoto);
+    formatMeta (text, "Show CALL", showCalls);
 
-    text.append (String.format ("Wrap PRINT ............... %s%n", wrapPrint));
-    text.append (String.format ("Wrap PRINT at ............ %d%n", wrapPrintAt));
-    text.append (String.format ("Wrap REM at .............. %d%n", wrapRemAt));
-    text.append (String.format ("Wrap DATA at ............. %d%n", wrapDataAt));
-    text.append (String.format ("Hide LET ................. %s%n", hideLet));
+    formatMeta (text, "Wrap PRINT", wrapPrint);
+    formatMeta (text, "Wrap PRINT at", 2, wrapPrintAt);
+    formatMeta (text, "Wrap REM at", 2, wrapRemAt);
+    formatMeta (text, "Wrap DATA at", 2, wrapDataAt);
+    formatMeta (text, "Hide LET", hideLet);
 
     return Utility.rtrim (text);
   }
