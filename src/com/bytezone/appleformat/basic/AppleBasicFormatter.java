@@ -14,8 +14,6 @@ import com.bytezone.appleformat.HexFormatter;
 public class AppleBasicFormatter extends BasicFormatter
 // -----------------------------------------------------------------------------------//
 {
-  private static final int THEN = 0xC4;       // must use an Integer constant
-
   private final LineFormatter flatFormatter = new FlatLine ();
   private final LineFormatter wrapFormatter = new WrapLine ();
   private final LineFormatter hexFormatter = new HexLine ();
@@ -50,10 +48,6 @@ public class AppleBasicFormatter extends BasicFormatter
 
     while ((linkField = getShort (buffer, ptr)) != 0)
     {
-      int lineNumber = getShort (buffer, ptr + 2);
-      currentLine.append (String.format (" %d ", lineNumber));
-      ptr += 4;
-
       ptr = formatter.formatLine (currentLine, ptr);
 
       if (ptr != (linkField - loadAddress + offset))
@@ -83,14 +77,13 @@ public class AppleBasicFormatter extends BasicFormatter
     public int formatLine (StringBuilder currentLine, int ptr)
     // -------------------------------------------------------------------------------//
     {
-      while (currentLine.length () < 17)
-        currentLine.append (" ");
+      int offset = loadAddress - 2;       // ignore first 2 bytes (ptr to next line)
 
-      int offset = loadAddress - 2;
+      String header = HexFormatter.formatNoHeader (buffer, ptr, 4, offset + ptr);
+      currentLine.append (String.format ("                 %s\n", header));
+      String lineNumber = String.format ("%6d", getShort (buffer, ptr + 2));
 
-      currentLine
-          .append (HexFormatter.formatNoHeader (buffer, ptr - 4, 4, offset + ptr - 4));
-      currentLine.append ("\n");
+      ptr += 4;
       String token = "";
 
       while (true)
@@ -105,8 +98,10 @@ public class AppleBasicFormatter extends BasicFormatter
 
         for (String line : formattedHex.split (NEWLINE))
         {
-          currentLine.append (String.format ("        %-8s %s%n", token, line));
+          currentLine
+              .append (String.format ("%6.6s  %-8s %s%n", lineNumber, token, line));
           token = "";
+          lineNumber = "";
         }
 
         ptr += len;
@@ -124,14 +119,14 @@ public class AppleBasicFormatter extends BasicFormatter
 
       while (true)
       {
-        int val = buffer[ptr++] & 0xFF;
-        if (val == 0 || val == ASCII_COLON || val == THEN)
+        byte b = buffer[ptr++];
+        if (b == 0 || b == ASCII_COLON || b == TOKEN_THEN)
           return ptr - start;
       }
     }
   }
 
-  // Lists all sublines on the same line
+  // Lists all sublines on a single line
   // ---------------------------------------------------------------------------------//
   class FlatLine implements LineFormatter
   // ---------------------------------------------------------------------------------//
@@ -141,6 +136,10 @@ public class AppleBasicFormatter extends BasicFormatter
     public int formatLine (StringBuilder currentLine, int ptr)
     // -------------------------------------------------------------------------------//
     {
+      int lineNumber = getShort (buffer, ptr + 2);
+      currentLine.append (String.format (" %d ", lineNumber));
+      ptr += 4;
+
       byte b;
 
       while ((b = buffer[ptr++]) != 0)
@@ -189,6 +188,10 @@ public class AppleBasicFormatter extends BasicFormatter
     public int formatLine (StringBuilder currentLine, int ptr)
     // -------------------------------------------------------------------------------//
     {
+      int lineNumber = getShort (buffer, ptr + 2);
+      currentLine.append (String.format (" %d ", lineNumber));
+      ptr += 4;
+
       byte b;
       int cursor = currentLine.length ();
 
