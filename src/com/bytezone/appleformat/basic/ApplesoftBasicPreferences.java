@@ -30,7 +30,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   private static String PREFS_WRAP_PRINT_AT = "WrapPrintAt";
   private static String PREFS_HIDE_LET = "HideLet";
 
-  public int displayFormat;              // 0 = No format, 1 = User, 2 = 40 col
+  public int displayFormat;          // 0 = No format, 1 = User, 2 = 40 col, 3 = Hex
 
   public boolean splitRem;
   public boolean splitDim;
@@ -120,7 +120,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public String toString ()
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder (super.toString ());
+    StringBuilder text = new StringBuilder ();
 
     formatMeta (text, "Display format", 2, displayFormat);
     formatMeta (text, "Split REM", splitRem);
@@ -131,7 +131,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     formatMeta (text, "Show THEN", showThen);
     formatMeta (text, "Blank after RETURN", blankAfterReturn);
     formatMeta (text, "Format REM", formatRem);
-    formatMeta (text, "Delete extra DATA space", deleteExtraDataSpace);
+    formatMeta (text, "Delete DATA space", deleteExtraDataSpace);
 
     formatMeta (text, "Show symbols", showSymbols);
     formatMeta (text, "Show duplicate symbols", showDuplicateSymbols);

@@ -1,18 +1,26 @@
 package com.bytezone.appleformat.basic;
 
 import static com.bytezone.appleformat.Utility.ASCII_BACKSPACE;
+import static com.bytezone.appleformat.Utility.ASCII_COLON;
 import static com.bytezone.appleformat.Utility.ASCII_CR;
 import static com.bytezone.appleformat.Utility.ASCII_LF;
 import static com.bytezone.appleformat.Utility.getIndent;
 import static com.bytezone.appleformat.Utility.getShort;
 import static com.bytezone.appleformat.Utility.isHighBitSet;
 
+import com.bytezone.appleformat.HexFormatter;
+
 // -----------------------------------------------------------------------------------//
 public class AppleBasicFormatter extends BasicFormatter
 // -----------------------------------------------------------------------------------//
 {
+  private static final int THEN = 0xC4;       // must use an Integer constant
+
   private final LineFormatter flatFormatter = new FlatLine ();
   private final LineFormatter wrapFormatter = new WrapLine ();
+  private final LineFormatter hexFormatter = new HexLine ();
+
+  private int loadAddress;
 
   // ---------------------------------------------------------------------------------//
   public AppleBasicFormatter (ApplesoftBasicProgram program,
@@ -20,6 +28,8 @@ public class AppleBasicFormatter extends BasicFormatter
   // ---------------------------------------------------------------------------------//
   {
     super (program, basicPreferences);
+
+    loadAddress = getLoadAddress ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -27,13 +37,16 @@ public class AppleBasicFormatter extends BasicFormatter
   public void append (StringBuilder fullText)
   // ---------------------------------------------------------------------------------//
   {
-    int loadAddress = getLoadAddress ();
     int ptr = offset;
     int linkField;
 
     StringBuilder currentLine = new StringBuilder ();
-    LineFormatter formatter =
-        basicPreferences.displayFormat == 2 ? wrapFormatter : flatFormatter;
+    LineFormatter formatter = switch (basicPreferences.displayFormat)
+    {
+      case 2 -> wrapFormatter;
+      case 0 -> flatFormatter;
+      default -> hexFormatter;
+    };
 
     while ((linkField = getShort (buffer, ptr)) != 0)
     {
@@ -60,6 +73,65 @@ public class AppleBasicFormatter extends BasicFormatter
     abstract int formatLine (StringBuilder currentLine, int ptr);
   }
 
+  // Displays the hex values for each subline
+  // ---------------------------------------------------------------------------------//
+  class HexLine implements LineFormatter
+  // ---------------------------------------------------------------------------------//
+  {
+    // -------------------------------------------------------------------------------//
+    @Override
+    public int formatLine (StringBuilder currentLine, int ptr)
+    // -------------------------------------------------------------------------------//
+    {
+      while (currentLine.length () < 17)
+        currentLine.append (" ");
+
+      int offset = loadAddress - 2;
+
+      currentLine
+          .append (HexFormatter.formatNoHeader (buffer, ptr - 4, 4, offset + ptr - 4));
+      currentLine.append ("\n");
+      String token = "";
+
+      while (true)
+      {
+        int b = buffer[ptr];
+        if ((b & 0x80) != 0)
+          token = String.format (" %s ", ApplesoftConstants.tokens[b & 0x7F]);
+
+        int len = getLineLength (buffer, ptr);
+        String formattedHex =
+            HexFormatter.formatNoHeader (buffer, ptr, len, offset + ptr);
+
+        for (String line : formattedHex.split (NEWLINE))
+        {
+          currentLine.append (String.format ("        %-8s %s%n", token, line));
+          token = "";
+        }
+
+        ptr += len;
+
+        if (buffer[ptr - 1] == 0)
+          return ptr;
+      }
+    }
+
+    // -------------------------------------------------------------------------------//
+    private int getLineLength (byte[] buffer, int ptr)
+    // -------------------------------------------------------------------------------//
+    {
+      int start = ptr;
+
+      while (true)
+      {
+        int val = buffer[ptr++] & 0xFF;
+        if (val == 0 || val == ASCII_COLON || val == THEN)
+          return ptr - start;
+      }
+    }
+  }
+
+  // Lists all sublines on the same line
   // ---------------------------------------------------------------------------------//
   class FlatLine implements LineFormatter
   // ---------------------------------------------------------------------------------//
@@ -104,6 +176,7 @@ public class AppleBasicFormatter extends BasicFormatter
     }
   }
 
+  // mimics the Applesoft display
   // ---------------------------------------------------------------------------------//
   class WrapLine implements LineFormatter
   // ---------------------------------------------------------------------------------//
