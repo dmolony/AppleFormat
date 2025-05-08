@@ -61,7 +61,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public AbstractFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, appleFile.getRawFileBuffer ());
+    this (appleFile, appleFile.getFileBuffer ());
     //    System.out.println ("AF");
   }
 

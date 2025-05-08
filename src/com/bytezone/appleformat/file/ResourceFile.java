@@ -1,8 +1,7 @@
 package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.Utility;
-import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.Buffer;
+import com.bytezone.filesystem.ForkProdos;
 
 // -----------------------------------------------------------------------------------//
 public class ResourceFile extends AbstractFormattedAppleFile
@@ -11,12 +10,13 @@ public class ResourceFile extends AbstractFormattedAppleFile
   int aux;
 
   // ---------------------------------------------------------------------------------//
-  public ResourceFile (AppleFile appleFile, Buffer dataRecord, int aux)
+  public ResourceFile (ForkProdos appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataRecord);
+    super (appleFile);
 
-    this.aux = aux;
+    //    this.aux = aux;
+    this.aux = appleFile.getAuxType ();
   }
 
   // ---------------------------------------------------------------------------------//

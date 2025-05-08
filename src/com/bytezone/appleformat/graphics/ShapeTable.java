@@ -139,9 +139,13 @@ public class ShapeTable extends Graphics
   }
 
   // ---------------------------------------------------------------------------------//
-  public static boolean isShapeTable (byte[] buffer, int offset, int length)
+  public static boolean isShapeTable (Buffer fileBuffer)
   // ---------------------------------------------------------------------------------//
   {
+    byte[] buffer = fileBuffer.data ();
+    int offset = fileBuffer.offset ();
+    int length = fileBuffer.length ();
+
     if (length < 2)
       return false;
 
