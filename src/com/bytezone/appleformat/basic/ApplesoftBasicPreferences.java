@@ -30,7 +30,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   private static String PREFS_WRAP_PRINT_AT = "WrapPrintAt";
   private static String PREFS_HIDE_LET = "HideLet";
 
-  public int displayFormat;          // 0 = No format, 1 = User, 2 = 40 col, 3 = Hex
+  public int displayFormat;          // 0 = No format, 1 = 40 col, 2 = Hex, 3 = User
 
   public boolean splitRem;
   public boolean splitDim;
@@ -62,7 +62,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
 
     boolean defaultValue = true;
 
-    displayFormat = preferences.getInt (PREFS_DISPLAY_FORMAT, 1);
+    displayFormat = preferences.getInt (PREFS_DISPLAY_FORMAT, 3);
 
     splitRem = preferences.getBoolean (PREFS_SPLIT_REM, defaultValue);
     splitDim = preferences.getBoolean (PREFS_SPLIT_DIM, defaultValue);

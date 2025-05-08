@@ -3,6 +3,7 @@ package com.bytezone.appleformat.basic;
 import static com.bytezone.appleformat.Utility.ASCII_BACKSPACE;
 import static com.bytezone.appleformat.Utility.ASCII_COLON;
 import static com.bytezone.appleformat.Utility.ASCII_CR;
+import static com.bytezone.appleformat.Utility.ASCII_DOUBLE_QUOTE;
 import static com.bytezone.appleformat.Utility.ASCII_LF;
 import static com.bytezone.appleformat.Utility.getIndent;
 import static com.bytezone.appleformat.Utility.getShort;
@@ -41,9 +42,10 @@ public class AppleBasicFormatter extends BasicFormatter
     StringBuilder currentLine = new StringBuilder ();
     LineFormatter formatter = switch (basicPreferences.displayFormat)
     {
-      case 2 -> wrapFormatter;
       case 0 -> flatFormatter;
-      default -> hexFormatter;
+      case 1 -> wrapFormatter;
+      case 2 -> hexFormatter;
+      default -> flatFormatter;         // should be impossible
     };
 
     while ((linkField = getShort (buffer, ptr)) != 0)
@@ -54,8 +56,9 @@ public class AppleBasicFormatter extends BasicFormatter
         System.out.printf ("%s: ptr: %04X, nextLine: %04X%n", program.getName (),
             ptr + loadAddress, linkField);
 
-      currentLine.append (NEWLINE);
       fullText.append (currentLine);
+      fullText.append (NEWLINE);
+
       currentLine.setLength (0);
     }
   }
@@ -77,11 +80,11 @@ public class AppleBasicFormatter extends BasicFormatter
     public int formatLine (StringBuilder currentLine, int ptr)
     // -------------------------------------------------------------------------------//
     {
-      int offset = loadAddress - 2;       // ignore first 2 bytes (ptr to next line)
+      int hexDisplay = loadAddress - 2;                         // ignore linkField
 
-      String header = HexFormatter.formatNoHeader (buffer, ptr, 4, offset + ptr);
-      currentLine.append (String.format ("                 %s\n", header));
-      String lineNumber = String.format ("%6d", getShort (buffer, ptr + 2));
+      String header = HexFormatter.formatNoHeader (buffer, ptr, 4, hexDisplay + ptr);
+      currentLine.append (String.format ("               %s\n", header));
+      String lineNumber = String.format ("%5d", getShort (buffer, ptr + 2));
 
       ptr += 4;
       String token = "";
@@ -90,16 +93,15 @@ public class AppleBasicFormatter extends BasicFormatter
       {
         int b = buffer[ptr];
         if ((b & 0x80) != 0)
-          token = String.format (" %s ", ApplesoftConstants.tokens[b & 0x7F]);
+          token = ApplesoftConstants.tokens[b & 0x7F];
 
         int len = getLineLength (buffer, ptr);
         String formattedHex =
-            HexFormatter.formatNoHeader (buffer, ptr, len, offset + ptr);
+            HexFormatter.formatNoHeader (buffer, ptr, len, hexDisplay + ptr);
 
         for (String line : formattedHex.split (NEWLINE))
         {
-          currentLine
-              .append (String.format ("%6.6s  %-8s %s%n", lineNumber, token, line));
+          currentLine.append (String.format ("%-5s  %-7s %s%n", lineNumber, token, line));
           token = "";
           lineNumber = "";
         }
@@ -116,11 +118,14 @@ public class AppleBasicFormatter extends BasicFormatter
     // -------------------------------------------------------------------------------//
     {
       int start = ptr;
+      boolean inQuote = false;
 
       while (true)
       {
         byte b = buffer[ptr++];
-        if (b == 0 || b == ASCII_COLON || b == TOKEN_THEN)
+        if (b == ASCII_DOUBLE_QUOTE)
+          inQuote = !inQuote;
+        if (b == 0 || b == TOKEN_THEN || (b == ASCII_COLON && !inQuote))
           return ptr - start;
       }
     }

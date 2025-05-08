@@ -76,8 +76,7 @@ public class PreferencesFactory
   private ApplePreferences getDosBinaryPreferences (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    //    byte[] buffer = appleFile.read ();
-    Buffer dataRecord = appleFile.getFileBuffer ();
+    Buffer dataRecord = appleFile.getRawFileBuffer ();
     byte[] buffer = dataRecord.data ();
 
     int address = Utility.getShort (buffer, 0);

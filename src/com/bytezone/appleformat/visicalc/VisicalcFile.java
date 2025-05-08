@@ -37,7 +37,7 @@ public class VisicalcFile extends AbstractFormattedAppleFile
   public static boolean isVisicalcFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer fileBuffer = appleFile.getFileBuffer ();
+    Buffer fileBuffer = appleFile.getRawFileBuffer ();
     byte[] buffer = fileBuffer.data ();
     int ptr = fileBuffer.offset ();
     int max = fileBuffer.max ();

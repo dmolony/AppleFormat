@@ -58,7 +58,7 @@ public class PascalProcedure extends AbstractFormattedAppleFile
     int ptr = fpp.getCodeStart ();
     int max = fpp.getCodeEnd ();
 
-    Buffer dataRecord = fpp.getFileBuffer ();
+    Buffer dataRecord = fpp.getRawFileBuffer ();
     byte[] buffer = dataRecord.data ();
 
     while (ptr < max)

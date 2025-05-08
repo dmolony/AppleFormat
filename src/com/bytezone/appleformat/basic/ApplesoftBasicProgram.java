@@ -50,8 +50,9 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
 
     int ptr = dataBuffer.offset ();
     byte[] buffer = dataBuffer.data ();
+    int max = dataBuffer.max () - 1;
 
-    while (buffer[ptr + 1] != 0)    // msb of link field
+    while (ptr < max && buffer[ptr + 1] != 0)    // msb of link field
     {
       SourceLine line = new SourceLine (this, buffer, ptr);
       sourceLines.add (line);
@@ -78,7 +79,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
       return text.toString ();
     }
 
-    if (((ApplesoftBasicPreferences) preferences).displayFormat == 1)
+    if (((ApplesoftBasicPreferences) preferences).displayFormat == 3)
       userBasicFormatter.append (text);
     else
       appleBasicFormatter.append (text);

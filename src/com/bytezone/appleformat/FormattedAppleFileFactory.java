@@ -154,6 +154,7 @@ public class FormattedAppleFileFactory
     }
     catch (Exception e)
     {
+      e.printStackTrace ();
       return new FormatError (e);
     }
   }
@@ -183,38 +184,42 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile checkDosIntegerBasic (FileDos fileDos)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer fullBuffer = fileDos.getFileBuffer ();
-    byte[] buffer = fullBuffer.data ();
+    Buffer dataBuffer = fileDos.getRawFileBuffer ();
+    byte[] buffer = dataBuffer.data ();
     int loadLength = Utility.getShort (buffer, 0);
-    Buffer dataBufferBasic = new Buffer (buffer, 2, loadLength);
+    Buffer fileBuffer = new Buffer (buffer, 2, loadLength);
 
-    return new IntegerBasicProgram (fileDos, dataBufferBasic);
+    return new IntegerBasicProgram (fileDos, fileBuffer);
   }
 
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkDosApplesoft (FileDos fileDos)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer fullBuffer = fileDos.getFileBuffer ();
-    byte[] buffer = fullBuffer.data ();
+    Buffer dataBuffer = fileDos.getRawFileBuffer ();
+    byte[] buffer = dataBuffer.data ();
     int loadLength = Utility.getShort (buffer, 0);
-    Buffer dataBufferBasic = new Buffer (buffer, 2, loadLength);
+    Buffer fileBuffer = new Buffer (buffer, 2, loadLength);
 
     ApplesoftBasicProgram basicProgram =
-        new ApplesoftBasicProgram (fileDos, dataBufferBasic);
+        new ApplesoftBasicProgram (fileDos, fileBuffer);
 
     // check for excessive space at the end of the basic program
     int endPtr = basicProgram.getEndPtr ();
-    int unusedSpace = fileDos.getFileLength () - endPtr - 1;
-
-    if (unusedSpace > 2)
+    int eof = fileDos.getFileLength ();           // claimed, but could be wrong
+    if (eof <= fileBuffer.max ())
     {
-      int address = Utility.getApplesoftLoadAddress (buffer);
-      Buffer dataBufferAsm = new Buffer (buffer, endPtr, unusedSpace);
-      AssemblerProgram assemblerProgram =
-          new AssemblerProgram (fileDos, dataBufferAsm, address + endPtr + 2);
+      int unusedSpace = eof - endPtr - 1;
 
-      basicProgram.append (assemblerProgram);
+      if (unusedSpace > 2)
+      {
+        int address = Utility.getApplesoftLoadAddress (buffer);
+        Buffer dataBufferAsm = new Buffer (buffer, endPtr, unusedSpace);
+        AssemblerProgram assemblerProgram =
+            new AssemblerProgram (fileDos, dataBufferAsm, address + endPtr + 2);
+
+        basicProgram.append (assemblerProgram);
+      }
     }
 
     return basicProgram;
@@ -247,10 +252,10 @@ public class FormattedAppleFileFactory
   private List<String> checkZardax (FileDos fileDos)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer fileBuffer = fileDos.getFileBuffer ();
-    byte[] buffer = fileBuffer.data ();
-    int ptr = fileBuffer.offset ();
-    int max = fileBuffer.max ();
+    Buffer dataBuffer = fileDos.getRawFileBuffer ();
+    byte[] buffer = dataBuffer.data ();
+    int ptr = dataBuffer.offset ();
+    int max = dataBuffer.max ();
     List<String> parameters = new ArrayList<> ();
 
     if (buffer[ptr] != (byte) 0xDF)
@@ -286,40 +291,40 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile checkDosBinary (FileDos appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer fullBuffer = appleFile.getFileBuffer ();
-    byte[] buffer = fullBuffer.data ();
+    Buffer dataBuffer = appleFile.getRawFileBuffer ();
+    byte[] buffer = dataBuffer.data ();
 
     if (buffer.length <= 4)
       return new DataFile (appleFile);
 
     int address = Utility.getShort (buffer, 0);
     int length = Utility.getShort (buffer, 2);
-    Buffer dataRecord = new Buffer (buffer, 4, length);
+    Buffer fileBuffer = new Buffer (buffer, 4, length);
     String fileName = appleFile.getFileName ();
 
     if (fileName.endsWith (".SET"))
-      return new DosCharacterSet (appleFile, dataRecord);
+      return new DosCharacterSet (appleFile, fileBuffer);
     if (fileName.endsWith (".S"))
-      return new AssemblerText (appleFile, dataRecord);
+      return new AssemblerText (appleFile, fileBuffer);
     if (fileName.endsWith (".SOURCE"))
-      return new AssemblerText (appleFile, dataRecord);     // wrong but better
+      return new AssemblerText (appleFile, fileBuffer);     // wrong but better
 
     //    if (fileName.endsWith (".L") && appleFile.getFileType () == 64)
     //      return new AssemblerText (appleFile, dataRecord);
 
     if (ShapeTable.isShapeTable (buffer, 4, length))
-      return new ShapeTable (appleFile, dataRecord);
+      return new ShapeTable (appleFile, fileBuffer);
 
     if (address == 0x2000 || address == 0x4000)
     {
       if (length > 0x1F00 && length <= 0x4000)
-        return new AppleGraphics (appleFile, dataRecord);
+        return new AppleGraphics (appleFile, fileBuffer);
 
       //        if (isScrunched (fileName, length))
       //          return new OriginalHiResImage (fileName, buffer, address, true);
     }
 
-    return new AssemblerProgram (appleFile, dataRecord, address);
+    return new AssemblerProgram (appleFile, fileBuffer, address);
   }
 
   // http://www.1000bit.it/support/manuali/apple/technotes/ftyp/ft.about.html
@@ -342,7 +347,7 @@ public class FormattedAppleFileFactory
       return new ProdosText ((ForkProdos) appleFile, textBlocks, aux);
     }
 
-    Buffer dataBuffer = appleFile.getFileBuffer ();
+    Buffer dataBuffer = appleFile.getRawFileBuffer ();
 
     if (((ForkProdos) appleFile).getForkType () == ForkType.RESOURCE)
       return new ResourceFile (appleFile, dataBuffer, aux);
@@ -581,12 +586,12 @@ public class FormattedAppleFileFactory
   // or converted to other graphics formats.
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkProdosBinary (AppleFile appleFile, Buffer dataRecord,
+  private FormattedAppleFile checkProdosBinary (AppleFile appleFile, Buffer dataBuffer,
       int aux)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
-    int eof = dataRecord.length ();
+    byte[] buffer = dataBuffer.data ();
+    int eof = dataBuffer.length ();
 
     if (ShapeTable.isShapeTable (buffer, 0, eof))
       return new ShapeTable (appleFile, new Buffer (buffer, 0, eof));
@@ -630,7 +635,7 @@ public class FormattedAppleFileFactory
     catch (Exception e)
     {
       System.out.println ("bad " + appleFile.getFileName ());
-      return new DataFile (appleFile, dataRecord);
+      return new DataFile (appleFile, dataBuffer);
     }
   }
 
@@ -680,7 +685,7 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile getFormattedBin2File (FileBinary2 appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer dataRecord = appleFile.getFileBuffer ();
+    Buffer dataBuffer = appleFile.getRawFileBuffer ();
     int fileType = appleFile.getFileType ();
     int auxType = appleFile.getAuxType ();
 
@@ -689,8 +694,8 @@ public class FormattedAppleFileFactory
       case 0:                                           // Prodos
         return switch (fileType)
         {
-          case FILE_TYPE_TEXT -> checkText (appleFile, dataRecord, auxType);
-          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataRecord, auxType);
+          case FILE_TYPE_TEXT -> checkText (appleFile, dataBuffer, auxType);
+          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, auxType);
           case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
           case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
           default -> new DataFile (appleFile);
@@ -717,21 +722,21 @@ public class FormattedAppleFileFactory
     int fileSystemId = 0;
     byte[] buffer = null;
     int aux = 0;
-    Buffer dataRecord;
+    Buffer dataBuffer;
 
     if (appleFile instanceof ForkNuFX fork)
     {
       fileSystemId = fork.getFileSystemId ();
-      dataRecord = fork.getFileBuffer ();
-      buffer = dataRecord.data ();
+      dataBuffer = fork.getRawFileBuffer ();
+      buffer = dataBuffer.data ();
       aux = fork.getAuxType ();
     }
     else
     {
       FileNuFX file = (FileNuFX) appleFile;
       fileSystemId = file.getFileSystemId ();
-      dataRecord = file.getFileBuffer ();
-      buffer = dataRecord.data ();
+      dataBuffer = file.getRawFileBuffer ();
+      buffer = dataBuffer.data ();
       aux = file.getAuxType ();
     }
 
@@ -745,13 +750,13 @@ public class FormattedAppleFileFactory
       case 1:                                     // Prodos/Sos
         return switch (fileType)
         {
-          case FILE_TYPE_TEXT -> checkText (appleFile, dataRecord, aux);
-          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataRecord, aux);
+          case FILE_TYPE_TEXT -> checkText (appleFile, dataBuffer, aux);
+          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, aux);
           case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
           case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
-          case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataRecord, aux);
-          case FILE_TYPE_GWP -> new Text (appleFile, dataRecord);
-          default -> new UnknownFile (appleFile, dataRecord, aux);
+          case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataBuffer, aux);
+          case FILE_TYPE_GWP -> new Text (appleFile, dataBuffer);
+          default -> new UnknownFile (appleFile, dataBuffer, aux);
         };
 
       case 2:                                     // Dos 3.3

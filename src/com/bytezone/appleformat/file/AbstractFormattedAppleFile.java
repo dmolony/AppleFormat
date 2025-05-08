@@ -61,7 +61,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   public AbstractFormattedAppleFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, appleFile.getFileBuffer ());
+    this (appleFile, appleFile.getRawFileBuffer ());
     //    System.out.println ("AF");
   }
 
@@ -130,7 +130,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
       //      System.out.printf ("AC -> AF - %s%n", af.getFileName ());
 
       int eof = af.getFileLength ();
-      Buffer temp = af.getFileBuffer ();
+      Buffer temp = af.getRawFileBuffer ();
 
       dataBuffer =
           temp.length () == eof ? temp : new Buffer (temp.data (), temp.offset (), eof);
