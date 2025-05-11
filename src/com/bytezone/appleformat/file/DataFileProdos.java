@@ -4,22 +4,16 @@ import static com.bytezone.utility.Utility.formatMeta;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.Buffer;
 
 //-----------------------------------------------------------------------------------//
 public class DataFileProdos extends AbstractFormattedAppleFile
 //-----------------------------------------------------------------------------------//
 {
-  int aux;
-
   // ---------------------------------------------------------------------------------//
-  public DataFileProdos (AppleFile appleFile, Buffer dataRecord, int aux)
+  public DataFileProdos (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    //    super (appleFile, buffer, 0, buffer.length);
     super (appleFile);
-
-    this.aux = aux;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -35,7 +29,7 @@ public class DataFileProdos extends AbstractFormattedAppleFile
     formatMeta (text, "File name", appleFile.getFileName ());
     formatMeta (text, "File type", 2, appleFile.getFileType (),
         appleFile.getFileTypeText ());
-    formatMeta (text, "Aux", 4, aux);
+    formatMeta (text, "Aux", 4, appleFile.getAuxType ());
     formatMeta (text, "Blocks", 4, appleFile.getTotalBlocks ());
     formatMeta (text, "EOF", 4, appleFile.getFileLength ());
 

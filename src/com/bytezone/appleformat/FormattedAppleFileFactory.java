@@ -329,8 +329,7 @@ public class FormattedAppleFileFactory
 
     assert appleFile instanceof ForkProdos;
 
-    int aux = ((ForkProdos) appleFile).getAuxType ();
-    ForkProdos forkProdos = (ForkProdos) appleFile;
+    int aux = appleFile.getAuxType ();
 
     // avoid the DataBuffer if using TextBlocks
     if (appleFile.isRandomAccess ())
@@ -342,7 +341,7 @@ public class FormattedAppleFileFactory
     Buffer dataBuffer = appleFile.getFileBuffer ();
 
     if (((ForkProdos) appleFile).getForkType () == ForkType.RESOURCE)
-      return new ResourceFile (forkProdos);
+      return new ResourceFile (appleFile);
 
     return switch (appleFile.getFileType ())
     {
@@ -351,16 +350,16 @@ public class FormattedAppleFileFactory
       case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataBuffer, aux);
       case FILE_TYPE_CMD -> new AssemblerProgram (appleFile, dataBuffer, aux);
       case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, aux);
-      case FILE_TYPE_PNT -> checkGraphics (appleFile, dataBuffer, aux);
-      case FILE_TYPE_PIC -> checkGraphics (appleFile, dataBuffer, aux);
-      case FILE_TYPE_ANI -> checkGraphics (appleFile, dataBuffer, aux);
-      case FILE_TYPE_FOT -> checkGraphics (appleFile, dataBuffer, aux);
+      case FILE_TYPE_PNT -> checkGraphics (appleFile);
+      case FILE_TYPE_PIC -> checkGraphics (appleFile);
+      case FILE_TYPE_ANI -> checkGraphics (appleFile);
+      case FILE_TYPE_FOT -> checkGraphics (appleFile);
       case FILE_TYPE_FNT -> new FontFile (appleFile, dataBuffer, aux);
-      case FILE_TYPE_FONT -> new QuickDrawFont (appleFile, dataBuffer);
+      case FILE_TYPE_FONT -> new QuickDrawFont (appleFile);
       case FILE_TYPE_GS_BASIC -> new BasicProgramGS (appleFile, dataBuffer);
       case FILE_TYPE_TDF -> new TdfFile (appleFile, dataBuffer, aux);
-      case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile, dataBuffer);
-      case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile, dataBuffer);
+      case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
+      case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
       case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile, dataBuffer);
       case FILE_TYPE_AWP -> new AppleworksWPFile (appleFile, dataBuffer);
       case FILE_TYPE_ADB -> new AppleworksADBFile (appleFile, dataBuffer);
@@ -487,34 +486,27 @@ public class FormattedAppleFileFactory
   // 0000  Animation (Pic0000)
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkGraphics (AppleFile appleFile, Buffer dataBuffer,
-      int aux)
+  private FormattedAppleFile checkGraphics (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataBuffer.data ();
-
     switch (appleFile.getFileType ())
     {
       case FILE_TYPE_PNT:
-        switch (aux)
+        switch (appleFile.getAuxType ())
         {
           case 0x0000:
           case 0x8000:
             return new Pnt0000 (appleFile);
 
           case 0x0001:
-            byte[] data = Utility.unpackBytes (buffer);
-            Buffer dataRecord2 = new Buffer (data, 0, data.length);
-            return new Pic0000 (appleFile, dataRecord2);
+            return new Pic0000 (appleFile, unpackBuffer (appleFile));
 
           case 0x0002:
             return new Pnt0002 (appleFile);
 
           case 0x0003:
             System.out.printf ("*** Found PNT aux 0003 : %s%n", appleFile.getFileName ());
-            byte[] unpackedBuffer = Utility.unpackBytes (buffer);
-            Buffer dataRecord3 = new Buffer (unpackedBuffer, 0, unpackedBuffer.length);
-            return new Pic0001 (appleFile, dataRecord3);
+            return new Pic0001 (appleFile, unpackBuffer (appleFile));
 
           case 0x0004:
             System.out.printf ("*** Found PNT aux 0004 : %s%n", appleFile.getFileName ());
@@ -530,7 +522,7 @@ public class FormattedAppleFileFactory
         break;
 
       case FILE_TYPE_PIC:
-        switch (aux)
+        switch (appleFile.getAuxType ())
         {
           case 0x0000:
           case 0x4100:
@@ -546,7 +538,7 @@ public class FormattedAppleFileFactory
         break;
 
       case FILE_TYPE_FOT:
-        switch (aux)
+        switch (appleFile.getAuxType ())
         {
           case 0x4000:
             System.out.printf ("*** Found FOT aux 4000 : %s%n", appleFile.getFileName ());
@@ -569,23 +561,37 @@ public class FormattedAppleFileFactory
         return new Animation (appleFile);
     }
 
-    return new DataFileProdos (appleFile, dataBuffer, aux);
+    return new DataFileProdos (appleFile);
   }
 
   // Another notable exception is the Fotofile (FOT) format inherited by ProDOS
   // from Apple SOS, which included metadata in the 121st byte (the first byte of
   // the first hole) indicating how it should be displayed (color mode, resolution),
-  // or converted to other graphics formats.
+  // or converted to other graphics formats. See File Type Note 8.
+  // Mode                         Page 1    Page 2
+  // 280 x 192 Black & White        0         4
+  // 280 x 192 Limited Color        1         5
+  // 560 x 192 Black & White        2         6
+  // 140 x 192 Full Color           3         7
+
+  // ---------------------------------------------------------------------------------//
+  private Buffer unpackBuffer (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] unpackedBuffer = Utility.unpackBytes (appleFile.getFileBuffer ().data ());
+    return new Buffer (unpackedBuffer, 0, unpackedBuffer.length);
+  }
 
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile checkProdosBinary (AppleFile appleFile, Buffer dataBuffer,
       int aux)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataBuffer.data ();
-    int eof = dataBuffer.length ();
+    Buffer fileBuffer = appleFile.getFileBuffer ();
+    byte[] buffer = fileBuffer.data ();
+    int eof = fileBuffer.length ();
 
-    if (ShapeTable.isShapeTable (dataBuffer))
+    if (ShapeTable.isShapeTable (fileBuffer))
       return new ShapeTable (appleFile, new Buffer (buffer, 0, eof));
 
     if (isAPP (buffer))
@@ -627,7 +633,7 @@ public class FormattedAppleFileFactory
     catch (Exception e)
     {
       System.out.println ("bad " + appleFile.getFileName ());
-      return new DataFile (appleFile, dataBuffer);
+      return new DataFile (appleFile, fileBuffer);
     }
   }
 
@@ -677,7 +683,7 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile getFormattedBin2File (FileBinary2 appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer dataBuffer = appleFile.getRawFileBuffer ();
+    Buffer dataBuffer = appleFile.getFileBuffer ();
     int fileType = appleFile.getFileType ();
     int auxType = appleFile.getAuxType ();
 
@@ -709,6 +715,7 @@ public class FormattedAppleFileFactory
 
   // ---------------------------------------------------------------------------------//
   private FormattedAppleFile getFormattedNufxFile (AppleFile appleFile)
+      throws FontValidationException
   // ---------------------------------------------------------------------------------//
   {
     int fileSystemId = 0;
@@ -719,7 +726,7 @@ public class FormattedAppleFileFactory
     if (appleFile instanceof ForkNuFX fork)
     {
       fileSystemId = fork.getFileSystemId ();
-      dataBuffer = fork.getRawFileBuffer ();
+      dataBuffer = fork.getFileBuffer ();
       buffer = dataBuffer.data ();
       aux = fork.getAuxType ();
     }
@@ -727,7 +734,7 @@ public class FormattedAppleFileFactory
     {
       FileNuFX file = (FileNuFX) appleFile;
       fileSystemId = file.getFileSystemId ();
-      dataBuffer = file.getRawFileBuffer ();
+      dataBuffer = file.getFileBuffer ();
       buffer = dataBuffer.data ();
       aux = file.getAuxType ();
     }
@@ -748,6 +755,7 @@ public class FormattedAppleFileFactory
           case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
           case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataBuffer, aux);
           case FILE_TYPE_GWP -> new Text (appleFile, dataBuffer);
+          case FILE_TYPE_FONT -> new QuickDrawFont (appleFile);
           default -> new UnknownFile (appleFile, dataBuffer, aux);
         };
 

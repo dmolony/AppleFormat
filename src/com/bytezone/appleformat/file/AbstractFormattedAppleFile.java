@@ -128,12 +128,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     {
       appleFile = af;
       //      System.out.printf ("AC -> AF - %s%n", af.getFileName ());
-
-      int eof = af.getFileLength ();
-      Buffer temp = af.getRawFileBuffer ();
-
-      dataBuffer =
-          temp.length () == eof ? temp : new Buffer (temp.data (), temp.offset (), eof);
+      dataBuffer = af.getFileBuffer ();
     }
     else if (container instanceof AppleFileSystem afs)
     {
@@ -198,8 +193,6 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected List<String> buildHex ()
   // ---------------------------------------------------------------------------------//
   {
-    Buffer dataBuffer = getDataBuffer ();
-
     return Utility.getHexDumpLines (dataBuffer.data (), dataBuffer.offset (),
         Math.min (MAX_HEX_BYTES, dataBuffer.length ()));
   }

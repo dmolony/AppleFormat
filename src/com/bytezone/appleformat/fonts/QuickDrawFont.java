@@ -1,5 +1,7 @@
 package com.bytezone.appleformat.fonts;
 
+import static com.bytezone.utility.Utility.formatMeta;
+
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +10,6 @@ import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.appleformat.ProdosConstants;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.Buffer;
-import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -57,20 +57,24 @@ public class QuickDrawFont extends CharacterList
 
   private BitSet[] strike;        // bit image of all characters
 
+  private int fileType;
+
   // ---------------------------------------------------------------------------------//
-  public QuickDrawFont (AppleFile file, Buffer dataRecord) throws FontValidationException
+  public QuickDrawFont (AppleFile file) throws FontValidationException
   // ---------------------------------------------------------------------------------//
   {
-    super (file, dataRecord);
+    super (file);
 
-    byte[] buffer = dataRecord.data ();
-    int offset = dataRecord.offset ();
-    int length = dataRecord.length ();
+    fileType = file.getFileType ();
+
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
 
     assert file.getFileType () == ProdosConstants.FILE_TYPE_FONT;
 
-    if (((FileProdos) file).getAuxType () != 0)
-      System.out.printf ("Font aux: %04X%n", ((FileProdos) file).getAuxType ());
+    if (file.getAuxType () != 0)
+      System.out.printf ("Font aux: %04X%n", file.getAuxType ());
 
     fontName = HexFormatter.getPascalString (buffer, 0);
     int nameLength = (buffer[0] & 0xFF);
@@ -240,25 +244,24 @@ public class QuickDrawFont extends CharacterList
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    FileProdos file = (FileProdos) appleFile;
-
     StringBuilder text = new StringBuilder ();
 
-    text.append (String.format ("Name ...................... %s%n", name));
-    text.append (String.format ("File type ................. %02X    %s%n",
-        file.getFileType (), file.getFileTypeText ()));
-    String auxTypeText = file.getAuxType () == 0 ? "QuickDraw Font File"
-        : file.getAuxType () == 1 ? "Truetype Font" : "??";
-    text.append (String.format ("Aux type .................. %04X  %s%n%n",
-        file.getAuxType (), auxTypeText));
-    text.append (String.format ("Font name ................. %s%n", fontName));
-    text.append (String.format ("Offset to MF part ......... %d%n", offsetToMF));
-    text.append (String.format ("Font family number ........ %d%n", fontFamily));
-    text.append (String.format ("Style ..................... %d%n", fontStyle));
-    text.append (String.format ("Point size .................%d%n", fontSize));
-    text.append (String.format ("Font version .............. %d.%d%n", versionMajor,
-        versionMinor));
-    text.append (String.format ("Font bounds rect extent ... %d%n", fbrExtent));
+    String version = versionMajor + "." + versionMinor;
+
+    formatMeta (text, "Name", name);
+    formatMeta (text, "File type", 2, fileType, ProdosConstants.fileTypes[fileType]);
+
+    int aux = appleFile.getAuxType ();
+    String auxTypeText =
+        aux == 0 ? "QuickDraw Font File" : aux == 1 ? "Truetype Font" : "??";
+    formatMeta (text, "Aux type", 4, aux, auxTypeText);
+    formatMeta (text, "Font name", fontName);
+    formatMeta (text, "Offset to MF part", 2, offsetToMF);
+    formatMeta (text, "Font family number", 4, fontFamily);
+    formatMeta (text, "Style", 4, fontStyle);
+    formatMeta (text, "Point size", 2, fontSize);
+    formatMeta (text, "Font version", version);
+    formatMeta (text, "Font bounds rect ext", 4, fbrExtent);
 
     for (int i = 0; i < unknownValues.length; i++)
       text.append (

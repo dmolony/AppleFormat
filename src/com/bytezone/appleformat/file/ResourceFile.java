@@ -1,22 +1,17 @@
 package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.Utility;
-import com.bytezone.filesystem.ForkProdos;
+import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
 public class ResourceFile extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
-  int aux;
-
   // ---------------------------------------------------------------------------------//
-  public ResourceFile (ForkProdos appleFile)
+  public ResourceFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
-
-    //    this.aux = aux;
-    this.aux = appleFile.getAuxType ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -33,7 +28,8 @@ public class ResourceFile extends AbstractFormattedAppleFile
         String.format ("File name .............. %-15s%n", appleFile.getFileName ()));
     text.append (String.format ("File type .............. %02X  %s%n",
         appleFile.getFileType (), appleFile.getFileTypeText ()));
-    text.append (String.format ("Aux .................... %04X%n", aux));
+    text.append (
+        String.format ("Aux .................... %04X%n", appleFile.getAuxType ()));
     text.append (
         String.format ("Blocks ................. %,9d%n", appleFile.getTotalBlocks ()));
     text.append (
