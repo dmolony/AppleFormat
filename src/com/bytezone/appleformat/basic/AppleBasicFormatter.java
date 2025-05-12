@@ -61,6 +61,12 @@ public class AppleBasicFormatter extends BasicFormatter
 
       currentLine.setLength (0);
     }
+
+    if (basicPreferences.displayFormat == 2)
+    {
+      ((HexLine) hexFormatter).finish (currentLine, ptr);
+      fullText.append (currentLine);
+    }
   }
 
   // ---------------------------------------------------------------------------------//
@@ -111,6 +117,17 @@ public class AppleBasicFormatter extends BasicFormatter
         if (buffer[ptr - 1] == 0)
           return ptr;
       }
+    }
+
+    // -------------------------------------------------------------------------------//
+    public void finish (StringBuilder currentLine, int ptr)
+    // -------------------------------------------------------------------------------//
+    {
+      int hexDisplay = loadAddress - 2;                         // ignore linkField
+      String formattedHex =
+          HexFormatter.formatNoHeader (buffer, ptr, 2, hexDisplay + ptr);
+
+      currentLine.append (String.format ("               %s", formattedHex));
     }
 
     // -------------------------------------------------------------------------------//
