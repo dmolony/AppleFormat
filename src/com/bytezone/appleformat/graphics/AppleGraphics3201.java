@@ -2,7 +2,6 @@ package com.bytezone.appleformat.graphics;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -101,16 +100,16 @@ public class AppleGraphics3201 extends Graphics
   {
     StringBuilder text = new StringBuilder ();
 
-    FileProdos file = (FileProdos) appleFile;
-    int aux = file.getAuxType ();
+    //    FileProdos file = (FileProdos) appleFile;
+    int aux = appleFile.getAuxType ();
     String auxText = "";
 
     text.append (String.format ("Image File : %s%n", name));
-    text.append (String.format ("File type  : $%02X    %s%n", file.getFileType (),
-        file.getFileTypeText ()));
+    text.append (String.format ("File type  : $%02X    %s%n", appleFile.getFileType (),
+        appleFile.getFileTypeText ()));
     text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
     text.append (String.format ("File size  : %,d%n", dataBuffer.length ()));
-    text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
+    text.append (String.format ("EOF        : %,d%n", appleFile.getFileLength ()));
     //    if (!failureReason.isEmpty ())
     //      text.append (String.format ("Failure    : %s%n", failureReason));
 

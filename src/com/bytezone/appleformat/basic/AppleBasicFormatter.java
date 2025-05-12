@@ -62,6 +62,7 @@ public class AppleBasicFormatter extends BasicFormatter
       currentLine.setLength (0);
     }
 
+    // add the final zero bytes
     if (basicPreferences.displayFormat == 2)
     {
       ((HexLine) hexFormatter).finish (currentLine, ptr);
