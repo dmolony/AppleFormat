@@ -32,13 +32,12 @@ public class Pnt0002 extends Graphics
 
     byte[] buffer = dataBuffer.data ();
     int ptr = dataBuffer.offset ();
-    //    int maxLen = appleFile.getFileLength ();
 
     while (ptr < dataBuffer.max ())
     {
       int len = Utility.getLong (buffer, ptr);
 
-      if (len == 0 || len >= ptr + dataBuffer.max ())
+      if (len == 0 || len > buffer.length)
       {
         System.out.printf ("Pnt0002 Block length %s: %d%n", appleFile.getFileName (),
             len);
@@ -46,7 +45,7 @@ public class Pnt0002 extends Graphics
       }
 
       String kind = HexFormatter.getPascalString (buffer, ptr + 4);
-      byte[] data = new byte[len];
+      byte[] data = new byte[Math.min (len, buffer.length - ptr)];
       System.arraycopy (buffer, ptr, data, 0, data.length);
 
       switch (kind)

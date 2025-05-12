@@ -1,8 +1,8 @@
 package com.bytezone.appleformat.graphics;
 
+import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.Buffer;
-import com.bytezone.filesystem.FileProdos;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -61,13 +61,16 @@ public class Pic0000 extends Graphics
     System.arraycopy (buffer, offset + 32000, controlBytes, 0, controlBytes.length);
 
     colorTables = new ColorTable[16];
-    int ptr = offset + COLOR_TABLE_OFFSET_AUX_0;
+    //    int ptr = offset + COLOR_TABLE_OFFSET_AUX_0;
 
+    //    for (int i = 0; i < colorTables.length; i++)
+    //    {
+    //      colorTables[i] = new ColorTable (i, buffer, ptr);
+    //      ptr += COLOR_TABLE_SIZE;
+    //    }
     for (int i = 0; i < colorTables.length; i++)
-    {
-      colorTables[i] = new ColorTable (i, buffer, ptr);
-      ptr += COLOR_TABLE_SIZE;
-    }
+      colorTables[i] =
+          new ColorTable (i, buffer, COLOR_TABLE_OFFSET_AUX_0 + i * COLOR_TABLE_SIZE);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -187,14 +190,14 @@ public class Pic0000 extends Graphics
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    FileProdos file = (FileProdos) appleFile;
-    int aux = file.getAuxType ();
+    //    FileProdos file = (FileProdos) appleFile;
+    int aux = appleFile.getAuxType ();
     String auxText = "";
     StringBuilder text = new StringBuilder ();
 
     text.append (String.format ("Image File : %s%n", name));
-    text.append (String.format ("File type  : $%02X    %s%n", file.getFileType (),
-        file.getFileTypeText ()));
+    text.append (String.format ("File type  : $%02X    %s%n", appleFile.getFileType (),
+        appleFile.getFileTypeText ()));
 
     auxText = "Super Hi-Res color image";
 
@@ -202,11 +205,70 @@ public class Pic0000 extends Graphics
       text.append (String.format ("Aux type   : $%04X  %s%n", aux, auxText));
 
     text.append (String.format ("File size  : %,d%n", dataBuffer.data ().length));
-    text.append (String.format ("EOF        : %,d%n", file.getFileLength ()));
+    text.append (String.format ("EOF        : %,d%n", appleFile.getFileLength ()));
     if (!failureReason.isEmpty ())
       text.append (String.format ("Failure    : %s%n", failureReason));
 
+    text.append (getDebugText ());
+
     text.deleteCharAt (text.length () - 1);
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private String getDebugText ()
+  // ---------------------------------------------------------------------------------//
+  {
+    byte[] buffer = dataBuffer.data ();
+    int offset = dataBuffer.offset ();
+    int length = dataBuffer.length ();
+
+    StringBuilder text = new StringBuilder ();
+    text.append ("\n\n");
+
+    if (controlBytes != null)
+    {
+      text.append ("SCB\n---\n");
+      for (int i = 0; i < controlBytes.length; i += 8)
+      {
+        for (int j = 0; j < 8; j++)
+        {
+          if (i + j >= controlBytes.length)
+            break;
+          text.append (String.format ("  %3d:  %02X  ", i + j, controlBytes[i + j]));
+        }
+        text.append ("\n");
+      }
+      text.append ("\n");
+    }
+
+    if (colorTables != null)
+    {
+      text.append ("Color Table\n\n #");
+      for (int i = 0; i < 16; i++)
+        text.append (String.format ("   %02X ", i));
+      text.append ("\n--");
+      for (int i = 0; i < 16; i++)
+        text.append ("  ----");
+      text.append ("\n");
+      for (ColorTable colorTable : colorTables)
+      {
+        text.append (colorTable.toLine ());
+        text.append ("\n");
+      }
+    }
+
+    text.append ("\nScreen lines\n\n");
+    for (int i = 0; i < 200; i++)
+    {
+      text.append (String.format ("Line: %02X  %<3d%n", i));
+      text.append (HexFormatter.format (buffer, i * 160, 160));
+      text.append ("\n\n");
+    }
+
+    text.deleteCharAt (text.length () - 1);
+    text.deleteCharAt (text.length () - 1);
+
     return text.toString ();
   }
 }
