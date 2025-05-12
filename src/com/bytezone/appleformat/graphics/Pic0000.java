@@ -224,11 +224,11 @@ public class Pic0000 extends Graphics
     int length = dataBuffer.length ();
 
     StringBuilder text = new StringBuilder ();
-    text.append ("\n\n");
+    text.append ("\n");
 
     if (controlBytes != null)
     {
-      text.append ("SCB\n---\n");
+      text.append ("Control Bytes\n-------------\n");
       for (int i = 0; i < controlBytes.length; i += 8)
       {
         for (int j = 0; j < 8; j++)
@@ -244,7 +244,7 @@ public class Pic0000 extends Graphics
 
     if (colorTables != null)
     {
-      text.append ("Color Table\n\n #");
+      text.append ("Color Table\n-----------\n #");
       for (int i = 0; i < 16; i++)
         text.append (String.format ("   %02X ", i));
       text.append ("\n--");
@@ -258,7 +258,7 @@ public class Pic0000 extends Graphics
       }
     }
 
-    text.append ("\nScreen lines\n\n");
+    text.append ("\nScreen lines\n------------\n");
     for (int i = 0; i < 200; i++)
     {
       text.append (String.format ("Line: %02X  %<3d%n", i));

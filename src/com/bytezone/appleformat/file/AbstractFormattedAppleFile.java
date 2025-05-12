@@ -40,8 +40,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected ApplePreferences preferences;
   protected FormattedAppleFile extraFile;     // eg AppleSoft with Binary
 
-  // Usually the FileBuffer, but could be an unpacked buffer, or even a buffer without
-  // a file
+  // Usually the FileBuffer, but could be an unpacked buffer
   protected final Buffer dataBuffer;
 
   // ---------------------------------------------------------------------------------//
