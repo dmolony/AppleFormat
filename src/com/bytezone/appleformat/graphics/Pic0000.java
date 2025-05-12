@@ -23,9 +23,6 @@ public class Pic0000 extends Graphics
   ColorTable[] colorTables;
   byte[] controlBytes;
 
-  //  private Image image;
-  //  private Image image;
-
   // ---------------------------------------------------------------------------------//
   public Pic0000 (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
@@ -61,16 +58,13 @@ public class Pic0000 extends Graphics
     System.arraycopy (buffer, offset + 32000, controlBytes, 0, controlBytes.length);
 
     colorTables = new ColorTable[16];
-    //    int ptr = offset + COLOR_TABLE_OFFSET_AUX_0;
+    int ptr = offset + COLOR_TABLE_OFFSET_AUX_0;
 
-    //    for (int i = 0; i < colorTables.length; i++)
-    //    {
-    //      colorTables[i] = new ColorTable (i, buffer, ptr);
-    //      ptr += COLOR_TABLE_SIZE;
-    //    }
     for (int i = 0; i < colorTables.length; i++)
-      colorTables[i] =
-          new ColorTable (i, buffer, COLOR_TABLE_OFFSET_AUX_0 + i * COLOR_TABLE_SIZE);
+    {
+      colorTables[i] = new ColorTable (i, buffer, ptr);
+      ptr += COLOR_TABLE_SIZE;
+    }
   }
 
   // ---------------------------------------------------------------------------------//
@@ -190,7 +184,6 @@ public class Pic0000 extends Graphics
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    //    FileProdos file = (FileProdos) appleFile;
     int aux = appleFile.getAuxType ();
     String auxText = "";
     StringBuilder text = new StringBuilder ();
