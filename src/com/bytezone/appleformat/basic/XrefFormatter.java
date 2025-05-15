@@ -67,20 +67,28 @@ public class XrefFormatter extends BasicFormatter
     {
       for (String symbol : subline.getVariables ())
         checkVar (symbol, line.lineNumber, symbolLines, uniqueSymbols);
+
       for (String symbol : subline.getArrays ())
         checkVar (symbol, line.lineNumber, arrayLines, uniqueArrays);
+
       for (String symbol : subline.getFunctions ())
         checkFunction (line.lineNumber, symbol);
+
       for (int targetLine : subline.getGosubLines ())
         addNumberInt (line.lineNumber, targetLine, gosubLines);
+
       for (int targetLine : subline.getGotoLines ())
         addNumberInt (line.lineNumber, targetLine, gotoLines);
+
       for (int num : subline.getConstantsInt ())
         addNumberInt (line.lineNumber, num, constantsInt);
+
       for (float num : subline.getConstantsFloat ())
         addNumberFloat (line.lineNumber, num, constantsFloat);
+
       if (subline.callTarget != null)
         addString (line.lineNumber, subline.callTarget, callLines);
+
       for (String s : subline.getStringsText ())
       {
         stringsText.add (s);
@@ -143,6 +151,9 @@ public class XrefFormatter extends BasicFormatter
 
     if (basicPreferences.showCalls && !callLines.isEmpty ())
       showSymbolsLeftRight (fullText, callLines, "   CALL");
+
+    if (basicPreferences.showUnreachableCode)
+      showUnreachableCode (fullText);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -199,6 +210,28 @@ public class XrefFormatter extends BasicFormatter
     fullText.append (String.format (format, underline));
     fullText.append (underline);
     fullText.append (NEWLINE);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private void showUnreachableCode (StringBuilder fullText)
+  // ---------------------------------------------------------------------------------//
+  {
+    boolean headingShown = false;
+
+    for (SourceLine sourceLine : sourceLines)
+    {
+      for (SubLine subLine : sourceLine.unreachableLines)
+      {
+        if (!headingShown)
+        {
+          headingShown = true;
+          heading (fullText, formatRight, "Line", "Unreachable code");
+        }
+
+        fullText
+            .append (String.format ("%7d  %s%n", subLine.sourceLine.lineNumber, subLine));
+      }
+    }
   }
 
   // ---------------------------------------------------------------------------------//

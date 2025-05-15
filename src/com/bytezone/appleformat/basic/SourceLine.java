@@ -17,6 +17,7 @@ public class SourceLine implements ApplesoftConstants
   byte[] buffer;
 
   List<SubLine> sublines = new ArrayList<> ();
+  List<SubLine> unreachableLines = new ArrayList<> ();
 
   // ---------------------------------------------------------------------------------//
   SourceLine (ApplesoftBasicProgram program, byte[] buffer, int ptr)
@@ -84,6 +85,8 @@ public class SourceLine implements ApplesoftConstants
     length = ptr - linePtr;
 
     addSubLine (startPtr, ptr);
+
+    checkCode ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -92,5 +95,24 @@ public class SourceLine implements ApplesoftConstants
   {
     sublines.add (new SubLine (this, startPtr, ptr - startPtr));
     return ptr;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private void checkCode ()
+  // ---------------------------------------------------------------------------------//
+  {
+    boolean inGoto = false;
+    for (SubLine subLine : sublines)
+    {
+      if (subLine.is (TOKEN_REM))
+        break;
+
+      if (inGoto)
+        unreachableLines.add (subLine);
+      //      System.out.printf ("%6d unreachable: %s%n", lineNumber, subLine);
+
+      if (subLine.is (TOKEN_GOTO) || subLine.isImpliedGoto ())
+        inGoto = true;
+    }
   }
 }

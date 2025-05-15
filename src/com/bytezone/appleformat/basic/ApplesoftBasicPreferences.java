@@ -29,6 +29,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   private static String PREFS_WRAP_PRINT = "WrapPrint";
   private static String PREFS_WRAP_PRINT_AT = "WrapPrintAt";
   private static String PREFS_HIDE_LET = "HideLet";
+  private static String PREFS_SHOW_UNREACHABLE_CODE = "ShowUnreachableCode";
 
   public int displayFormat;          // 0 = No format, 1 = 40 col, 2 = Hex, 3 = User
 
@@ -40,6 +41,8 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public boolean blankAfterReturn;
   public boolean formatRem;
   public boolean deleteExtraDataSpace;
+  public boolean hideLet;
+  public boolean wrapPrint;
 
   public boolean showGosubGoto;
   public boolean showCalls;
@@ -47,8 +50,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   public boolean showFunctions;
   public boolean showConstants;
   public boolean showDuplicateSymbols;
-  public boolean hideLet;
-  public boolean wrapPrint;
+  public boolean showUnreachableCode;
 
   public int wrapPrintAt = 40;
   public int wrapRemAt = 80;
@@ -85,6 +87,8 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     wrapPrintAt = preferences.getInt (PREFS_WRAP_PRINT_AT, 40);
     hideLet = preferences.getBoolean (PREFS_HIDE_LET, defaultValue);
     wrapPrint = preferences.getBoolean (PREFS_WRAP_PRINT, defaultValue);
+    showUnreachableCode =
+        preferences.getBoolean (PREFS_SHOW_UNREACHABLE_CODE, defaultValue);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -113,6 +117,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     preferences.putInt (PREFS_WRAP_PRINT_AT, wrapPrintAt);
     preferences.putBoolean (PREFS_HIDE_LET, hideLet);
     preferences.putBoolean (PREFS_WRAP_PRINT, wrapPrint);
+    preferences.putBoolean (PREFS_SHOW_UNREACHABLE_CODE, showUnreachableCode);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -139,6 +144,7 @@ public class ApplesoftBasicPreferences extends ApplePreferences
     formatMeta (text, "Show constants", showConstants);
     formatMeta (text, "Show GOTO/GOSUB", showGosubGoto);
     formatMeta (text, "Show CALL", showCalls);
+    formatMeta (text, "Show unreachable", showUnreachableCode);
 
     formatMeta (text, "Wrap PRINT", wrapPrint);
     formatMeta (text, "Wrap PRINT at", 2, wrapPrintAt);
