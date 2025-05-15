@@ -45,7 +45,8 @@ public class Catalog extends AbstractFormattedAppleFile
   public String buildExtras ()
   // ---------------------------------------------------------------------------------//
   {
-    return appleFile != null ? appleFile.getFileName () : "who?";
+    //    return forkedFile != null ? ((AppleFile) forkedFile).getFileName () : "who?";
+    return "";
   }
 
   // ---------------------------------------------------------------------------------//

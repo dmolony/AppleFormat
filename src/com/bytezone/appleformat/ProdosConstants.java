@@ -11,6 +11,7 @@ public interface ProdosConstants
   static int FILE_TYPE_BINARY = 0x06;
   static int FILE_TYPE_FNT = 0x07;
   static int FILE_TYPE_FOT = 0x08;                // was Apple /// FotoFile
+  static int FILE_TYPE_BA3 = 0x09;
   static int FILE_TYPE_DIRECTORY = 0x0F;
   static int FILE_TYPE_ADB = 0x19;
   static int FILE_TYPE_AWP = 0x1A;

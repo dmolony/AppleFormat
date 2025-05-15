@@ -43,8 +43,8 @@ public class UnknownFile extends AbstractFormattedAppleFile
     formatMeta (text, "File type", 2, appleFile.getFileType (),
         appleFile.getFileTypeText ());
     formatMeta (text, "Aux", 4, aux);
-    formatMeta (text, "Blocks", 4, appleFile.getTotalBlocks ());
-    formatMeta (text, "EOF", 4, appleFile.getFileLength ());
+    formatMeta (text, "Blocks", 6, appleFile.getTotalBlocks ());
+    formatMeta (text, "EOF", 8, appleFile.getFileLength ());
 
     return Utility.rtrim (text);
   }

@@ -58,11 +58,11 @@ public class ProdosText extends Text
           int offset = record.offset () + textBlock.getStartByte ();
           int recordNo = offset / recordLength;
           text.append (String.format (" %,9d %,9d  %s%n", offset, recordNo,
-              getRecordData (buffer, record, (byte) 0xFF)));
+              getRecordData (buffer, record, (byte) 0x7F)));
         }
         else
           text.append (
-              String.format ("%s%n", getRecordData (buffer, record, (byte) 0xFF)));
+              String.format ("%s%n", getRecordData (buffer, record, (byte) 0x7F)));
     }
 
     return Utility.rtrim (text);

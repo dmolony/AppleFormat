@@ -110,7 +110,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     textBlocks = null;
 
     name = "";
-    dataBuffer = null;
+    dataBuffer = ((AppleFile) forkedFile).getFileBuffer ();
   }
 
   // Disk file - file system

@@ -5,12 +5,13 @@ import static com.bytezone.utility.Utility.formatMeta;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 
+// apparently unused - a data fork will be an actual prodos file
 //-----------------------------------------------------------------------------------//
-public class DataFileProdos extends AbstractFormattedAppleFile
+public class DataForkProdos extends AbstractFormattedAppleFile
 //-----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public DataFileProdos (AppleFile appleFile)
+  public DataForkProdos (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
@@ -30,8 +31,8 @@ public class DataFileProdos extends AbstractFormattedAppleFile
     formatMeta (text, "File type", 2, appleFile.getFileType (),
         appleFile.getFileTypeText ());
     formatMeta (text, "Aux", 4, appleFile.getAuxType ());
-    formatMeta (text, "Blocks", 4, appleFile.getTotalBlocks ());
-    formatMeta (text, "EOF", 4, appleFile.getFileLength ());
+    formatMeta (text, "Blocks", 6, appleFile.getTotalBlocks ());
+    formatMeta (text, "EOF", 8, appleFile.getFileLength ());
 
     return Utility.rtrim (text);
   }

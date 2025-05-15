@@ -39,13 +39,13 @@ import com.bytezone.appleformat.basic.BasicProgramGS;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.file.Catalog;
 import com.bytezone.appleformat.file.DataFile;
-import com.bytezone.appleformat.file.DataFileProdos;
+import com.bytezone.appleformat.file.DataForkProdos;
 import com.bytezone.appleformat.file.FormattedAppleFile;
 import com.bytezone.appleformat.file.LocalFolder;
 import com.bytezone.appleformat.file.PascalCode;
 import com.bytezone.appleformat.file.PascalProcedure;
 import com.bytezone.appleformat.file.PascalSegment;
-import com.bytezone.appleformat.file.ResourceFile;
+import com.bytezone.appleformat.file.ResourceForkProdos;
 import com.bytezone.appleformat.file.StoredVariables;
 import com.bytezone.appleformat.file.TdfFile;
 import com.bytezone.appleformat.file.UnknownFile;
@@ -128,6 +128,9 @@ public class FormattedAppleFileFactory
   {
     try
     {
+      if (appleFile.isForkedFile ())
+        return new Catalog ((AppleForkedFile) appleFile);
+
       if (appleFile instanceof AppleContainer container    //
           && (appleFile.getFileType () == 0                // ??
               | appleFile.getFileType () == 15))           // directory file
@@ -135,9 +138,6 @@ public class FormattedAppleFileFactory
 
       if (appleFile.hasEmbeddedFileSystem ())
         return new Catalog (appleFile.getEmbeddedFileSystem ());
-
-      if (appleFile.isForkedFile ())
-        return new Catalog ((AppleForkedFile) appleFile);
 
       return switch (appleFile.getFileSystemType ())
       {
@@ -340,7 +340,7 @@ public class FormattedAppleFileFactory
     Buffer dataBuffer = appleFile.getFileBuffer ();
 
     if (((ForkProdos) appleFile).getForkType () == ForkType.RESOURCE)
-      return new ResourceFile (appleFile);
+      return new ResourceForkProdos (appleFile);
 
     return switch (appleFile.getFileType ())
     {
@@ -561,7 +561,7 @@ public class FormattedAppleFileFactory
         return new Animation (appleFile);
     }
 
-    return new DataFileProdos (appleFile);
+    return new DataForkProdos (appleFile);
   }
 
   // Another notable exception is the Fotofile (FOT) format inherited by ProDOS

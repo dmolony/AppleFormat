@@ -1,14 +1,16 @@
 package com.bytezone.appleformat.file;
 
+import static com.bytezone.utility.Utility.formatMeta;
+
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
 
 // -----------------------------------------------------------------------------------//
-public class ResourceFile extends AbstractFormattedAppleFile
+public class ResourceForkProdos extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   // ---------------------------------------------------------------------------------//
-  public ResourceFile (AppleFile appleFile)
+  public ResourceForkProdos (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
@@ -19,21 +21,17 @@ public class ResourceFile extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    if (dataBuffer.length () == 0)
+    if (!appleFile.hasData ())
       return "This file has no data\n\n" + appleFile.getErrorMessage ();
 
     StringBuilder text = new StringBuilder ();
 
-    text.append (
-        String.format ("File name .............. %-15s%n", appleFile.getFileName ()));
-    text.append (String.format ("File type .............. %02X  %s%n",
-        appleFile.getFileType (), appleFile.getFileTypeText ()));
-    text.append (
-        String.format ("Aux .................... %04X%n", appleFile.getAuxType ()));
-    text.append (
-        String.format ("Blocks ................. %,9d%n", appleFile.getTotalBlocks ()));
-    text.append (
-        String.format ("EOF .................... %,9d%n", appleFile.getFileLength ()));
+    formatMeta (text, "File name", appleFile.getFileName ());
+    formatMeta (text, "File type", 2, appleFile.getFileType (),
+        appleFile.getFileTypeText ());
+    formatMeta (text, "Aux", 4, appleFile.getAuxType ());
+    formatMeta (text, "Blocks", 6, appleFile.getTotalBlocks ());
+    formatMeta (text, "EOF", 8, appleFile.getFileLength ());
 
     return Utility.rtrim (text);
   }
