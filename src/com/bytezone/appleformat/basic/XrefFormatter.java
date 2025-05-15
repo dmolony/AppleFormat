@@ -219,19 +219,17 @@ public class XrefFormatter extends BasicFormatter
     boolean headingShown = false;
 
     for (SourceLine sourceLine : sourceLines)
-    {
       for (SubLine subLine : sourceLine.unreachableLines)
       {
         if (!headingShown)
         {
           headingShown = true;
-          heading (fullText, formatRight, "Line", "Unreachable code");
+          heading (fullText, formatRight, "Line", "Unreachable IF code");
         }
 
         fullText
             .append (String.format ("%7d  %s%n", subLine.sourceLine.lineNumber, subLine));
       }
-    }
   }
 
   // ---------------------------------------------------------------------------------//
