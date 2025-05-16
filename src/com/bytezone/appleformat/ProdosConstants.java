@@ -37,6 +37,7 @@ public interface ProdosConstants
   static int FILE_TYPE_PAL = 0xC3;
   static int FILE_TYPE_FONT = 0xC8;
   static int FILE_TYPE_FINDER = 0xC9;
+  static int FILE_TYPE_FND = 0xC9;
   static int FILE_TYPE_ICN = 0xCA;
   static int FILE_TYPE_LBR = 0xE0;
   static int FILE_TYPE_APPLETALK = 0xE2;
