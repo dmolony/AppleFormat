@@ -89,6 +89,7 @@ public class UserBasicFormatter extends BasicFormatter
           // Join this REM statement to the previous line, so no indenting
           fullText.deleteCharAt (fullText.length () - 1);         // remove newline
           fullText.append (" ");
+          alignment.reset ();
         }
         else    // ... otherwise do all the indenting
         {
@@ -110,7 +111,9 @@ public class UserBasicFormatter extends BasicFormatter
         // Check for a wrappable REM/DATA/DIM statement
         // (see SEA BATTLE on DISK283.DSK)
         int inset = Math.max (text.length (), getIndent (fullText)) + 1;
-        if (subline.is (TOKEN_REM) && lineText.length () > basicPreferences.wrapRemAt)
+
+        if (subline.is (TOKEN_REM) && !joinableRem (subline)
+            && lineText.length () > basicPreferences.wrapRemAt)
         {
           List<String> lines =
               splitLine (lineText, basicPreferences.wrapRemAt, ' ', FORCE);

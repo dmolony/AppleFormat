@@ -114,11 +114,13 @@ public final class Utility
   {
     int ptr = fullText.length () - 1;
     int indent = 0;
+
     while (ptr >= 0 && fullText.charAt (ptr) != '\n')
     {
       --ptr;
       ++indent;
     }
+
     return indent;
   }
 

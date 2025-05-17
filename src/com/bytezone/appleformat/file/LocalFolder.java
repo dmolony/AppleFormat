@@ -30,23 +30,28 @@ public class LocalFolder extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder ("  File size    File name\n");
+    StringBuilder text = new StringBuilder (" No    File size    File name\n");
 
-    text.append ("------------  ---------------------------------"
+    text.append ("---  ------------  ---------------------------------"
         + "------------------------------------------\n");
 
     File[] files = localFile.listFiles ();
     Arrays.sort (files);
 
+    int count = 1;
     for (File file : files)
+    {
       if (file.isDirectory ())
-        text.append (String.format ("              %s \n", file.getName ()));
+        text.append (String.format ("%3d                %s \n", count, file.getName ()));
       else
       {
         String fileName = file.getName ();
         if (!file.isHidden () && !fileName.startsWith ("."))
-          text.append (String.format ("%,12d  %s \n", file.length (), fileName));
+          text.append (
+              String.format ("%3d  %,12d  %s \n", count, file.length (), fileName));
       }
+      count++;
+    }
 
     return text.toString ();
   }

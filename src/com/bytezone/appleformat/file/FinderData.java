@@ -2,6 +2,7 @@ package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.HexFormatter;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.utility.Utility;
 
 // -----------------------------------------------------------------------------------//
 public class FinderData extends AbstractFormattedAppleFile
@@ -27,7 +28,7 @@ public class FinderData extends AbstractFormattedAppleFile
     int ptr = dataBuffer.offset ();
     int max = dataBuffer.max ();
 
-    version = buffer[0];
+    version = buffer[ptr];
 
     text.append ("Name : " + name + "\n\n");
 
@@ -70,9 +71,6 @@ public class FinderData extends AbstractFormattedAppleFile
     else
       text.append (String.format ("Unknown finder data version: %d%n", version));
 
-    if (text.length () > 0)
-      text.deleteCharAt (text.length () - 1);
-
-    return text.toString ();
+    return Utility.rtrim (text);
   }
 }
