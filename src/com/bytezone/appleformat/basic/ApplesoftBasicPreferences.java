@@ -1,6 +1,6 @@
 package com.bytezone.appleformat.basic;
 
-import static com.bytezone.utility.Utility.formatMeta;
+import static com.bytezone.utility.Utility.formatText;
 
 import java.util.prefs.Preferences;
 
@@ -127,30 +127,30 @@ public class ApplesoftBasicPreferences extends ApplePreferences
   {
     StringBuilder text = new StringBuilder ();
 
-    formatMeta (text, "Display format", 2, displayFormat);
-    formatMeta (text, "Split REM", splitRem);
-    formatMeta (text, "Split DIM", splitDim);
-    formatMeta (text, "Align assign", alignAssign);
+    formatText (text, "Display format", 2, displayFormat);
+    formatText (text, "Split REM", splitRem);
+    formatText (text, "Split DIM", splitDim);
+    formatText (text, "Align assign", alignAssign);
 
-    formatMeta (text, "Show caret", showCaret);
-    formatMeta (text, "Show THEN", showThen);
-    formatMeta (text, "Blank after RETURN", blankAfterReturn);
-    formatMeta (text, "Format REM", formatRem);
-    formatMeta (text, "Delete DATA space", deleteExtraDataSpace);
+    formatText (text, "Show caret", showCaret);
+    formatText (text, "Show THEN", showThen);
+    formatText (text, "Blank after RETURN", blankAfterReturn);
+    formatText (text, "Format REM", formatRem);
+    formatText (text, "Delete DATA space", deleteExtraDataSpace);
 
-    formatMeta (text, "Show symbols", showSymbols);
-    formatMeta (text, "Show duplicate symbols", showDuplicateSymbols);
-    formatMeta (text, "Show functions", showFunctions);
-    formatMeta (text, "Show constants", showConstants);
-    formatMeta (text, "Show GOTO/GOSUB", showGosubGoto);
-    formatMeta (text, "Show CALL", showCalls);
-    formatMeta (text, "Show unreachable", showUnreachableCode);
+    formatText (text, "Show symbols", showSymbols);
+    formatText (text, "Show duplicate symbols", showDuplicateSymbols);
+    formatText (text, "Show functions", showFunctions);
+    formatText (text, "Show constants", showConstants);
+    formatText (text, "Show GOTO/GOSUB", showGosubGoto);
+    formatText (text, "Show CALL", showCalls);
+    formatText (text, "Show unreachable", showUnreachableCode);
 
-    formatMeta (text, "Wrap PRINT", wrapPrint);
-    formatMeta (text, "Wrap PRINT at", 2, wrapPrintAt);
-    formatMeta (text, "Wrap REM at", 2, wrapRemAt);
-    formatMeta (text, "Wrap DATA at", 2, wrapDataAt);
-    formatMeta (text, "Hide LET", hideLet);
+    formatText (text, "Wrap PRINT", wrapPrint);
+    formatText (text, "Wrap PRINT at", 2, wrapPrintAt);
+    formatText (text, "Wrap REM at", 2, wrapRemAt);
+    formatText (text, "Wrap DATA at", 2, wrapDataAt);
+    formatText (text, "Hide LET", hideLet);
 
     return Utility.rtrim (text);
   }

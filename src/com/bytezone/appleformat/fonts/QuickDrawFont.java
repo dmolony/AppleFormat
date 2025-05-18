@@ -1,6 +1,6 @@
 package com.bytezone.appleformat.fonts;
 
-import static com.bytezone.utility.Utility.formatMeta;
+import static com.bytezone.utility.Utility.formatText;
 
 import java.util.BitSet;
 import java.util.HashMap;
@@ -248,20 +248,20 @@ public class QuickDrawFont extends CharacterList
 
     String version = versionMajor + "." + versionMinor;
 
-    formatMeta (text, "Name", name);
-    formatMeta (text, "File type", 2, fileType, ProdosConstants.fileTypes[fileType]);
+    formatText (text, "Name", name);
+    formatText (text, "File type", 2, fileType, ProdosConstants.fileTypes[fileType]);
 
     int aux = appleFile.getAuxType ();
     String auxTypeText =
         aux == 0 ? "QuickDraw Font File" : aux == 1 ? "Truetype Font" : "??";
-    formatMeta (text, "Aux type", 4, aux, auxTypeText);
-    formatMeta (text, "Font name", fontName);
-    formatMeta (text, "Offset to MF part", 2, offsetToMF);
-    formatMeta (text, "Font family number", 4, fontFamily);
-    formatMeta (text, "Style", 4, fontStyle);
-    formatMeta (text, "Point size", 2, fontSize);
-    formatMeta (text, "Font version", version);
-    formatMeta (text, "Font bounds rect ext", 4, fbrExtent);
+    formatText (text, "Aux type", 4, aux, auxTypeText);
+    formatText (text, "Font name", fontName);
+    formatText (text, "Offset to MF part", 2, offsetToMF);
+    formatText (text, "Font family number", 4, fontFamily);
+    formatText (text, "Style", 4, fontStyle);
+    formatText (text, "Point size", 2, fontSize);
+    formatText (text, "Font version", version);
+    formatText (text, "Font bounds rect ext", 4, fbrExtent);
 
     for (int i = 0; i < unknownValues.length; i++)
       text.append (

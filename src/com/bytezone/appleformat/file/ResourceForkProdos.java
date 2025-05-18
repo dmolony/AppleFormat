@@ -1,6 +1,6 @@
 package com.bytezone.appleformat.file;
 
-import static com.bytezone.utility.Utility.formatMeta;
+import static com.bytezone.utility.Utility.formatText;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
@@ -26,12 +26,12 @@ public class ResourceForkProdos extends AbstractFormattedAppleFile
 
     StringBuilder text = new StringBuilder ();
 
-    formatMeta (text, "File name", appleFile.getFileName ());
-    formatMeta (text, "File type", 2, appleFile.getFileType (),
+    formatText (text, "File name", appleFile.getFileName ());
+    formatText (text, "File type", 2, appleFile.getFileType (),
         appleFile.getFileTypeText ());
-    formatMeta (text, "Aux", 4, appleFile.getAuxType ());
-    formatMeta (text, "Blocks", 6, appleFile.getTotalBlocks ());
-    formatMeta (text, "EOF", 8, appleFile.getFileLength ());
+    formatText (text, "Aux", 4, appleFile.getAuxType ());
+    formatText (text, "Blocks", 6, appleFile.getTotalBlocks ());
+    formatText (text, "EOF", 8, appleFile.getFileLength ());
 
     return Utility.rtrim (text);
   }
