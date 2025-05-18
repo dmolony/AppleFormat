@@ -264,28 +264,29 @@ public class QuickDrawFont extends CharacterList
     formatText (text, "Font bounds rect ext", 4, fbrExtent);
 
     for (int i = 0; i < unknownValues.length; i++)
-      text.append (
-          String.format ("Additional field .......... %04X  %<,6d%n", unknownValues[i]));
+      formatText (text, "Additional field", 4, unknownValues[i]);
 
-    text.append (String.format (
-        "%nFont type ................. %04X  %<,6d  (ignored on IIgs)%n", fontType));
-    text.append (String.format ("Ascii code of first char .. %04X  %<,6d%n", firstChar));
-    text.append (String.format ("Ascii code of last char ... %04X  %<,6d%n", lastChar));
-    text.append (String.format ("Maximum character width ... %04X  %<,6d%n", widMax));
-    text.append (String.format ("Maximum leftward kern ..... %04X  %<,6d%n", kernMax));
-    text.append (String.format ("Negative of descent ....... %04X  %<,6d%n%n", nDescent));
-    text.append (String.format ("Width of font rectangle ... %04X  %<,6d%n", fRectWidth));
-    text.append (
-        String.format ("Height of font rectangle .. %04X  %<,6d%n%n", fRectHeight));
-    text.append (String.format ("Offset to O/W table ....... %04X  %<,6d%n%n", owTLoc));
-    text.append (String.format ("Ascent .................... %04X  %<,6d%n", ascent));
-    text.append (String.format ("Descent ................... %04X  %<,6d%n", descent));
-    text.append (String.format ("Leading ................... %04X  %<,6d%n%n", leading));
-    text.append (String.format ("Width of font strike ...... %04X  %<,6d  (%,d bits)%n%n",
-        rowWords, rowWords * 16));
+    text.append ("\n");
+    formatText (text, "Font type", 4, fontType, " (ignored on IIgs)");
 
-    text.append (String.format ("Total characters .......... %d%n", totalCharacters));
-    text.append (String.format ("Widest character .......... %d%n%n", widestCharacter));
+    formatText (text, "Ascii code of first char", 4, firstChar);
+    formatText (text, "Ascii code of last char", 4, lastChar);
+    formatText (text, "Maximum character width", 4, widMax);
+    formatText (text, "Maximum leftward kern", 4, kernMax);
+    formatText (text, "Negative of descent", 4, nDescent);
+    text.append ("\n");
+    formatText (text, "Width of font rectangle", 4, fRectWidth);
+    formatText (text, "Height of font rectangle", 4, fRectHeight);
+    formatText (text, "Offset to O/W table", 4, owTLoc);
+    formatText (text, "Ascent", 4, ascent);
+    formatText (text, "Descent", 4, descent);
+    formatText (text, "Leading", 4, leading);
+    formatText (text, "Width of font strike", 4, rowWords,
+        String.format (" (%,d bits)", rowWords * 16));
+
+    formatText (text, "Total characters", 4, totalCharacters);
+    formatText (text, "Widest character", 4, widestCharacter);
+    text.append ("\n");
 
     if (corrupt)
     {
