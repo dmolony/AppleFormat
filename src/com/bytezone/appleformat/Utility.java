@@ -47,6 +47,8 @@ public final class Utility
   public static final byte ASCII_EQUALS = 0x3D;
   public static final byte ASCII_CARET = 0x5E;
 
+  private static final int MAX_SHORT = 0xFFFF;
+
   private static MathContext mathContext = new MathContext (9);
   private static MathContext mathContext4 = new MathContext (6);
   private static MathContext mathContext8 = new MathContext (15);
@@ -272,24 +274,6 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
-  // public static int getLong (byte[] buffer, int ptr)
-  // //
-  // ---------------------------------------------------------------------------------//
-  // {
-  // return getWord (buffer, ptr) + getWord (buffer, ptr + 2) * 0x10000;
-  // }
-
-  // ---------------------------------------------------------------------------------//
-  // public static int getWord (byte[] buffer, int ptr)
-  // //
-  // ---------------------------------------------------------------------------------//
-  // {
-  // int a = (buffer[ptr + 1] & 0xFF) << 8;
-  // int b = buffer[ptr] & 0xFF;
-  // return a + b;
-  // }
-
-  // ---------------------------------------------------------------------------------//
   public static int intValue (byte b1, byte b2)
   // ---------------------------------------------------------------------------------//
   {
@@ -355,28 +339,24 @@ public final class Utility
   public static int getShort (byte[] buffer, int ptr)
   // ---------------------------------------------------------------------------------//
   {
-    if (ptr < 0 || ptr + 1 >= buffer.length)
+    try
+    {
+      return ((buffer[ptr] & 0xFF) | ((buffer[ptr + 1] & 0xFF) << 8));
+    }
+    catch (ArrayIndexOutOfBoundsException e)
     {
       System.out.printf ("Index out of range (getShort): %04X  %<d%n", ptr);
       return 0;
     }
-
-    return ((buffer[ptr] & 0xFF) | ((buffer[ptr + 1] & 0xFF) << 8));
   }
 
   // ---------------------------------------------------------------------------------//
   public static int getSignedShort (byte[] buffer, int ptr)
   // ---------------------------------------------------------------------------------//
   {
-    try
-    {
-      return (short) ((buffer[ptr] & 0xFF) | ((buffer[ptr + 1] & 0xFF) << 8));
-    }
-    catch (ArrayIndexOutOfBoundsException e)
-    {
-      System.out.printf ("Index out of range (signedShort): %04X  %<d%n", ptr);
-      return 0;
-    }
+    int val = getShort (buffer, ptr);
+
+    return ((val & 0x8000) == 0) ? val : val - MAX_SHORT - 1;
   }
 
   // ---------------------------------------------------------------------------------//
