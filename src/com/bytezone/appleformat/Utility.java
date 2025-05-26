@@ -162,10 +162,10 @@ public final class Utility
 
         hexLine.append (String.format ("%02X ", b[z]));
 
-        int c = b[z] & 0x7F;
+        int c = b[z] & 0xFF;
 
         if (c > 127)
-          c -= c < 160 ? 64 : 128;
+          c -= (c < 160) ? 64 : 128;
 
         if (c < 32 || c == 127)         // non-printable
           textLine.append (".");

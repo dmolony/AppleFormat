@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 
 //$06 (BIN) aux $2000 .A2FC
 //$06 (BIN) aux ?     .PAC
+//$06 (BIN) aux $2000 eof $4000
+//$00 (NON)           eof $4000        ZORK.ZERO
 // -----------------------------------------------------------------------------------//
 public class AppleGraphicsA2FC extends Graphics
 // -----------------------------------------------------------------------------------//
@@ -25,26 +27,12 @@ public class AppleGraphicsA2FC extends Graphics
   private int auxBufferOffset;
 
   // ---------------------------------------------------------------------------------//
-  //  public AppleGraphicsA2FC (AppleFile appleFile, byte[] buffer, byte[] auxBuffer)
-  //  // ---------------------------------------------------------------------------------//
-  //  {
-  //    super (appleFile, buffer);
-  //
-  //    primaryBuffer = buffer;
-  //    this.auxBuffer = Objects.requireNonNull (auxBuffer);
-  //
-  //    buildImage ();
-  //  }
-
-  // ---------------------------------------------------------------------------------//
   public AppleGraphicsA2FC (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
 
     byte[] buffer = dataBuffer.data ();
-    //    int offset = dataBuffer.offset ();
-    //    int length = dataBuffer.length ();
 
     if (name.endsWith (".PAC"))
     {
@@ -52,7 +40,7 @@ public class AppleGraphicsA2FC extends Graphics
       auxBuffer = doubleScrunch.memory[0];
       primaryBuffer = doubleScrunch.memory[1];
     }
-    else if (name.endsWith (".A2FC"))
+    else if (name.endsWith (".A2FC") || appleFile.getFileLength () == 0x4000)
     {
       auxBuffer = buffer;
       primaryBuffer = buffer;
@@ -133,12 +121,6 @@ public class AppleGraphicsA2FC extends Graphics
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder text = new StringBuilder ();
-
-    //    if (packedBuffer != null)
-    //    {
-    //      text.append ("Packed buffer:\n\n");
-    //      text.append (HexFormatter.format (packedBuffer));
-    //    }
 
     text.append ("Auxilliary buffer:\n\n");
     text.append (HexFormatter.format (auxBuffer));

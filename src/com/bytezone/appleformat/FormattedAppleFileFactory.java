@@ -610,6 +610,9 @@ public class FormattedAppleFileFactory
       if (name.endsWith (".A2FC") || name.endsWith (".PAC"))
         return new AppleGraphicsA2FC (appleFile);
 
+      if (eof == 0x4000 && aux == 0x2000)
+        return new AppleGraphicsA2FC (appleFile);
+
       if (eof > 0x1F00 && eof <= 0x4000)
         return new AppleGraphics (appleFile, new Buffer (buffer, 0, eof));
     }
@@ -626,7 +629,7 @@ public class FormattedAppleFileFactory
     if (name.endsWith (".3201") && aux == 0)
       return new AppleGraphics3201 (appleFile);
 
-    if (eof == 32768)
+    if (eof == 0x8000)
       return new Pic0000 (appleFile);
 
     try
@@ -641,14 +644,21 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkNon (AppleFile appleFile, Buffer dataRecord, int aux)
+  private FormattedAppleFile checkNon (AppleFile appleFile, Buffer fileBuffer, int aux)
   // ---------------------------------------------------------------------------------//
   {
-    byte[] buffer = dataRecord.data ();
+    byte[] buffer = fileBuffer.data ();
 
-    String name = appleFile.getFileName ();
-    if (name.endsWith (".TIFF") && AppleImage.isTiff (buffer))
+    String fileName = appleFile.getFileName ();
+    if (fileName.endsWith (".TIFF") && AppleImage.isTiff (buffer))
       return new DataFile (appleFile);    // JavaFX doesn't support TIFF
+
+    // check for pitchdark errors
+    int eof = fileBuffer.length ();
+    if (eof == 0x4000 && fileName.equals ("ZORK.ZERO"))
+      return new AppleGraphicsA2FC (appleFile);
+    else if (eof == 0x8000 && fileName.equals ("ZORK.ZERO"))
+      return new Pic0000 (appleFile);
 
     return new DataFile (appleFile);
   }
