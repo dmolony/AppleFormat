@@ -2,7 +2,6 @@ package com.bytezone.appleformat.file;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.Buffer;
 
 // $AB GSB Apple IIgs BASIC Program
 // $AC TDF Apple IIgs BASIC TDF           Toolbox Definition File
@@ -15,12 +14,10 @@ public class TdfFile extends AbstractFormattedAppleFile
   int length;
 
   // ---------------------------------------------------------------------------------//
-  public TdfFile (AppleFile appleFile, Buffer dataBuffer, int aux)
+  public TdfFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataBuffer);
-
-    this.aux = aux;
+    super (appleFile);
 
     byte[] buffer = dataBuffer.data ();
     int ptr = dataBuffer.offset ();

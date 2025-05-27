@@ -28,11 +28,12 @@ public class IconFile extends Graphics
   private final boolean debug = false;
 
   // ---------------------------------------------------------------------------------//
-  public IconFile (AppleFile appleFile, Buffer dataRecord)
+  public IconFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataRecord);
+    super (appleFile);
 
+    Buffer dataRecord = appleFile.getFileBuffer ();
     byte[] buffer = dataRecord.data ();
 
     iBlkNext = Utility.getLong (buffer, 0);

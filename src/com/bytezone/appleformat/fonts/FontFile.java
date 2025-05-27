@@ -13,16 +13,17 @@ public class FontFile extends CharacterList
   private static final int charsX = 16;
 
   // ---------------------------------------------------------------------------------//
-  public FontFile (AppleFile file, Buffer dataRecord, int address)
+  public FontFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (file, dataRecord);
+    super (appleFile);
 
+    Buffer dataRecord = appleFile.getFileBuffer ();
     byte[] buffer = dataRecord.data ();
     int offset = dataRecord.offset ();
     int length = dataRecord.length ();
 
-    loadAddress = address;
+    loadAddress = appleFile.getAuxType ();
     int ptr = offset;
 
     while (ptr < buffer.length)

@@ -35,8 +35,10 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   int offset;
   int length;
 
+  // Sometimes a file uses a subset of its own dataBuffer to create an assembler
+  // routine (Applesoft)
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (AppleFile appleFile, Buffer dataRecord, int address)
+  public AssemblerProgram (AppleFile appleFile, Buffer dataRecord, int loadAddress)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, dataRecord);
@@ -49,12 +51,12 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
 
     preferences = PreferencesFactory.assemblerPreferences;
 
-    this.loadAddress = address;
+    this.loadAddress = loadAddress;
 
     if (false)
       System.out.printf (
           "name: %s, buffer length: %04X, offset: %04X, length: %04X, address: %04X%n",
-          name, buffer.length, offset, length, address);
+          name, buffer.length, offset, length, loadAddress);
 
     if (equates == null)
       getEquates ();
@@ -63,16 +65,12 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public AssemblerProgram (AppleFile appleFile, Buffer dataRecord, int address,
+  public AssemblerProgram (AppleFile appleFile, Buffer dataRecord, int loadAddress,
       int executeOffset)
   // ---------------------------------------------------------------------------------//
   {
-    this (appleFile, dataRecord, address);
+    this (appleFile, dataRecord, loadAddress);
     this.executeOffset = executeOffset;
-
-    buffer = dataRecord.data ();
-    offset = dataRecord.offset ();
-    length = dataRecord.length ();
 
     assert offset + length <= buffer.length;
   }

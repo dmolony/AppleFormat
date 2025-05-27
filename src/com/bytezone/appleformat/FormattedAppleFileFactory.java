@@ -330,16 +330,15 @@ public class FormattedAppleFileFactory
 
     assert appleFile instanceof ForkProdos;
 
-    int aux = appleFile.getAuxType ();
-
     // avoid the DataBuffer if using TextBlocks
     if (appleFile.isRandomAccess ())
     {
       List<? extends TextBlock> textBlocks = ((ForkProdos) appleFile).getTextBlocks ();
-      return new ProdosText ((ForkProdos) appleFile, textBlocks, aux);
+      return new ProdosText ((ForkProdos) appleFile, textBlocks);
     }
 
     Buffer dataBuffer = appleFile.getFileBuffer ();
+    int aux = appleFile.getAuxType ();
 
     if (((ForkProdos) appleFile).getForkType () == ForkType.RESOURCE)
       return new ResourceForkProdos (appleFile);
@@ -347,30 +346,30 @@ public class FormattedAppleFileFactory
     return switch (appleFile.getFileType ())
     {
       case FILE_TYPE_TEXT -> checkText (appleFile);
-      case FILE_TYPE_GWP -> new Text (appleFile, dataBuffer);
+      case FILE_TYPE_GWP -> new Text (appleFile);
       case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataBuffer, aux);
       case FILE_TYPE_CMD -> new AssemblerProgram (appleFile, dataBuffer, aux);
-      case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, aux);
+      case FILE_TYPE_BINARY -> checkProdosBinary (appleFile);
       case FILE_TYPE_PNT -> checkGraphics (appleFile);
       case FILE_TYPE_PIC -> checkGraphics (appleFile);
       case FILE_TYPE_ANI -> checkGraphics (appleFile);
       case FILE_TYPE_FND -> new FinderData (appleFile);
       case FILE_TYPE_FOT -> checkGraphics (appleFile);
-      case FILE_TYPE_FNT -> new FontFile (appleFile, dataBuffer, aux);
+      case FILE_TYPE_FNT -> new FontFile (appleFile);
       case FILE_TYPE_FONT -> new QuickDrawFont (appleFile);
-      case FILE_TYPE_GS_BASIC -> new BasicProgramGS (appleFile, dataBuffer);
-      case FILE_TYPE_TDF -> new TdfFile (appleFile, dataBuffer, aux);
+      case FILE_TYPE_GS_BASIC -> new BasicProgramGS (appleFile);
+      case FILE_TYPE_TDF -> new TdfFile (appleFile);
       case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
       case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
-      case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile, dataBuffer);
-      case FILE_TYPE_AWP -> new AppleworksWPFile (appleFile, dataBuffer);
-      case FILE_TYPE_ADB -> new AppleworksADBFile (appleFile, dataBuffer);
-      case FILE_TYPE_ICN -> new IconFile (appleFile, dataBuffer);
-      case FILE_TYPE_NON -> checkNon (appleFile, dataBuffer, aux);
-      case FILE_TYPE_BAT -> new Text (appleFile, dataBuffer);
-      case FILE_TYPE_SRC -> new Text (appleFile, dataBuffer);
+      case FILE_TYPE_ASP -> new AppleworksSSFile (appleFile);
+      case FILE_TYPE_AWP -> new AppleworksWPFile (appleFile);
+      case FILE_TYPE_ADB -> new AppleworksADBFile (appleFile);
+      case FILE_TYPE_ICN -> new IconFile (appleFile);
+      case FILE_TYPE_NON -> checkNon (appleFile);
+      case FILE_TYPE_BAT -> new Text (appleFile);
+      case FILE_TYPE_SRC -> new Text (appleFile);
       case FILE_TYPE_APPLESOFT_VARS -> new StoredVariables (appleFile);
-      default -> new UnknownFile (appleFile, dataBuffer, aux);
+      default -> new UnknownFile (appleFile);
     };
   }
 
@@ -386,7 +385,7 @@ public class FormattedAppleFileFactory
     if (fileName.endsWith (".SRC"))
       return new AssemblerText (appleFile, dataBuffer);
 
-    return new Text (appleFile, dataBuffer);
+    return new Text (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -586,13 +585,14 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkProdosBinary (AppleFile appleFile, Buffer dataBuffer,
-      int aux)
+  private FormattedAppleFile checkProdosBinary (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     Buffer fileBuffer = appleFile.getFileBuffer ();
     byte[] buffer = fileBuffer.data ();
     int eof = fileBuffer.length ();
+
+    int aux = appleFile.getAuxType ();
 
     if (ShapeTable.isShapeTable (fileBuffer))
       return new ShapeTable (appleFile, new Buffer (buffer, 0, eof));
@@ -644,9 +644,10 @@ public class FormattedAppleFileFactory
   }
 
   // ---------------------------------------------------------------------------------//
-  private FormattedAppleFile checkNon (AppleFile appleFile, Buffer fileBuffer, int aux)
+  private FormattedAppleFile checkNon (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
+    Buffer fileBuffer = appleFile.getFileBuffer ();
     byte[] buffer = fileBuffer.data ();
 
     String fileName = appleFile.getFileName ();
@@ -706,7 +707,7 @@ public class FormattedAppleFileFactory
         return switch (fileType)
         {
           case FILE_TYPE_TEXT -> checkText (appleFile);
-          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, auxType);
+          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile);
           case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
           case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
           default -> new DataFile (appleFile);
@@ -731,32 +732,11 @@ public class FormattedAppleFileFactory
       throws FontValidationException
   // ---------------------------------------------------------------------------------//
   {
-    int fileSystemId = 0;
-    byte[] buffer = null;
-    //    int aux = 0;
-    Buffer dataBuffer;
-    int aux = appleFile.getAuxType ();
+    if (appleFile instanceof FileNuFX file)       // just one resource
+      appleFile = file.getForks ().get (0);
 
-    if (appleFile instanceof ForkNuFX fork)
-    {
-      fileSystemId = fork.getFileSystemId ();
-      dataBuffer = fork.getFileBuffer ();
-      buffer = dataBuffer.data ();
-      //      aux = fork.getAuxType ();
-    }
-    else
-    {
-      FileNuFX file = (FileNuFX) appleFile;
-      fileSystemId = file.getFileSystemId ();
-      dataBuffer = file.getFileBuffer ();
-      buffer = dataBuffer.data ();
-      //      aux = file.getAuxType ();
-    }
-
+    int fileSystemId = ((ForkNuFX) appleFile).getFileSystemId ();
     int fileType = appleFile.getFileType ();
-
-    if (buffer == null)
-      return new DataFile (appleFile, new Buffer (buffer, 0, 0));
 
     switch (fileSystemId)
     {
@@ -764,13 +744,15 @@ public class FormattedAppleFileFactory
         return switch (fileType)
         {
           case FILE_TYPE_TEXT -> checkText (appleFile);
-          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile, dataBuffer, aux);
+          case FILE_TYPE_BINARY -> checkProdosBinary (appleFile);
           case FILE_TYPE_APPLESOFT -> new ApplesoftBasicProgram (appleFile);
           case FILE_TYPE_INTEGER_BASIC -> new IntegerBasicProgram (appleFile);
-          case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataBuffer, aux);
-          case FILE_TYPE_GWP -> new Text (appleFile, dataBuffer);
+          case FILE_TYPE_SYS -> new AssemblerProgram (appleFile,
+              appleFile.getFileBuffer (), appleFile.getAuxType ());
+          case FILE_TYPE_GWP -> new Text (appleFile);
           case FILE_TYPE_FONT -> new QuickDrawFont (appleFile);
-          default -> new UnknownFile (appleFile, dataBuffer, aux);
+          case FILE_TYPE_SRC -> new Text (appleFile);
+          default -> new UnknownFile (appleFile);
         };
 
       case 2:                                     // Dos 3.3
@@ -778,11 +760,11 @@ public class FormattedAppleFileFactory
       case 4:                                     // Pascal
       case 8:                                     // CPM
         System.out.printf ("NuFX file system: %d not written%n", fileSystemId);
-        return new UnknownFile (appleFile, new Buffer (buffer, 0, buffer.length), aux);
+        return new UnknownFile (appleFile);
 
       default:
         System.out.printf ("NuFX unknown file system: %d%n", fileSystemId);
-        return new UnknownFile (appleFile, new Buffer (buffer, 0, buffer.length), aux);
+        return new UnknownFile (appleFile);
     }
   }
 

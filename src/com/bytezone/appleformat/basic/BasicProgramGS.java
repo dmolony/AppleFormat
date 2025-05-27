@@ -7,8 +7,7 @@ import java.util.List;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.file.AbstractFormattedAppleFile;
-import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.Buffer;;
+import com.bytezone.filesystem.AppleFile;;
 
 // -----------------------------------------------------------------------------------//
 public class BasicProgramGS extends AbstractFormattedAppleFile
@@ -91,17 +90,17 @@ public class BasicProgramGS extends AbstractFormattedAppleFile
   int length;
 
   // ---------------------------------------------------------------------------------//
-  public BasicProgramGS (AppleFile appleFile, Buffer dataRecord)
+  public BasicProgramGS (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataRecord);
+    super (appleFile);
 
     // need to validate these files - seem to sometimes contain palette files
     // 0132 816-Paint.po
 
-    buffer = dataRecord.data ();
-    int ptr = dataRecord.offset () + 5;
-    while (ptr < dataRecord.max ())
+    buffer = dataBuffer.data ();
+    int ptr = dataBuffer.offset () + 5;
+    while (ptr < dataBuffer.max ())
     {
       SourceLine sourceLine = new SourceLine (buffer, ptr);
 

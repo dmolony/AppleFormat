@@ -47,11 +47,12 @@ public class AppleworksADBFile extends AbstractFormattedAppleFile
   private final Record standardRecord;
 
   // ---------------------------------------------------------------------------------//
-  public AppleworksADBFile (AppleFile appleFile, Buffer dataRecord)
+  public AppleworksADBFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataRecord);
+    super (appleFile);
 
+    Buffer dataRecord = appleFile.getFileBuffer ();
     byte[] buffer = dataRecord.data ();
     dbMinVersion = buffer[218] & 0xFF;
 

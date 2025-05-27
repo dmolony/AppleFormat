@@ -11,11 +11,12 @@ public class AppleworksWPFile extends AbstractFormattedAppleFile
   Header header;
 
   // ---------------------------------------------------------------------------------//
-  public AppleworksWPFile (AppleFile appleFile, Buffer dataRecord)
+  public AppleworksWPFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataRecord);
+    super (appleFile);
 
+    Buffer dataRecord = appleFile.getFileBuffer ();
     header = new Header (dataRecord.data (), dataRecord.offset ());
   }
 

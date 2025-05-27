@@ -19,12 +19,12 @@ public class ProdosText extends Text
   int recordLength;
 
   // ---------------------------------------------------------------------------------//
-  public ProdosText (ForkProdos appleFile, List<? extends TextBlock> textBlocks, int aux)
+  public ProdosText (ForkProdos appleFile, List<? extends TextBlock> textBlocks)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile, textBlocks);
 
-    this.recordLength = aux;
+    this.recordLength = appleFile.getAuxType ();
   }
 
   // ---------------------------------------------------------------------------------//

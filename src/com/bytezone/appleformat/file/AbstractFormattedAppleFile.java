@@ -1,6 +1,7 @@
 package com.bytezone.appleformat.file;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.AppleForkedFile;
 import com.bytezone.filesystem.Buffer;
+import com.bytezone.filesystem.ForkProdos;
 import com.bytezone.filesystem.TextBlock;
 
 import javafx.scene.image.Image;
@@ -22,6 +24,7 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
 {
   protected static final WritableImage emptyImage = new WritableImage (1, 1);
   private static final int MAX_HEX_BYTES = 0x10_000;
+  private static List<String> emptyList = Arrays.asList ("No data");
 
   protected final File localFile;
   protected final AppleFile appleFile;
@@ -110,7 +113,11 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
     textBlocks = null;
 
     name = "";
-    dataBuffer = ((AppleFile) forkedFile).getFileBuffer ();
+
+    if (forkedFile instanceof ForkProdos fp)
+      dataBuffer = fp.getFileBuffer ();
+    else
+      dataBuffer = null;
   }
 
   // Disk file - file system
@@ -193,6 +200,9 @@ public abstract class AbstractFormattedAppleFile implements FormattedAppleFile
   protected List<String> buildHex ()
   // ---------------------------------------------------------------------------------//
   {
+    if (dataBuffer == null)       // NuFX forks have no buffer
+      return emptyList;
+
     return Utility.getHexDumpLines (dataBuffer.data (), dataBuffer.offset (),
         Math.min (MAX_HEX_BYTES, dataBuffer.length ()));
   }

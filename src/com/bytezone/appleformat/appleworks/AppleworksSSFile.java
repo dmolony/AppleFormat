@@ -17,11 +17,12 @@ public class AppleworksSSFile extends AbstractFormattedAppleFile
   List<Row> rows = new ArrayList<> ();
 
   // ---------------------------------------------------------------------------------//
-  public AppleworksSSFile (AppleFile appleFile, Buffer dataRecord)
+  public AppleworksSSFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataRecord);
+    super (appleFile);
 
+    Buffer dataRecord = appleFile.getFileBuffer ();
     byte[] buffer = dataRecord.data ();
     header = new Header (buffer);
 

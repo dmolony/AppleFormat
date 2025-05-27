@@ -4,21 +4,16 @@ import static com.bytezone.utility.Utility.formatText;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.Buffer;
 
 //-----------------------------------------------------------------------------------//
 public class UnknownFile extends AbstractFormattedAppleFile
 //-----------------------------------------------------------------------------------//
 {
-  int aux;
-
   // ---------------------------------------------------------------------------------//
-  public UnknownFile (AppleFile appleFile, Buffer dataBuffer, int aux)
+  public UnknownFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataBuffer);
-
-    this.aux = aux;
+    super (appleFile);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -42,7 +37,7 @@ public class UnknownFile extends AbstractFormattedAppleFile
     formatText (text, "File name", appleFile.getFileName ());
     formatText (text, "File type", 2, appleFile.getFileType (),
         appleFile.getFileTypeText ());
-    formatText (text, "Aux", 4, aux);
+    formatText (text, "Aux", 4, appleFile.getAuxType ());
     formatText (text, "Blocks", 6, appleFile.getTotalBlocks ());
     formatText (text, "EOF", 8, appleFile.getFileLength ());
 
