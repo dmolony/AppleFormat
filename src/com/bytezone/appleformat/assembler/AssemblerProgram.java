@@ -92,7 +92,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   public String getHexDump ()
   // ---------------------------------------------------------------------------------//
   {
-    // It might be useful to add opt-O to change the offset. Sometimes it's useful
+    // It might be useful to add an option to change the offset. Sometimes it's useful
     // to see the hex dump offset from zero, other times it's better to use the
     // load address.
     String text = HexFormatter.format (buffer, 0, buffer.length, loadAddress);
@@ -105,47 +105,11 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public String getAssembler ()
-  // ---------------------------------------------------------------------------------//
-  {
-    //    if (buffer == null)
-    return "No buffer";
-
-    //    if (assembler == null)
-    //      this.assembler = new AssemblerProgram (name, buffer, loadAddress);
-    //
-    //    if (extraBuffer.length == 0)
-    //      return assembler.getText ();
-    //
-    //    String extraName = String.format ("%s (extra)", name);
-    //    AssemblerProgram assemblerProgram =
-    //        new AssemblerProgram (extraName, extraBuffer, loadAddress + buffer.length);
-    //
-    //    return assembler.getText () + "\n\n" + assemblerProgram.getText ();
-  }
-
-  // ---------------------------------------------------------------------------------//
-  private void addHeader (StringBuilder pgm)
-  // ---------------------------------------------------------------------------------//
-  {
-    pgm.append (String.format ("Name    : %s%n", name));
-    pgm.append (String.format ("Length  : $%04X (%<,d)%n", length));
-    pgm.append (String.format ("Load at : $%04X (%,d)%n", loadAddress, loadAddress));
-
-    if (executeOffset > 0)
-      pgm.append (String.format ("Entry   : $%04X%n", (loadAddress + executeOffset)));
-    pgm.append ("\n");
-  }
-
-  // ---------------------------------------------------------------------------------//
   @Override
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
     StringBuilder pgm = new StringBuilder ();
-
-    //    if (assemblerPreferences.showHeader)
-    //      addHeader (pgm);
 
     pgm.append (getListing ());
 

@@ -588,11 +588,9 @@ public class FormattedAppleFileFactory
   private FormattedAppleFile checkProdosBinary (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
-    Buffer fileBuffer = appleFile.getFileBuffer ();
+    Buffer fileBuffer = appleFile.getFileBuffer ();       // exactBuffer
     byte[] buffer = fileBuffer.data ();
     int eof = fileBuffer.length ();
-
-    int aux = appleFile.getAuxType ();
 
     if (ShapeTable.isShapeTable (fileBuffer))
       return new ShapeTable (appleFile, new Buffer (buffer, 0, eof));
@@ -600,10 +598,11 @@ public class FormattedAppleFileFactory
     if (isAPP (buffer))
       return new AppleGraphics3201 (appleFile);
 
-    String name = appleFile.getFileName ();
-
     if (AppleImage.isGif (buffer) || AppleImage.isPng (buffer))
       return new AppleImage (appleFile);
+
+    int aux = appleFile.getAuxType ();
+    String name = appleFile.getFileName ();
 
     if (aux == 0x2000 || aux == 0x4000)
     {
@@ -617,7 +616,7 @@ public class FormattedAppleFileFactory
         return new AppleGraphics (appleFile, new Buffer (buffer, 0, eof));
     }
 
-    if (name.endsWith (".3200") && eof != 38400 && isAPP (buffer))
+    if (name.endsWith (".3200") && eof != 38400)
     {
       name = name.replace (".3200", ".3201");
       System.out.printf ("Assuming %s should be %s%n", appleFile.getFileName (), name);
@@ -734,6 +733,8 @@ public class FormattedAppleFileFactory
   {
     if (appleFile instanceof FileNuFX file)       // just one resource
       appleFile = file.getForks ().get (0);
+
+    assert appleFile instanceof ForkNuFX;
 
     int fileSystemId = ((ForkNuFX) appleFile).getFileSystemId ();
     int fileType = appleFile.getFileType ();

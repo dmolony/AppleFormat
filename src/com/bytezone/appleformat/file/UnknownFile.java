@@ -4,16 +4,27 @@ import static com.bytezone.utility.Utility.formatText;
 
 import com.bytezone.appleformat.Utility;
 import com.bytezone.filesystem.AppleFile;
+import com.bytezone.filesystem.ForkNuFX;
+import com.bytezone.filesystem.ForkProdos;
 
 //-----------------------------------------------------------------------------------//
 public class UnknownFile extends AbstractFormattedAppleFile
 //-----------------------------------------------------------------------------------//
 {
+  String fileName;
+
   // ---------------------------------------------------------------------------------//
   public UnknownFile (AppleFile appleFile)
   // ---------------------------------------------------------------------------------//
   {
     super (appleFile);
+
+    if (appleFile instanceof ForkNuFX fork)
+      fileName = fork.getParentFile ().getFileName ();
+    else if (appleFile instanceof ForkProdos fork)
+      fileName = fork.getParentFile ().getFileName ();
+    else
+      fileName = appleFile.getFileName ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -34,7 +45,7 @@ public class UnknownFile extends AbstractFormattedAppleFile
   {
     StringBuilder text = new StringBuilder ();
 
-    formatText (text, "File name", appleFile.getFileName ());
+    formatText (text, "File name", fileName);
     formatText (text, "File type", 2, appleFile.getFileType (),
         appleFile.getFileTypeText ());
     formatText (text, "Aux", 4, appleFile.getAuxType ());
