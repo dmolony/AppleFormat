@@ -19,6 +19,7 @@ public class UnknownFile extends AbstractFormattedAppleFile
   {
     super (appleFile);
 
+    // this is to avoid the file name being shown as 'data fork' or 'resource fork'
     if (appleFile instanceof ForkNuFX fork)
       fileName = fork.getParentFile ().getFileName ();
     else if (appleFile instanceof ForkProdos fork)
