@@ -273,7 +273,7 @@ public class QuickDrawFont extends CharacterList
     formatText (text, "Ascii code of last char", 4, lastChar);
     formatText (text, "Maximum character width", 4, widMax);
     formatText (text, "Maximum leftward kern", 4, kernMax);
-    formatText (text, "Negative of descent", 4, nDescent);
+    formatText (text, "Negative of descent", 8, nDescent);
     text.append ("\n");
     formatText (text, "Width of font rectangle", 4, fRectWidth);
     formatText (text, "Height of font rectangle", 4, fRectHeight);
