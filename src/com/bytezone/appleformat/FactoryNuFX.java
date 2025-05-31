@@ -1,10 +1,15 @@
 package com.bytezone.appleformat;
 
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_ANI;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_APPLESOFT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_BINARY;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FND;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FONT;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_FOT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_GWP;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_INTEGER_BASIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PIC;
+import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_PNT;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_SRC;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_SYS;
 import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
@@ -12,6 +17,7 @@ import static com.bytezone.appleformat.ProdosConstants.FILE_TYPE_TEXT;
 import com.bytezone.appleformat.assembler.AssemblerProgram;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
+import com.bytezone.appleformat.file.FinderData;
 import com.bytezone.appleformat.file.FormattedAppleFile;
 import com.bytezone.appleformat.file.UnknownFile;
 import com.bytezone.appleformat.fonts.FontValidationException;
@@ -52,6 +58,11 @@ class FactoryNuFX extends FactoryProdosCommon
           case FILE_TYPE_GWP -> new Text (appleFile);
           case FILE_TYPE_FONT -> new QuickDrawFont (appleFile);
           case FILE_TYPE_SRC -> new Text (appleFile);
+          case FILE_TYPE_PNT -> checkGraphics (appleFile);
+          case FILE_TYPE_PIC -> checkGraphics (appleFile);
+          case FILE_TYPE_ANI -> checkGraphics (appleFile);
+          case FILE_TYPE_FND -> new FinderData (appleFile);
+          case FILE_TYPE_FOT -> checkGraphics (appleFile);
           default -> new UnknownFile (appleFile);
         };
 
