@@ -16,7 +16,6 @@ import com.bytezone.appleformat.text.PascalText;
 import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFileSystem;
-import com.bytezone.filesystem.AppleForkedFile;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileDos;
@@ -71,8 +70,8 @@ public class FormattedAppleFileFactory
   {
     try
     {
-      if (appleFile.isForkedFile ())
-        return new Catalog ((AppleForkedFile) appleFile);
+      //      if (appleFile.isForkedFile ())
+      //        return new Catalog ((AppleForkedFile) appleFile);
 
       if (appleFile instanceof AppleContainer container    //
           && (appleFile.getFileType () == 0                // ??
