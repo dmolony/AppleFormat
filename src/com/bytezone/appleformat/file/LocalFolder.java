@@ -30,7 +30,8 @@ public class LocalFolder extends AbstractFormattedAppleFile
   public String buildText ()
   // ---------------------------------------------------------------------------------//
   {
-    StringBuilder text = new StringBuilder (" No    File size    File name\n");
+    StringBuilder text = new StringBuilder ("Folder name : " + name + "\n\n");
+    text.append (" No    File size    File name\n");
 
     text.append ("---  ------------  ---------------------------------"
         + "------------------------------------------\n");

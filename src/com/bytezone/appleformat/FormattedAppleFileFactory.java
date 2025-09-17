@@ -50,6 +50,7 @@ public class FormattedAppleFileFactory
   // ---------------------------------------------------------------------------------//
   {
     assert localFile.isDirectory ();
+
     return new LocalFolder (localFile);
   }
 
