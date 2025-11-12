@@ -79,9 +79,6 @@ public class FormattedAppleFileFactory
               | appleFile.getFileType () == 15))           // directory file
         return new Catalog (container);
 
-      if (appleFile.hasEmbeddedFileSystem ())
-        return new Catalog (appleFile.getEmbeddedFileSystem ());
-
       return switch (appleFile.getFileSystemType ())
       {
         case DOS3, DOS4 -> factoryDos.getFormattedDosFile ((FileDos) appleFile);

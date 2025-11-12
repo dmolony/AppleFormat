@@ -89,7 +89,7 @@ class FactoryProdos extends FactoryProdosCommon
     {
       case FILE_TYPE_TEXT -> checkText (appleFile);
       case FILE_TYPE_GWP -> new Text (appleFile);
-      case FILE_TYPE_SYS -> new AssemblerProgram (appleFile, dataBuffer, aux);
+      case FILE_TYPE_SYS -> checkSys (appleFile);
       case FILE_TYPE_CMD -> new AssemblerProgram (appleFile, dataBuffer, aux);
       case FILE_TYPE_BINARY -> checkProdosBinary (appleFile);
       case FILE_TYPE_PNT -> checkGraphics (appleFile);
@@ -127,6 +127,16 @@ class FactoryProdos extends FactoryProdosCommon
       return false;
 
     return true;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkSys (AppleFile appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    Buffer dataBuffer = appleFile.getFileBuffer ();
+    int aux = appleFile.getAuxType ();
+
+    return new AssemblerProgram (appleFile, dataBuffer, aux);
   }
 
   // ---------------------------------------------------------------------------------//

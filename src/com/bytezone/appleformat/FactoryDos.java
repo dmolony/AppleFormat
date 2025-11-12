@@ -156,6 +156,8 @@ class FactoryDos
       return new AssemblerText (appleFile, fileBuffer);
     if (fileName.endsWith (".SOURCE"))
       return new AssemblerText (appleFile, fileBuffer);     // wrong but better
+    if (fileName.endsWith (".LOGO"))
+      return new DosText (appleFile);
 
     //    if (fileName.endsWith (".L") && appleFile.getFileType () == 64)
     //      return new AssemblerText (appleFile, dataRecord);
