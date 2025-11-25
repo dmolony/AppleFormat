@@ -32,6 +32,8 @@ public class ShapeTable extends Graphics
   private final int maxShapeWidth;
   private final int maxShapeHeight;
 
+  private static boolean debug = false;
+
   // ---------------------------------------------------------------------------------//
   public ShapeTable (AppleFile appleFile, Buffer dataRecord)
   // ---------------------------------------------------------------------------------//
@@ -149,9 +151,12 @@ public class ShapeTable extends Graphics
     if (length < 2)
       return false;
 
-    int totalShapes = Utility.getSignedShort (buffer, offset);
+    int totalShapes = Utility.getShort (buffer, offset);
     if (totalShapes <= 0 || totalShapes > 255)
       return false;
+
+    if (debug)
+      System.out.printf ("Total shapes : %d%n", totalShapes);
 
     int min = offset + totalShapes * 2 + 2;       // skip index
     int max = offset + length;
@@ -159,9 +164,19 @@ public class ShapeTable extends Graphics
     if (min >= max)
       return false;
 
+    if (debug)
+    {
+      System.out.printf ("Min : %d%n", min);
+      System.out.printf ("Max : %d%n", max);
+    }
+
     // this flags large files that start with a very small value
-    if (totalShapes * 500 < max)
+    if (totalShapes * 700 < max)
+    {
+      if (debug)
+        System.out.printf ("%d * 700 < %d%n", totalShapes, max);
       return false;
+    }
 
     int lo = 99999;
     int hi = 0;
@@ -170,7 +185,8 @@ public class ShapeTable extends Graphics
     for (int i = 0; i < totalShapes; i++)
     {
       int ptr = offset + Utility.getShort (buffer, offset + i * 2 + 2);
-      //      System.out.printf ("%3d  %04X  %04X  %04X%n", i, min, ptr, max);
+      if (debug)
+        System.out.printf ("%3d  %04X  %04X  %04X%n", i, min, ptr, max);
       if (ptr < min || ptr >= max)
         return false;
 
@@ -180,12 +196,14 @@ public class ShapeTable extends Graphics
         hi = ptr;
     }
 
-    //    System.out.printf ("lo: %04X, hi: %04X%n", lo, hi);
+    if (debug)
+      System.out.printf ("lo: %04X, hi: %04X%n", lo, hi);
     int unusedLo = lo - min;
     int unusedHi = max - hi;
-    //    System.out.printf ("Unused: %d, %d%n", unusedLo, unusedHi);
+    if (debug)
+      System.out.printf ("Unused: %d, %d%n", unusedLo, unusedHi);
 
-    if (unusedLo + unusedHi > 200)
+    if (unusedLo + unusedHi > 1000)
       return false;
 
     // nibble0489.po SMALL.LETTERS is clearly a shape table, 
