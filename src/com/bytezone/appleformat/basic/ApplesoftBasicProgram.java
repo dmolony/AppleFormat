@@ -23,6 +23,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
   private XrefFormatter xrefFormatter;
 
   private int endPtr;
+  private List<String> dataItems = new ArrayList<> ();
 
   // ---------------------------------------------------------------------------------//
   public ApplesoftBasicProgram (AppleFile appleFile)
@@ -34,10 +35,10 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public ApplesoftBasicProgram (AppleFile appleFile, Buffer dataRecord)
+  public ApplesoftBasicProgram (AppleFile appleFile, Buffer dataBuffer)
   // ---------------------------------------------------------------------------------//
   {
-    super (appleFile, dataRecord);
+    super (appleFile, dataBuffer);
 
     setup ();
   }
@@ -56,6 +57,7 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
     {
       SourceLine line = new SourceLine (this, buffer, ptr);
       sourceLines.add (line);
+      dataItems.addAll (line.getDataItems ());
       ptr += line.length;           // assumes lines are contiguous
     }
 
@@ -116,6 +118,13 @@ public class ApplesoftBasicProgram extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return sourceLines;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  public List<String> getDataItems ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return dataItems;
   }
 
   // ---------------------------------------------------------------------------------//

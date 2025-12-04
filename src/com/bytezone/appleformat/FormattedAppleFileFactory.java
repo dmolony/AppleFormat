@@ -6,6 +6,7 @@ import java.util.prefs.Preferences;
 import com.bytezone.appleformat.basic.BasicCpmProgram;
 import com.bytezone.appleformat.file.Catalog;
 import com.bytezone.appleformat.file.DataFile;
+import com.bytezone.appleformat.file.DosMaster;
 import com.bytezone.appleformat.file.FormattedAppleFile;
 import com.bytezone.appleformat.file.LocalFolder;
 import com.bytezone.appleformat.file.PascalCode;
@@ -19,6 +20,7 @@ import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.FileBinary2;
 import com.bytezone.filesystem.FileCpm;
 import com.bytezone.filesystem.FileDos;
+import com.bytezone.filesystem.FileDosMaster;
 
 // -----------------------------------------------------------------------------------//
 public class FormattedAppleFileFactory
@@ -74,10 +76,18 @@ public class FormattedAppleFileFactory
       //      if (appleFile.isForkedFile ())
       //        return new Catalog ((AppleForkedFile) appleFile);
 
-      if (appleFile instanceof AppleContainer container    //
-          && (appleFile.getFileType () == 0                // ??
-              | appleFile.getFileType () == 15))           // directory file
-        return new Catalog (container);
+      //      System.out.printf ("%s %d %n", appleFile instanceof AppleContainer,
+      //          appleFile.getFileType ());
+
+      if (appleFile instanceof AppleContainer container)    //
+      {
+        if (appleFile instanceof FileDosMaster dosMaster)
+          return new DosMaster (appleFile);
+
+        if (appleFile.getFileType () == 0                // ??
+            | appleFile.getFileType () == 15)           // directory file
+          return new Catalog (container);
+      }
 
       return switch (appleFile.getFileSystemType ())
       {

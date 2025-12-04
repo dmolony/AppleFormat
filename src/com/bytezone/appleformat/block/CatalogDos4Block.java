@@ -31,6 +31,7 @@ public class CatalogDos4Block extends CatalogDosBlock
 
     for (int i = 11; i <= 255; i += CATALOG_ENTRY_SIZE)
     {
+      text.append ("\n");
       boolean deleted = (buffer[i] & 0x80) != 0;
       boolean zero = (buffer[i] & 0x40) != 0;
       int track = buffer[i] & 0x3F;

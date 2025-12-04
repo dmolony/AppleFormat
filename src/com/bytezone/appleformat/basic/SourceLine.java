@@ -115,4 +115,16 @@ public class SourceLine implements ApplesoftConstants
         inGoto = true;
     }
   }
+
+  // ---------------------------------------------------------------------------------//
+  List<String> getDataItems ()
+  // ---------------------------------------------------------------------------------//
+  {
+    List<String> dataItems = new ArrayList<> ();
+
+    for (SubLine subline : sublines)
+      dataItems.addAll (subline.getDataItems ());
+
+    return dataItems;
+  }
 }

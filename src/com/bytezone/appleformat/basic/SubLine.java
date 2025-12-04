@@ -57,6 +57,7 @@ public class SubLine implements ApplesoftConstants
   private final List<Float> constantsFloat = new ArrayList<> ();
 
   private final List<String> stringsText = new ArrayList<> ();
+  private final List<String> dataItems = new ArrayList<> ();
 
   // ---------------------------------------------------------------------------------//
   SubLine (SourceLine sourceLine, int offset, int length)
@@ -343,6 +344,7 @@ public class SubLine implements ApplesoftConstants
         for (String chunk : new String (getBuffer ()).split (","))
         {
           chunk = chunk.trim ();
+          dataItems.add (chunk);
           if (chunk.isEmpty ())
             continue;
 
@@ -358,6 +360,13 @@ public class SubLine implements ApplesoftConstants
 
         break;
     }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  List<String> getDataItems ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return dataItems;
   }
 
   // ---------------------------------------------------------------------------------//

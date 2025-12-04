@@ -32,6 +32,7 @@ public class CatalogDos3Block extends CatalogDosBlock
 
     for (int i = 11; i <= 255; i += CATALOG_ENTRY_SIZE)
     {
+      text.append ("\n");
       if (buffer[i] == (byte) 0xFF)         // file is deleted
       {
         addText (text, buffer, i, 2,
