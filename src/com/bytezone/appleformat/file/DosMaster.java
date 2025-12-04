@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.bytezone.appleformat.Utility;
 import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.filesystem.AppleFile;
-import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.FileDosMaster;
 
 // -----------------------------------------------------------------------------------//
@@ -28,18 +27,13 @@ public class DosMaster extends AbstractFormattedAppleFile
   {
     StringBuilder text = new StringBuilder ();
 
-    List<AppleFileSystem> fileSystems = ((FileDosMaster) appleFile).getFileSystems ();
-
-    if (fileSystems.size () == 0)
-      return NO_MENU;
-
-    Optional<AppleFile> opt = fileSystems.get (0).getFile ("HELLO");
+    Optional<AppleFile> opt = ((FileDosMaster) appleFile).getHelloProgram ();
     if (opt.isEmpty ())
       return NO_MENU;
 
-    ApplesoftBasicProgram hello = new ApplesoftBasicProgram (opt.get ());
-    List<String> dataItems = hello.getDataItems ();
-    if (dataItems.size () % 3 != 0)
+    ApplesoftBasicProgram helloProgram = new ApplesoftBasicProgram (opt.get ());
+    List<String> dataItems = helloProgram.getDataItems ();
+    if (dataItems.size () == 0 || dataItems.size () % 3 != 0)
       return NO_MENU;
 
     text.append ("#    GAME TITLE                       VOLUME\n");
@@ -56,9 +50,11 @@ public class DosMaster extends AbstractFormattedAppleFile
         title = title.substring (1, title.length () - 1);
 
       if (Utility.isPossibleNumber (title.getBytes ()[0]))
-        return "";
+        return NO_MENU;
       if (Utility.isPossibleNumber (program.getBytes ()[0]))
-        return "";
+        return NO_MENU;
+      if (!Utility.isNumber (volume))
+        return NO_MENU;
 
       text.append (String.format ("%-3d  %-32s %s%n", count++, title, volume));
     }
@@ -71,6 +67,6 @@ public class DosMaster extends AbstractFormattedAppleFile
   protected String buildExtras ()
   // ---------------------------------------------------------------------------------//
   {
-    return ((FileDosMaster) appleFile).getCatalogText ();
+    return ((FileDosMaster) appleFile).getDebugText ();
   }
 }
