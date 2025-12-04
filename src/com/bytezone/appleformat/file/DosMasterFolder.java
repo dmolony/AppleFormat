@@ -9,12 +9,13 @@ import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.FileDosMaster;
 
 // -----------------------------------------------------------------------------------//
-public class DosMaster extends AbstractFormattedAppleFile
+public class DosMasterFolder extends AbstractFormattedAppleFile
 // -----------------------------------------------------------------------------------//
 {
   private final static String NO_MENU = "Menu not found";
+
   // ---------------------------------------------------------------------------------//
-  public DosMaster (AppleFile dosMaster)
+  public DosMasterFolder (AppleFile dosMaster)
   // ---------------------------------------------------------------------------------//
   {
     super (dosMaster);

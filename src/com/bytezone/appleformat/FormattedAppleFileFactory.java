@@ -6,7 +6,7 @@ import java.util.prefs.Preferences;
 import com.bytezone.appleformat.basic.BasicCpmProgram;
 import com.bytezone.appleformat.file.Catalog;
 import com.bytezone.appleformat.file.DataFile;
-import com.bytezone.appleformat.file.DosMaster;
+import com.bytezone.appleformat.file.DosMasterFolder;
 import com.bytezone.appleformat.file.FormattedAppleFile;
 import com.bytezone.appleformat.file.LocalFolder;
 import com.bytezone.appleformat.file.PascalCode;
@@ -82,7 +82,7 @@ public class FormattedAppleFileFactory
       if (appleFile instanceof AppleContainer container)    //
       {
         if (appleFile instanceof FileDosMaster dosMaster)
-          return new DosMaster (appleFile);
+          return new DosMasterFolder (dosMaster);
 
         if (appleFile.getFileType () == 0                // ??
             | appleFile.getFileType () == 15)           // directory file
