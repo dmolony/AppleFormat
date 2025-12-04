@@ -34,6 +34,7 @@ public class DosMasterFolder extends AbstractFormattedAppleFile
 
     ApplesoftBasicProgram helloProgram = new ApplesoftBasicProgram (opt.get ());
     List<String> dataItems = helloProgram.getDataItems ();
+
     if (dataItems.size () == 0 || dataItems.size () % 3 != 0)
       return NO_MENU;
 
