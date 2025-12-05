@@ -164,10 +164,13 @@ public final class Utility
 
         hexLine.append (String.format ("%02X ", b[z]));
 
-        int c = b[z] & 0xFF;
+        // see https://en.wikipedia.org/wiki/Apple_II_character_set
 
-        if (c > 127)
-          c -= (c < 160) ? 64 : 128;
+        //        int c = b[z] & 0xFF;
+        //        if (c > 127)
+        //          c -= (c < 160) ? 64 : 128;
+
+        int c = b[z] & 0x7F;
 
         if (c < 32 || c == 127)         // non-printable
           textLine.append (".");
@@ -175,8 +178,13 @@ public final class Utility
           textLine.append ((char) c);
       }
 
-      lines.add (String.format ("%06X  %-48s %s", displayOffset + ptr,
-          hexLine.toString (), textLine.toString ()));
+      int address = displayOffset + ptr;
+
+      if (address % 512 == 0)
+        lines.add ("");
+
+      lines.add (String.format ("%06X  %-48s %s", address, hexLine.toString (),
+          textLine.toString ()));
     }
 
     return lines;

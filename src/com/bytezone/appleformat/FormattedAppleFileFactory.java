@@ -79,13 +79,13 @@ public class FormattedAppleFileFactory
       //      System.out.printf ("%s %d %n", appleFile instanceof AppleContainer,
       //          appleFile.getFileType ());
 
-      if (appleFile instanceof AppleContainer container)    //
+      if (appleFile instanceof AppleContainer container)
       {
         if (appleFile instanceof FileDosMaster dosMaster)
           return new DosMasterFolder (dosMaster);
 
         if (appleFile.getFileType () == 0                // ??
-            | appleFile.getFileType () == 15)           // directory file
+            || appleFile.getFileType () == 15)           // prodos directory file
           return new Catalog (container);
       }
 
