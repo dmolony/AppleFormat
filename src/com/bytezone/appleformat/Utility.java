@@ -180,7 +180,7 @@ public final class Utility
 
       int address = displayOffset + ptr;
 
-      if (address % 512 == 0)
+      if (address > 0 && address % 512 == 0)
         lines.add ("");
 
       lines.add (String.format ("%06X  %-48s %s", address, hexLine.toString (),
