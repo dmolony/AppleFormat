@@ -42,7 +42,13 @@ public class CatalogDos3Block extends CatalogDosBlock
         if (buffer[i + 3] == 0)
           addText (text, buffer, i + 3, 4, "");
         else
+        {
           addText (text, buffer, i + 3, 4, "DEL: " + getName (buffer, i + 3, 29));
+          addNameBytes (i, text, buffer);
+          //          for (int j = 0; j < 24; j += 4)
+          //            addText (text, buffer, i + j + 7, 4, "");
+          //          addText (text, buffer, i + 31, 2, "");
+        }
         addTextAndDecimal (text, buffer, i + 33, 2, "DEL: Sector count");
       }
       else if (buffer[i] > 0)               // file exists
@@ -54,9 +60,10 @@ public class CatalogDos3Block extends CatalogDosBlock
         else
         {
           addText (text, buffer, i + 3, 4, getName (buffer, i + 3, 30));
-          for (int j = 0; j < 24; j += 4)
-            addText (text, buffer, i + j + 7, 4, "");
-          addText (text, buffer, i + 31, 2, "");
+          addNameBytes (i, text, buffer);
+          //          for (int j = 0; j < 24; j += 4)
+          //            addText (text, buffer, i + j + 7, 4, "");
+          //          addText (text, buffer, i + 31, 2, "");
         }
         addTextAndDecimal (text, buffer, i + 33, 2, "Sector count");
       }
@@ -70,6 +77,15 @@ public class CatalogDos3Block extends CatalogDosBlock
     }
 
     return Utility.rtrim (text);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private void addNameBytes (int i, StringBuilder text, byte[] buffer)
+  // ---------------------------------------------------------------------------------//
+  {
+    for (int j = 0; j < 24; j += 4)
+      addText (text, buffer, i + j + 7, 4, "");
+    addText (text, buffer, i + 31, 2, "");
   }
 
   // ---------------------------------------------------------------------------------//

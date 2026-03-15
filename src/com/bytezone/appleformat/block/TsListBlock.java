@@ -48,17 +48,20 @@ public class TsListBlock extends AbstractFormattedAppleBlock
     addText (text, buffer, 7, 4, "Not used");
     addText (text, buffer, 11, 1, "Not used");
 
-    int blockNo = Utility.getShort (buffer, 5);
+    int blockNo = Utility.getShort (buffer, 5);       // sector base number
 
     for (int i = 12; i <= 255; i += 2)
     {
-      if (buffer[i] == 0 && buffer[i + 1] == 0)
+      int track = buffer[i] & 0xFF;
+      int sector = buffer[i + 1] & 0xFF;
+
+      if (track == 0 && sector == 0)
         msg = "";
       else
       {
         String msg2 = fileSystemType == FileSystemType.DOS4 && (buffer[i] & 0x40) != 0
             ? "  - track zero" : "";
-        msg = String.format ("Track/sector of file sector %04X (%<d)%s", blockNo, msg2);
+        msg = String.format ("TS %02d : %02d / %02d %s", blockNo, track, sector, msg2);
       }
       blockNo++;
       addText (text, buffer, i, 2, msg);
