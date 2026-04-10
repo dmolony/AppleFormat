@@ -696,6 +696,38 @@ public final class Utility
   }
 
   // ---------------------------------------------------------------------------------//
+  public static String getAccessText (int access)
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    if ((access & 0x80) != 0)
+      text.append ("destroy, ");
+    if ((access & 0x40) != 0)
+      text.append ("rename, ");
+    if ((access & 0x20) != 0)
+      text.append ("changed, ");
+    if ((access & 0x10) != 0)
+      text.append ("16?, ");
+    if ((access & 0x08) != 0)
+      text.append ("8?, ");
+    if ((access & 0x04) != 0)
+      text.append ("4?, ");
+    if ((access & 0x02) != 0)
+      text.append ("write, ");
+    if ((access & 0x01) != 0)
+      text.append ("read, ");
+
+    if (text.length () > 0)
+    {
+      text.deleteCharAt (text.length () - 1);
+      text.deleteCharAt (text.length () - 1);
+    }
+
+    return text.toString ();
+  }
+
+  // ---------------------------------------------------------------------------------//
   public static int dimension (int chars, int border, int size, int gap)
   // ---------------------------------------------------------------------------------//
   {

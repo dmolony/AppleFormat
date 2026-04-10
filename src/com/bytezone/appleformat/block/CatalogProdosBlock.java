@@ -115,7 +115,8 @@ public class CatalogProdosBlock extends AbstractFormattedAppleBlock
 
     addTextAndDecimal (text, buffer, offset + 28, 1, "Version");
     addText (text, buffer, offset + 29, 1, "Minimum version");
-    addText (text, buffer, offset + 30, 1, "Access");
+    addText (text, buffer, offset + 30, 1,
+        "Access (" + Utility.getAccessText (buffer[offset + 30] & 0xFF) + ")");
     addTextAndDecimal (text, buffer, offset + 31, 2,
         "Auxilliary type - " + getAuxilliaryText (fileType, auxType));
 
