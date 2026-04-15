@@ -169,7 +169,8 @@ public class CatalogProdosBlock extends AbstractFormattedAppleBlock
     addText (text, buffer, offset + 20, 4, "Not used");
     LocalDateTime created = Utility.getAppleDate (buffer, offset + 24);
     String dateC = created == null ? "" : created.format (df);
-    addText (text, buffer, offset + 24, 4, "Creation date : " + dateC);
+    String timeC = created == null ? "" : created.format (tf);
+    addText (text, buffer, offset + 24, 4, "Creation date : " + dateC + " " + timeC);
 
     addText (text, buffer, offset + 28, 1, "Prodos version");
     addText (text, buffer, offset + 29, 1, "Minimum version");
