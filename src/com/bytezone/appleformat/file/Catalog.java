@@ -58,10 +58,10 @@ public class Catalog extends AbstractFormattedAppleFile
     lastDepth = 0;
 
     if (container instanceof FsProdos fs)
-      return getFileList (fs, fs.getHeaderName ());
+      return getFileList (fs, "/" + fs.getHeaderName ());
 
     if (container instanceof FolderProdos fp)
-      return getFileList (fp, fp.getHeaderName ());
+      return getFileList (fp, fp.getPath ());
 
     return "";
   }
@@ -74,7 +74,7 @@ public class Catalog extends AbstractFormattedAppleFile
 
     lastDepth = 0;
 
-    text.append ("/" + name + "\n");
+    text.append (name + "\n");
     text.append (listContents (1, container));
 
     return Utility.rtrim (text);
