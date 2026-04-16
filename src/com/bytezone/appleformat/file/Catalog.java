@@ -58,7 +58,7 @@ public class Catalog extends AbstractFormattedAppleFile
     lastDepth = 0;
 
     if (container instanceof FsProdos fs)
-      return getFileList (fs, "/" + fs.getHeaderName ());
+      return getFileList (fs, fs.getPath ());
 
     if (container instanceof FolderProdos fp)
       return getFileList (fp, fp.getPath ());
