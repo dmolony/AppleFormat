@@ -4,6 +4,7 @@ import com.bytezone.filesystem.AppleContainer;
 import com.bytezone.filesystem.AppleFile;
 import com.bytezone.filesystem.AppleFileSystem;
 import com.bytezone.filesystem.AppleForkedFile;
+import com.bytezone.filesystem.FolderProdos;
 import com.bytezone.filesystem.FsProdos;
 import com.bytezone.utility.Utility;
 
@@ -57,19 +58,26 @@ public class Catalog extends AbstractFormattedAppleFile
     lastDepth = 0;
 
     if (container instanceof FsProdos fs)
-    {
-      StringBuilder text = new StringBuilder ();
+      return getFileList (fs, fs.getHeaderName ());
 
-      String name = fs.getHeaderName ();
-      lastDepth = 0;
-
-      text.append ("/" + name + "\n");
-      text.append (listContents (1, container));
-
-      return Utility.rtrim (text);
-    }
+    if (container instanceof FolderProdos fp)
+      return getFileList (fp, fp.getHeaderName ());
 
     return "";
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private String getFileList (AppleContainer container, String name)
+  // ---------------------------------------------------------------------------------//
+  {
+    StringBuilder text = new StringBuilder ();
+
+    lastDepth = 0;
+
+    text.append ("/" + name + "\n");
+    text.append (listContents (1, container));
+
+    return Utility.rtrim (text);
   }
 
   // ---------------------------------------------------------------------------------//
