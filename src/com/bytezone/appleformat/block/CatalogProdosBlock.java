@@ -174,7 +174,8 @@ public class CatalogProdosBlock extends AbstractFormattedAppleBlock
 
     addText (text, buffer, offset + 28, 1, "Prodos version");
     addText (text, buffer, offset + 29, 1, "Minimum version");
-    addText (text, buffer, offset + 30, 1, "Access");
+    addText (text, buffer, offset + 30, 1,
+        "Access (" + Utility.getAccessText (buffer[offset + 30] & 0xFF) + ")");
 
     addTextAndDecimal (text, buffer, offset + 31, 1, "Entry length");
     addTextAndDecimal (text, buffer, offset + 32, 1, "Entries per block");
