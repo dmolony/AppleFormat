@@ -62,6 +62,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
       getEquates ();
 
     //    AssemblerBlocks assemblerBlocks = new AssemblerBlocks (buffer, address);
+    if (true)
+      checkStrings ();
   }
 
   // ---------------------------------------------------------------------------------//
@@ -362,6 +364,60 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     {
       e.printStackTrace ();
     }
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private void checkStrings ()
+  // ---------------------------------------------------------------------------------//
+  {
+    //    int start = offset;
+    int max = offset + length - 3;
+
+    for (int ptr = offset; ptr < max; ptr++)
+    {
+      //      System.out.printf ("%02X %n", buffer[ptr] & 0xFF);
+      if (buffer[ptr] == 0x20)          // JSR
+      {
+        int target = (buffer[ptr + 1] & 0xFF) + (buffer[ptr + 2] & 0xFF) * 256;
+        //        System.out.printf ("    target: %04X%n", target);
+        int p2 = ptr + 3;
+        while ((buffer[p2] & 0x80) != 0)      // while hi bit is set
+        {
+          p2++;
+        }
+        if (buffer[p2] == 0)          // possible string terminator
+        {
+          int o2 = target - loadAddress;
+          if (o2 > 0 && o2 < max && buffer[o2] == 0x68)         // PLA
+            System.out.printf ("%d  %02X%n", o2, buffer[o2]);
+
+          int len = p2 - ptr - 3;
+          int start = ptr + 3;
+          String s = "";
+          String d = "";
+          String cr = "";
+          if (buffer[p2 - 1] == (byte) 0x8D)
+          {
+            --len;
+            cr = "<cr>";
+          }
+          if (buffer[ptr + 3] == (byte) 0x84)
+          {
+            ++start;
+            --len;
+            d = "<ctrl-d>";
+          }
+
+          if (len > 2)
+          {
+            s = Utility.string (buffer, start, len);
+            System.out.printf ("%04X  %s%n", target, d + s + cr);
+          }
+        }
+        //        System.out.println ();
+      }
+    }
+
   }
 
   // ---------------------------------------------------------------------------------//
