@@ -62,8 +62,8 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
       getEquates ();
 
     //    AssemblerBlocks assemblerBlocks = new AssemblerBlocks (buffer, address);
-    if (true)
-      checkStrings ();
+    if (false)
+      checkStrings ();      // look for hi bit set constants
   }
 
   // ---------------------------------------------------------------------------------//

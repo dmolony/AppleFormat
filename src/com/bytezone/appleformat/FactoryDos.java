@@ -59,7 +59,7 @@ class FactoryDos
     {
       int unusedSpace = eof - endPtr - 1;
 
-      if (unusedSpace > 2)
+      if (unusedSpace > 3)
       {
         byte[] buffer = fileBuffer.data ();
         int address = Utility.getApplesoftLoadAddress (buffer);
