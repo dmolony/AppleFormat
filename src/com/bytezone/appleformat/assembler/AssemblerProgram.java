@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +105,14 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
 
     return text + "\n\nData outside actual buffer:\n\n" + HexFormatter
         .format (extraBuffer, 0, extraBuffer.length, loadAddress + buffer.length);
+  }
+
+  // ---------------------------------------------------------------------------------//
+  @Override
+  public List<String> buildHex ()
+  // ---------------------------------------------------------------------------------//
+  {
+    return Arrays.asList (getHexDump ().split ("\n"));
   }
 
   // ---------------------------------------------------------------------------------//
