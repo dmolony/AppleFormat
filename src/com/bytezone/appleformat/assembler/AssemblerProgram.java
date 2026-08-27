@@ -98,7 +98,6 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     // It might be useful to add an option to change the offset. Sometimes it's useful
     // to see the hex dump offset from zero, other times it's better to use the
     // load address.
-    //    String text = HexFormatter.format (buffer, 0, buffer.length, loadAddress);
     String text = HexFormatter.format (buffer, offset, length, loadAddress);
 
     if (extraBuffer.length == 0)
