@@ -32,7 +32,8 @@ class FactoryDos
       case FsDos.FILE_TYPE_TEXT -> checkDosText (appleFile);
       case FsDos.FILE_TYPE_INTEGER_BASIC -> checkDosIntegerBasic (appleFile);
       case FsDos.FILE_TYPE_APPLESOFT, 32 -> checkDosApplesoft (appleFile);
-      case FsDos.FILE_TYPE_BINARY, 16, 64 -> checkDosBinary (appleFile);
+      case FsDos.FILE_TYPE_BINARY, 64 -> checkDosBinary (appleFile);
+      case 16 -> checkDosRelocatable (appleFile);
       default -> new DataFile (appleFile);
     };
   }
@@ -134,6 +135,28 @@ class FactoryDos
       value = value * 10 + buffer[ptr++] - (byte) 0xB0;
 
     return value == 0 ? name : name + value;
+  }
+
+  // ---------------------------------------------------------------------------------//
+  private FormattedAppleFile checkDosRelocatable (FileDos appleFile)
+  // ---------------------------------------------------------------------------------//
+  {
+    Buffer fileBuffer = appleFile.getFileBuffer ();
+    byte[] buffer = fileBuffer.data ();
+    int address = appleFile.getLoadAddress ();
+    int codeLength = Utility.getShort (buffer, 4);
+
+    // create new Buffer with the correct offset and length
+    Buffer codeBuffer = new Buffer (buffer, 6, codeLength);
+
+    AssemblerProgram assemblerProgram =
+        new AssemblerProgram (appleFile, codeBuffer, address);
+
+    Buffer relocationBuffer =
+        new Buffer (buffer, codeLength + 6, fileBuffer.length () - codeLength - 2);
+    assemblerProgram.setExtraBuffer (relocationBuffer);
+
+    return assemblerProgram;
   }
 
   // ---------------------------------------------------------------------------------//

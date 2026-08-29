@@ -27,7 +27,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   private final int loadAddress;
   private int executeOffset;
 
-  private byte[] extraBuffer = new byte[0];
+  private Buffer extraBuffer;
 
   private List<Integer> entryPoints;
   private List<StringLocation> stringLocations;
@@ -79,13 +79,14 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   }
 
   // ---------------------------------------------------------------------------------//
-  public void setExtraBuffer (byte[] fullBuffer, int offset, int length)
+  public void setExtraBuffer (Buffer extraBuffer)
   // ---------------------------------------------------------------------------------//
   {
-    if (length >= 0)
+    if (extraBuffer.length () >= 0)
     {
-      this.extraBuffer = new byte[length];
-      System.arraycopy (fullBuffer, offset, extraBuffer, 0, length);
+      //      this.extraBuffer = new byte[length];
+      //      System.arraycopy (fullBuffer, offset, extraBuffer, 0, length);
+      this.extraBuffer = extraBuffer;
     }
     else
       System.out.println ("Invalid length in setExtraBuffer() : " + length);
@@ -100,11 +101,12 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     // load address.
     String text = HexFormatter.format (buffer, offset, length, loadAddress);
 
-    if (extraBuffer.length == 0)
+    if (extraBuffer.length () == 0)
       return text;
 
-    return text + "\n\nData outside actual buffer:\n\n" + HexFormatter
-        .format (extraBuffer, 0, extraBuffer.length, loadAddress + buffer.length);
+    return text + "\n\nData outside code buffer:\n\n"
+        + HexFormatter.format (extraBuffer.data (), extraBuffer.offset (),
+            extraBuffer.length (), loadAddress + length);
   }
 
   // ---------------------------------------------------------------------------------//
@@ -341,7 +343,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   // ---------------------------------------------------------------------------------//
   {
     return target >= loadAddress
-        && target < loadAddress + buffer.length + extraBuffer.length;
+        && target < loadAddress + buffer.length + extraBuffer.length ();
   }
 
   // ---------------------------------------------------------------------------------//
