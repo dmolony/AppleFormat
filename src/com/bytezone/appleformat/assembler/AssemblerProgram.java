@@ -82,14 +82,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
   public void setExtraBuffer (Buffer extraBuffer)
   // ---------------------------------------------------------------------------------//
   {
-    if (extraBuffer.length () >= 0)
-    {
-      //      this.extraBuffer = new byte[length];
-      //      System.arraycopy (fullBuffer, offset, extraBuffer, 0, length);
-      this.extraBuffer = extraBuffer;
-    }
-    else
-      System.out.println ("Invalid length in setExtraBuffer() : " + length);
+    this.extraBuffer = extraBuffer;
   }
 
   // ---------------------------------------------------------------------------------//
@@ -101,7 +94,7 @@ public class AssemblerProgram extends AbstractFormattedAppleFile
     // load address.
     String text = HexFormatter.format (buffer, offset, length, loadAddress);
 
-    if (extraBuffer.length () == 0)
+    if (extraBuffer == null || extraBuffer.length () == 0)
       return text;
 
     return text + "\n\nData outside code buffer:\n\n"

@@ -8,6 +8,7 @@ import com.bytezone.appleformat.basic.ApplesoftBasicProgram;
 import com.bytezone.appleformat.basic.IntegerBasicProgram;
 import com.bytezone.appleformat.file.DataFile;
 import com.bytezone.appleformat.file.FormattedAppleFile;
+import com.bytezone.appleformat.file.ZeroPage;
 import com.bytezone.appleformat.fonts.DosCharacterSet;
 import com.bytezone.appleformat.graphics.AppleGraphics;
 import com.bytezone.appleformat.graphics.ShapeTable;
@@ -181,6 +182,11 @@ class FactoryDos
       return new AssemblerText (appleFile, fileBuffer);     // wrong but better
     if (fileName.endsWith (".LOGO"))
       return new DosText (appleFile);
+
+    if (address == 0 && length == 0x100)
+    {
+      return new ZeroPage (appleFile);
+    }
 
     //    if (fileName.endsWith (".L") && appleFile.getFileType () == 64)
     //      return new AssemblerText (appleFile, dataRecord);
